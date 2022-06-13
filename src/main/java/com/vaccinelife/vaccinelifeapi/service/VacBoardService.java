@@ -74,22 +74,22 @@ public class VacBoardService {
     }
 
     // 게시물 작성
-    @Transactional
-    public void createVacBoard(VacBoardPostRequestDto requestDto) {
-        User user = userRepository.findById(requestDto.getUserId()).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
-        );
-        vacBoardRepository.save(requestDto.toEntity(user));
-    }
+//    @Transactional
+//    public User createVacBoard(VacBoardPostRequestDto requestDto) {
+//        User user = userRepository.findById(requestDto.getUserId()).orElseThrow(
+//                () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
+//        );
+//        vacBoardRepository.save(requestDto.toEntity(user));
+//    }
 
     // 게시물 수정
     @Transactional
-    public Long update(Long vacBoardId, VacBoardRequestDto requestDto) {
+    public VacBoard update(Long vacBoardId, VacBoardRequestDto requestDto) {
         VacBoard vacBoard = vacBoardRepository.findById(vacBoardId).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
         vacBoard.update(requestDto);
-        return vacBoardId;
+        return vacBoard;
     }
 
     // 게시물 삭제

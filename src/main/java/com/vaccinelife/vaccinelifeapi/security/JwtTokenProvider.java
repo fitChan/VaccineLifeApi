@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Component
@@ -33,7 +34,7 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성
-    public String createToken(String userPk, Long id,UserRole roles, String nickname, Boolean isVaccine, String type,int degree, String gender, String age, String disease, String afterEffect) {
+    public String createToken(String userPk, Long id, Set<UserRole> roles, String nickname, Boolean isVaccine, String type, int degree, String gender, String age, String disease, String afterEffect) {
         Claims claims = Jwts.claims().setSubject(userPk);
         // claim : JWT payload 에 저장되는 정보단위
         //토큰으로 넘겨줄 user data 저장 -> 프론트에서 token decode 해서 사용

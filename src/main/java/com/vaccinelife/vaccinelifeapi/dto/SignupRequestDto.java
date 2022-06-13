@@ -1,17 +1,14 @@
 package com.vaccinelife.vaccinelifeapi.dto;
 
 import io.swagger.models.auth.In;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Data @Builder
 @Getter
 public class SignupRequestDto {
 

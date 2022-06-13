@@ -22,7 +22,6 @@ public class VaccinelifeApiApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-//						.allowedOrigins("http://localhost:3000","http://kurlymarket.shop/")
                         .allowedOrigins("*")
                         .maxAge(3000)
                         .allowedHeaders("header1", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method"

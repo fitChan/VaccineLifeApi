@@ -3,12 +3,21 @@ package com.vaccinelife.vaccinelifeapi.controller;
 
 import com.vaccinelife.vaccinelifeapi.dto.*;
 import com.vaccinelife.vaccinelifeapi.exception.ApiException;
+import com.vaccinelife.vaccinelifeapi.model.Resource.VacBoardRequestDtoResource;
+import com.vaccinelife.vaccinelifeapi.model.Resource.VacBoardResource;
+import com.vaccinelife.vaccinelifeapi.model.User;
+import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
 import com.vaccinelife.vaccinelifeapi.service.CommentService;
 import com.vaccinelife.vaccinelifeapi.service.VacBoardService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,56 +25,100 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/vacBoard")
 
 public class VacBoardController {
     private final VacBoardService vacBoardService;
+    private final VacBoardRepository vacBoardRepository;
+    private final UserRepository userRepository;
     private final CommentService commentService;
+    private final ModelMapper modelMapper;
 
     //    전체 게시판 조회
     @GetMapping("")
-    public ResponseEntity<List<VacBoardSimRequestDto>> getSimpleVacBoard() {
-        return ResponseEntity.ok().body(vacBoardService.getSimpleVacBoard());
+    public ResponseEntity getSimpleVacBoard(Pageable pageable, PagedResourcesAssembler<VacBoard> assembler) {
+        Page<VacBoard> page = this.vacBoardRepository.findAll(pageable);
+        var pagedResources = assembler.toModel(page, VacBoardResource::new);
+        pagedResources.add(new Link("/docs/index.html#resources-vacBoard-query").withRel("profile"));
+        return ResponseEntity.ok(pagedResources);
     }
 
     //    탑 3
     @GetMapping("/topLike")
-    public ResponseEntity<List<VacBoardTopRequestDto>> getTopList(){
+    public ResponseEntity<List<VacBoardTopRequestDto>> getTopList() {
         return ResponseEntity.ok().body(vacBoardService.getTopList());
     }
 
     //이전글 다음글
     @GetMapping("/{vacBoardId}/id")
-    public ResponseEntity<VacPrevNextDto> getNPId(@PathVariable Long vacBoardId){
+    public ResponseEntity<VacPrevNextDto> getNPId(@PathVariable Long vacBoardId) {
         return ResponseEntity.ok().body(vacBoardService.getVacNextPrevId(vacBoardId));
     }
 
     //    상세 게시판 조회
     @GetMapping("/{vacBoardId}")
-    public ResponseEntity<VacBoardRequestDto> getDetailVacBoard(@PathVariable Long vacBoardId) {
+    public ResponseEntity getDetailVacBoard(@PathVariable Long vacBoardId) {
         vacBoardService.IpChecker(vacBoardId); // 방문자 체크 로직
-        return  ResponseEntity.ok().body(vacBoardService.getDetailVacBoard(vacBoardId));
+
+        VacBoardRequestDto newVacBoardRequestDto = vacBoardService.getDetailVacBoard(vacBoardId);
+        VacBoardRequestDtoResource vacBoardRequestDtoResource = new VacBoardRequestDtoResource(newVacBoardRequestDto);
+        vacBoardRequestDtoResource.add(new Link("/docs/index.html#resources-get-vacBoard").withRel("profile"));
+
+        return ResponseEntity.ok(vacBoardRequestDtoResource);
     }
+
     @GetMapping("/{vacBoardId}/comments")
     public ResponseEntity<List<CommentRequestDto>> getComment(@PathVariable Long vacBoardId) {
         commentService.getComment(vacBoardId);
-        return  ResponseEntity.ok().body(commentService.getComment(vacBoardId));
+        return ResponseEntity.ok().body(commentService.getComment(vacBoardId));
     }
 
-    //    게시글 작성
+    /*    게시글 작성
     @PostMapping("")
-    public ResponseEntity<Void> createVacBoard(@RequestBody VacBoardPostRequestDto requestDto) {
+    public ResponseEntity createVacBoard(@RequestBody VacBoardPostRequestDto requestDto) {
+        VacBoard vacBoard = modelMapper.map(requestDto, VacBoard.class);
         vacBoardService.createVacBoard(requestDto);
-        return ResponseEntity.created(URI.create("/api/vacBoard")).build();
+        return ResponseEntity.created(URI.create("/api/vacBoard")).body(vacBoard);
+    }*/
+
+
+    /*2022-06-09 하단 게시글 작성으로 수정*/
+    @PostMapping("")
+    public ResponseEntity createVacBoard(@RequestBody VacBoardPostRequestDto requestDto) {
+        VacBoard vacBoard = modelMapper.map(requestDto, VacBoard.class);
+        User user = userRepository.findById(requestDto.getUser()).orElseThrow(
+                () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
+        );
+        vacBoard.setUser(user);
+        VacBoard newVacBoard = this.vacBoardRepository.save(vacBoard);
+        WebMvcLinkBuilder selfLinkBuilder = linkTo(VacBoardController.class).slash(newVacBoard.getId());
+        URI createdUri
+                = selfLinkBuilder.toUri();
+        VacBoardResource vacBoardResource = new VacBoardResource(vacBoard);
+        vacBoardResource.add(linkTo(VacBoardController.class).withRel("query-vacBoards"));
+//        vacBoardResource.add(selfLinkBuilder.withSelfRel());
+        vacBoardResource.add(new Link("/docs/index.html#resources-vacBoard-create").withRel("profile"));
+        return ResponseEntity.created(createdUri).body(vacBoardResource);
     }
 
     //    게시글 수정
     @PutMapping("/{vacBoardId}")
-    public ResponseEntity<Void> updateVacBoard(@PathVariable Long vacBoardId, @RequestBody VacBoardRequestDto requestDto) {
-        vacBoardService.update(vacBoardId, requestDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity updateVacBoard(@PathVariable Long vacBoardId, @RequestBody VacBoardRequestDto requestDto) {
+        VacBoard vacBoard = vacBoardService.update(vacBoardId, requestDto);
+
+        WebMvcLinkBuilder selfLinkBuilder = linkTo(VacBoardController.class).slash(vacBoard.getId());
+        URI createdUri
+                = selfLinkBuilder.toUri();
+        VacBoardResource vacBoardResource = new VacBoardResource(vacBoard);
+
+        vacBoardResource.add(linkTo(VacBoardController.class).withRel("update-vacBoard"));
+        vacBoardResource.add(new Link("/docs/index.html#resources-vacBoard-update").withRel("profile"));
+
+        return ResponseEntity.created(createdUri).body(vacBoardResource);
     }
 
     //    게시글 삭제
@@ -86,7 +139,7 @@ public class VacBoardController {
     ) {
 
         page = page - 1;
-        return vacBoardService.readVacBoard(page , size, sortBy, isAsc);
+        return vacBoardService.readVacBoard(page, size, sortBy, isAsc);
     }
 
 
@@ -102,7 +155,7 @@ public class VacBoardController {
     ) {
 
         page = page - 1;
-        return vacBoardService.readVacBoardType(page , size, sortBy, isAsc, type);
+        return vacBoardService.readVacBoardType(page, size, sortBy, isAsc, type);
     }
 
     //예외처리 메세지 던질 핸들러

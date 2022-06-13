@@ -4,22 +4,20 @@ package com.vaccinelife.vaccinelifeapi.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @Setter
 @Entity
-@Getter
-@NoArgsConstructor
+@Getter @Builder
+@NoArgsConstructor @AllArgsConstructor
 @Table(uniqueConstraints=
 @UniqueConstraint(columnNames = {"username", "nickname"}))
-@Data
 public class User extends Timestamped{
 
 
@@ -63,6 +61,9 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties({"comment"})
     private Set<Comment> comment = new HashSet<>();
+
+
+
     public void add(Comment comment) {
         comment.setUser(this);
         this.comment.add(comment);
@@ -101,13 +102,14 @@ public class User extends Timestamped{
     private Set<Medical> medicals = new HashSet<>();
 
     @Column(nullable = false)
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(value = EnumType.STRING)
-    private UserRole role;
+    private Set<UserRole> role;
 
 
 
 
-    public User(Long id, String username, String password, UserRole role, String nickname, Boolean isVaccine, String type,Integer degree, String gender, String age, String disease, String afterEffect) {
+    public User(Long id, String username, String password, Set<UserRole> role, String nickname, Boolean isVaccine, String type,Integer degree, String gender, String age, String disease, String afterEffect) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -126,7 +128,6 @@ public class User extends Timestamped{
     public void update(SignupRequestDto requestDto) {
         this.id=requestDto.getId();
         this.username=requestDto.getUsername();
-        this.role=UserRole.USER;
         this.nickname=requestDto.getNickname();
         this.isVaccine=requestDto.getIsVaccine();
         this.type=requestDto.getType();

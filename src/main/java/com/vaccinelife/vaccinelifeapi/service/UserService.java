@@ -5,29 +5,59 @@ import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.UserRole;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class UserService {
-    private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
-    private final AuthenticationManager authenticationManager;
-    private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
+public class UserService implements UserDetailsService {
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
+    PasswordEncoder passwordEncoder;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    AuthenticationManager authenticationManager;
+    private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
+
+//    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, AuthenticationManager authenticationManager) {
+//        this.passwordEncoder = passwordEncoder;
+//        this.userRepository = userRepository;
+//        this.authenticationManager = authenticationManager;
+//    }
+
+
+    public boolean bad(SignupRequestDto requestDto, User user) {
+
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+            return false;
+        }
+        return true;
     }
 
     //유저 정보 업데이트
@@ -43,29 +73,30 @@ public class UserService {
 
     @Transactional
     public void registerUser(SignupRequestDto requestDto) {
-        Long id=requestDto.getId();
+        Long id = requestDto.getId();
         String username = requestDto.getUsername();
         String password = requestDto.getPassword();
         String passwordChecker = requestDto.getPasswordChecker();
         String nickname = requestDto.getNickname();
-        Boolean isVaccine=requestDto.getIsVaccine();
-        String type=requestDto.getType();
-        int degree=requestDto.getDegree();
-        String gender=requestDto.getGender();
-        String age=requestDto.getAge();
-        String disease=requestDto.getDisease();
-        String afterEffect=requestDto.getAfterEffect();
+        Boolean isVaccine = requestDto.getIsVaccine();
+        String type = requestDto.getType();
+        int degree = requestDto.getDegree();
+        String gender = requestDto.getGender();
+        String age = requestDto.getAge();
+        String disease = requestDto.getDisease();
+        String afterEffect = requestDto.getAfterEffect();
+        Set<UserRole> role = Collections.singleton(UserRole.USER);
 
+        password = passwordEncoder.encode(password);
 
-
-        password = passwordEncoder.encode(requestDto.getPassword());
-        UserRole role = UserRole.USER;
-        User user = new User(id, username, password, role, nickname, isVaccine, type, degree , gender, age, disease, afterEffect);
+        User user = new User(id, username, password, role, nickname, isVaccine, type, degree, gender, age, disease, afterEffect);
         userRepository.save(user);
+
+
     }
 
     @Transactional
-    public String findAfterEffect(){
+    public String findAfterEffect() {
         List<User> none = userRepository.findAllByAfterEffectContaining("없음");
         List<User> fever = userRepository.findAllByAfterEffectContaining("발열");
         List<User> headache = userRepository.findAllByAfterEffectContaining("두통");
@@ -87,16 +118,32 @@ public class UserService {
         int othersNum = others.size();
 
 
-        return "{"+"\n"+
-                "\""+"none"+"\""+":"+noneNum+","+"\n"+
-                "\""+"fever"+"\""+":"+feverNum+","+"\n"+
-                "\""+"headache"+"\""+":"+headacheNum+","+"\n"+
-                "\""+"fatigue"+"\""+":"+fatigueNum+","+"\n"+
-                "\""+"pain"+"\""+":"+painNum+","+"\n"+
-                "\""+"swell"+"\""+":"+swellNum+","+"\n"+
-                "\""+"sickness"+"\""+":"+sicknessNum+","+"\n"+
-                "\""+"allergy"+"\""+":"+allergyNum+","+"\n"+
-                "\""+"others"+"\""+":"+othersNum+"\n"+
+        return "{" + "\n" +
+                "\"" + "none" + "\"" + ":" + noneNum + "," + "\n" +
+                "\"" + "fever" + "\"" + ":" + feverNum + "," + "\n" +
+                "\"" + "headache" + "\"" + ":" + headacheNum + "," + "\n" +
+                "\"" + "fatigue" + "\"" + ":" + fatigueNum + "," + "\n" +
+                "\"" + "pain" + "\"" + ":" + painNum + "," + "\n" +
+                "\"" + "swell" + "\"" + ":" + swellNum + "," + "\n" +
+                "\"" + "sickness" + "\"" + ":" + sicknessNum + "," + "\n" +
+                "\"" + "allergy" + "\"" + ":" + allergyNum + "," + "\n" +
+                "\"" + "others" + "\"" + ":" + othersNum + "\n" +
                 "}";
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException(username)
+        );
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities(user.getRole()));
+    }
+
+    private Collection<? extends GrantedAuthority> authorities(Set<UserRole> role) {
+        return role.stream()
+                .map(r -> new SimpleGrantedAuthority("ROLE" + r.name()))
+                .collect(Collectors.toSet());
+    }
+
+
 }

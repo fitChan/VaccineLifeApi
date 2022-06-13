@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 public class UserDetailsImpl implements UserDetails {
 
@@ -20,7 +21,7 @@ public class UserDetailsImpl implements UserDetails {
         return user;
     }
 
-    public UserRole getRole() {
+    public Set<UserRole> getRole() {
         return user.getRole();
     }
 
