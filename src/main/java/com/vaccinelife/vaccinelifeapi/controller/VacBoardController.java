@@ -3,8 +3,8 @@ package com.vaccinelife.vaccinelifeapi.controller;
 
 import com.vaccinelife.vaccinelifeapi.dto.*;
 import com.vaccinelife.vaccinelifeapi.exception.ApiException;
-import com.vaccinelife.vaccinelifeapi.model.Resource.VacBoardRequestDtoResource;
-import com.vaccinelife.vaccinelifeapi.model.Resource.VacBoardResource;
+import com.vaccinelife.vaccinelifeapi.config.Resource.VacBoardRequestDtoResource;
+import com.vaccinelife.vaccinelifeapi.config.Resource.VacBoardResource;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;

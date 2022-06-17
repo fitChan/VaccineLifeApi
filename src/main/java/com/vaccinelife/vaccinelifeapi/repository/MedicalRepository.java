@@ -15,7 +15,6 @@ public interface MedicalRepository extends JpaRepository<Medical, Long> {
 
     List<Medical> findAllByCreatedAtBetweenOrderByCreatedAtDesc(LocalDateTime created, LocalDateTime month);
     List<Medical> findAllByUserIdOrderByCreatedAtDesc(Long userId);
-
     List<Medical> findTop3ByCreatedAtBetweenOrderByLikeCountDescCreatedAtDesc(LocalDateTime created, LocalDateTime week);
     Page<MedicalResponseDto> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }

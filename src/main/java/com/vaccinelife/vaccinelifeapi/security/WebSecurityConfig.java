@@ -35,7 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
     // authenticationManager를 Bean 등록
@@ -66,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // 암호화에 필요한 PasswordEncoder Bean 등록
 
 
-    @Override
+    /*@Override
     protected void configure(HttpSecurity http) throws Exception {
         // 필터 등록
         http
@@ -79,14 +80,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .formLogin()
                 .and()
                 .authorizeRequests() // 요청에 대한 사용권한 체크
-//                .mvcMatchers(HttpMethod.GET, "/api/**").authenticated()
+                .mvcMatchers(HttpMethod.GET, "/api/**").anonymous()
                 .anyRequest().permitAll() // 나머지 요청은 누구나 접근 가능
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class);
         // JwtAuthenticationFilter는
         // UsernamePasswordAuthenticationFilter 전에 넣음
+    }*/
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // 필터 등록
+        http
+                .authorizeRequests()
+                .mvcMatchers("/docs/index.html").permitAll()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                .and()
+                .authorizeRequests()
+                .mvcMatchers(HttpMethod.GET, "/api/**").anonymous()
+                .anyRequest().permitAll();
     }
-
 
 }

@@ -3,6 +3,8 @@ package com.vaccinelife.vaccinelifeapi.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vaccinelife.vaccinelifeapi.dto.QuarBoardRequestDto;
+import com.vaccinelife.vaccinelifeapi.model.ip.QuarBoardIp;
+import com.vaccinelife.vaccinelifeapi.model.ip.VacBoardIp;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -73,7 +75,7 @@ public class QuarBoard extends Timestamped{
 
     @OneToMany(mappedBy = "quarBoard", cascade = {CascadeType.REMOVE})
     @JsonIgnore
-    private Set<Ip> ip = new HashSet<>();
+    private Set<QuarBoardIp> ip = new HashSet<>();
     public void updateHits(int count){
         this.totalVisitors += count;
 

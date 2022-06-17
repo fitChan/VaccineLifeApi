@@ -1,5 +1,6 @@
-package com.vaccinelife.vaccinelifeapi.model;
+package com.vaccinelife.vaccinelifeapi.model.ip;
 
+import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Ip {
+public class VacBoardIp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -19,16 +20,10 @@ public class Ip {
     @ManyToOne(fetch = FetchType.LAZY)
     private VacBoard vacBoard;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private QuarBoard quarBoard;
-
-    public Ip(String ip,VacBoard vacBoard){
+    public VacBoardIp(String ip, VacBoard vacBoard){
         this.ip = ip;
         this.vacBoard = vacBoard;
     }
-    public Ip(String ip, QuarBoard quarBoard){
-        this.ip = ip;
-        this.quarBoard = quarBoard;
-    }
+
 
 }

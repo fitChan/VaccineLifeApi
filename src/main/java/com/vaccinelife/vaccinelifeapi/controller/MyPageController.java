@@ -2,6 +2,7 @@ package com.vaccinelife.vaccinelifeapi.controller;
 
 import com.vaccinelife.vaccinelifeapi.dto.*;
 import com.vaccinelife.vaccinelifeapi.exception.ApiException;
+import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
 import com.vaccinelife.vaccinelifeapi.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,23 +20,22 @@ public class MyPageController {
     private final QuarBoardService quarBoardService;
     private final MedicalService medicalService;
 
-
     //백신 후기 List 받기
-    @GetMapping("/{userId}/vacBoard")
-    public ResponseEntity<List<VacBoardSimRequestDto>> getMypageVacBoard(@PathVariable Long userId) {
-        return ResponseEntity.ok().body(vacBoardService.getMypageVacBoard(userId));
+    @GetMapping("/{Token}/vacBoard")
+    public ResponseEntity<List<VacBoardSimRequestDto>> getMypageVacBoard(@PathVariable String Token) {
+        return ResponseEntity.ok().body(vacBoardService.getMypageVacBoard(Token));
     }
 
     //자가 격리 List 받기
-    @GetMapping("/{userId}/quarBoard")
-    public ResponseEntity<List<QuarBoardSimRequestDto>> getMypageQuarBoard(@PathVariable Long userId){
-        return ResponseEntity.ok().body(quarBoardService.getMypageQuarBoard(userId));
+    @GetMapping("/{Token}/quarBoard")
+    public ResponseEntity<List<QuarBoardSimRequestDto>> getMypageQuarBoard(@PathVariable  String Token){
+        return ResponseEntity.ok().body(quarBoardService.getMypageQuarBoard(Token));
     }
 
     //의료진 분들께 한마디 List 받기
-    @GetMapping("/{userId}/medical")
-    public ResponseEntity<List<MedicalResponseDto>> getMypageMedical(@PathVariable Long userId){
-        return ResponseEntity.ok().body(medicalService.getMypageMedical(userId));
+    @GetMapping("/{Token}/medical")
+    public ResponseEntity<List<MedicalResponseDto>> getMypageMedical(@PathVariable  String Token){
+        return ResponseEntity.ok().body(medicalService.getMypageMedical(Token));
     }
 
 

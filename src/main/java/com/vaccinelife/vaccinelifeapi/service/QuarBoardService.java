@@ -1,19 +1,21 @@
 package com.vaccinelife.vaccinelifeapi.service;
 
 import com.vaccinelife.vaccinelifeapi.dto.*;
-import com.vaccinelife.vaccinelifeapi.model.Ip;
 import com.vaccinelife.vaccinelifeapi.model.QuarBoard;
 import com.vaccinelife.vaccinelifeapi.model.User;
-import com.vaccinelife.vaccinelifeapi.model.VacBoard;
-import com.vaccinelife.vaccinelifeapi.repository.IpRepository;
+import com.vaccinelife.vaccinelifeapi.model.ip.QuarBoardIp;
 import com.vaccinelife.vaccinelifeapi.repository.QuarBoardRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
+import com.vaccinelife.vaccinelifeapi.repository.ip.QuarBoardIpRepository;
+import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
+import com.vaccinelife.vaccinelifeapi.security.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -24,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -32,10 +35,11 @@ public class QuarBoardService {
 
     private final QuarBoardRepository quarBoardRepository;
     private final UserRepository userRepository;
-    private final IpRepository ipRepository;
+    private final QuarBoardIpRepository quarBoardIpRepo;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-
-//    상세 조회
+    //    상세 조회
     @Transactional
     public QuarBoardRequestDto getDetailQuarBoard(Long quarBoardId) {
         QuarBoard quarBoard = quarBoardRepository.findById(quarBoardId).orElseThrow(
@@ -47,7 +51,7 @@ public class QuarBoardService {
 
     //이전글 다음글
     @Transactional
-    public QuarPrevNextDto getQuarNextPrevId(Long quarBoardId){
+    public QuarPrevNextDto getQuarNextPrevId(Long quarBoardId) {
         QuarBoard prevId = quarBoardRepository.findTopByIdLessThanOrderByCreatedAtDesc(quarBoardId);
         QuarBoard nextId = quarBoardRepository.findFirstByIdGreaterThan(quarBoardId);
         return QuarPrevNextDto.builder()
@@ -56,27 +60,26 @@ public class QuarBoardService {
                 .build();
     }
 
-//    전체 조회
+    //    전체 조회
     @Transactional
-    public List<QuarBoardSimRequestDto> getSimpleQuarBoard(){
+    public List<QuarBoardSimRequestDto> getSimpleQuarBoard() {
         List<QuarBoard> quarBoards = quarBoardRepository.findAllByOrderByCreatedAtDesc();
         return QuarBoardSimRequestDto.list(quarBoards);
     }
 
 
-
-//    탑 3
+    //    탑 3
     @Transactional
-    public List<QuarBoardTopRequestDto> getTopList(){
-        LocalDateTime week = LocalDateTime.of(LocalDate.now().minusDays(7), LocalTime.of(0,0,0));
-        LocalDateTime now = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+    public List<QuarBoardTopRequestDto> getTopList() {
+        LocalDateTime week = LocalDateTime.of(LocalDate.now().minusDays(7), LocalTime.of(0, 0, 0));
+        LocalDateTime now = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
         List<QuarBoard> quarBoards = quarBoardRepository.findTop3ByCreatedAtBetweenOrderByLikeCountDescCreatedAtDesc(week, now);
         return QuarBoardTopRequestDto.list(quarBoards);
     }
 
-//    게시물 작성
+    //    게시물 작성
     @Transactional
-    public void createQuarBoard(QuarBoardPostRequestDto requestDto){
+    public void createQuarBoard(QuarBoardPostRequestDto requestDto) {
         User user = userRepository.findById(requestDto.getUserId()).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
         );
@@ -87,7 +90,7 @@ public class QuarBoardService {
         quarBoardRepository.save(quarBoard);
     }
 
-//     게시물 수정
+    //     게시물 수정
     @Transactional
     public Long update(Long quarBoardId, QuarBoardRequestDto requestDto) {
         QuarBoard quarBoard = quarBoardRepository.findById(quarBoardId).orElseThrow(
@@ -97,18 +100,18 @@ public class QuarBoardService {
         return quarBoardId;
     }
 
-//    게시물 삭제
+    //    게시물 삭제
     @Transactional
-    public void deleteQuarBoard(Long quarBoardId){
+    public void deleteQuarBoard(Long quarBoardId) {
         QuarBoard quarBoard = quarBoardRepository.findById(quarBoardId).orElseThrow(
-                ()-> new IllegalArgumentException("해당 아이디값을 찾을 수 없습니다.")
+                () -> new IllegalArgumentException("해당 아이디값을 찾을 수 없습니다.")
         );
         quarBoardRepository.deleteById(quarBoardId);
     }
 
     //    ip로 조회수 체크
     @Transactional
-    public Ip QuarIpChecker(Long id) {
+    public QuarBoardIp QuarIpChecker(Long id) {
         HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String visitorIp = req.getHeader("X-Forwarded-For");
 
@@ -133,22 +136,22 @@ public class QuarBoardService {
 
 
         QuarBoard quarBoard = quarBoardRepository.findById(id).orElseThrow(
-                ()-> new IllegalArgumentException("게시물 오류")
+                () -> new IllegalArgumentException("게시물 오류")
         );
-        Ip ip = new Ip(visitorIp, quarBoard);
+        QuarBoardIp ip = new QuarBoardIp(visitorIp, quarBoard);
 
-//        List<Ip> IpList = ipRepository.findAll();
-        boolean isExist = ipRepository.existsByQuarBoardAndIp(quarBoard, visitorIp);
+//        List<Ip> IpList = quarBoardIpRepo.findAll();
+        boolean isExist = quarBoardIpRepo.existsByQuarBoardAndIp(quarBoard, visitorIp);
         if (!isExist) {
-            ipRepository.save(ip);
+            quarBoardIpRepo.save(ip);
             quarBoard.updateHits(+1);
-        }else {
+        } else {
             quarBoard.updateHits(+0);
         }
         return ip;
     }
 
-//    페이지 처리
+    //    페이지 처리
     public Page<QuarBoardSimRequestDto> readQuarBoard(int page, int size, String sortBy, boolean isAsc) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
@@ -159,7 +162,13 @@ public class QuarBoardService {
 
     //마이페이지 내가 쓴글
     @Transactional
-    public List<QuarBoardSimRequestDto> getMypageQuarBoard(Long userId){
+    public List<QuarBoardSimRequestDto> getMypageQuarBoard(String token) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
+        String username = userDetails.getUsername();
+        Optional<User> user = userRepository.findByUsername(username);
+
+        Long userId = user.get().getId();
+
         List<QuarBoard> quarBoards = quarBoardRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
         return QuarBoardSimRequestDto.list(quarBoards);
     }

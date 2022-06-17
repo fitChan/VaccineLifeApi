@@ -1,8 +1,8 @@
 package com.vaccinelife.vaccinelifeapi.ControllerTest;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
+import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardPostRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
@@ -10,23 +10,14 @@ import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
+import com.vaccinelife.vaccinelifeapi.service.UserService;
 import com.vaccinelife.vaccinelifeapi.service.VacBoardService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.restdocs.RestDocsAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.stream.IntStream;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
@@ -35,6 +26,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -49,19 +41,26 @@ public class VacBoardControllerTest extends BaseControllerTest {
     VacBoardService vacBoardService;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserService userService;
 
 
     @Test
     @TestDescription("정상적으로 vacBoard를 생성함")
     public void createVacBoard() throws Exception {
 
+        User user = userRepository.findByUsername("cksdntjd").orElseThrow(
+                ()-> new IllegalArgumentException("없는 유저")
+        );
+        Long id = user.getId();
         VacBoardPostRequestDto vacBoardPostRequestDto = VacBoardPostRequestDto.builder()
-                .user(1L)
+                .user(id)
                 .title("the title")
                 .contents("the content")
                 .build();
 
         this.mockMvc.perform(post("/api/vacBoard")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON)
                 .content(objectMapper.writeValueAsString(vacBoardPostRequestDto)))
@@ -112,16 +111,40 @@ public class VacBoardControllerTest extends BaseControllerTest {
         ;
     }
 
+    private String getAccessToken() throws Exception {
+        String username = "cksdntjd";
+        String password = "cksdn123";
+        SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+                .username(username)
+                .password(password)
+                .build();
+        this.mockMvc.perform(post("/api/signup"));
+        String userId = "myApp";
+        String userSecret = "pass";
+
+        ResultActions perform = this.mockMvc.perform(post("/oauth/token")
+                .with(httpBasic(userId, userSecret))
+                .param("username", username)
+                .param("password", password)
+                .param("grant_type", "password")
+        );
+        var responseBody = perform.andReturn().getResponse().getContentAsString();
+//        Jackson2JsonParser parse = new Jackson2JsonParser();
+//        return parse.parseMap(responseBody).get("access_token").toString();
+        return "aa";
+    }
+
     @Test
     @TestDescription("입력값이 없을경우 vacBoard 생성 오류")
     public void createVacBoard_Empty_Request() throws Exception {
 
-        VacBoardPostRequestDto vacBoardPostRequestDto = VacBoardPostRequestDto.builder().build();
+        VacBoard vacBoard = VacBoard.builder().build();
 
         this.mockMvc.perform(post("/api/vacBoard")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON)
-                .content(objectMapper.writeValueAsString(vacBoardPostRequestDto)))
+                .content(objectMapper.writeValueAsString(vacBoard)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 
@@ -131,7 +154,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
     @TestDescription("30개의 게시물을 10개씩 페이지 조회하기.")
     public void queryVacBoardList() throws Exception {
         //Given
-        IntStream.range(0, 30).forEach(this::generateVacboard);
+//        IntStream.range(0, 30).forEach(this::generateVacboard); Appconfig로 test용 게시판 설정
         //When
         this.mockMvc.perform(get("/api/vacBoard")
                 .param("page", "1")
@@ -176,23 +199,23 @@ public class VacBoardControllerTest extends BaseControllerTest {
         ;
     }
 
-    private VacBoard generateVacboard(int i) {
-        User user = userRepository.findById(1L).orElseThrow(
-                () -> new IllegalArgumentException("없는 유저입니다.")
-        );
-        VacBoard vacBoard = VacBoard.builder()
-                .user(user)
-                .title("vacBoard" + i)
-                .contents("generated contents for JUnit Test")
-                .build();
-        return this.vacBoardRepository.save(vacBoard);
-    }
+//    private VacBoard generateVacboard(int i) {
+//        User user = userRepository.findById(1L).orElseThrow(
+//                () -> new IllegalArgumentException("없는 유저입니다.")
+//        );
+//        VacBoard vacBoard = VacBoard.builder()
+//                .user(user)
+//                .title("vacBoard" + i)
+//                .contents("generated contents for JUnit Test")
+//                .build();
+//        return this.vacBoardRepository.save(vacBoard);
+//    }
 
     @Test
     @TestDescription("vacBoard 게시물 하나를 조회하는 테스트")
     public void get_vacBoard() throws Exception {
-        VacBoard vacBoard = vacBoardRepository.findById(700L).orElseThrow(
-                ()-> new IllegalArgumentException("게시물이 존재하지 않습니다.")
+        VacBoard vacBoard = vacBoardRepository.findById(2L).orElseThrow(
+                () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")
         );
         VacBoardRequestDto vacBoardRequestDto = VacBoardRequestDto.builder()
                 .id(vacBoard.getId())
@@ -201,15 +224,6 @@ public class VacBoardControllerTest extends BaseControllerTest {
                 .totalVisitors(vacBoard.getTotalVisitors())
                 .likeCount(vacBoard.getLikeCount())
                 .userId(vacBoard.getUser().getId())
-//                .username(vacBoard.getUser().getUsername())
-//                .nickname(vacBoard.getUser().getNickname())
-//                .isVaccine(vacBoard.getUser().getIsVaccine())
-//                .type(vacBoard.getUser().getType())
-//                .degree(vacBoard.getUser().getDegree())
-//                .gender(vacBoard.getUser().getGender())
-//                .age(vacBoard.getUser().getAge())
-//                .disease(vacBoard.getUser().getDisease())
-//                .afterEffect(vacBoard.getUser().getAfterEffect())
                 .createdAt(vacBoard.getCreatedAt())
                 .modifiedAt(vacBoard.getModifiedAt())
                 .build();
@@ -242,14 +256,18 @@ public class VacBoardControllerTest extends BaseControllerTest {
     @Test
     @TestDescription("게시물을 수정하는 테스트")
     public void update_vacBoard() throws Exception {
-        User user = userRepository.findById(1L).orElseThrow(
-                () -> new IllegalArgumentException("없는 유저입니다.")
+        Long id = 2L;
+        VacBoard vacBoard = vacBoardRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("없는 게시물입니다.")
         );
-        VacBoard vacBoard = new VacBoard("updated title", "updated contents", user);
+        vacBoard.update(new VacBoardRequestDto().builder()
+                .title("updated title")
+                .contents("updated contents")
+                .build());
 
 
-        long id = 700L;
         this.mockMvc.perform(put("/api/vacBoard/" + id)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON)
                 .content(objectMapper.writeValueAsString(vacBoard)))

@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.http.HttpMethod;
 
 @SpringBootApplication
 @EnableJpaAuditing
+//@EnableResourceServer @EnableAuthorizationServer
 public class VaccinelifeApiApplication {
 
 	public static void main(String[] args) {

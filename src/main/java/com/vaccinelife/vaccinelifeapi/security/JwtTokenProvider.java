@@ -1,10 +1,7 @@
 package com.vaccinelife.vaccinelifeapi.security;
 
 import com.vaccinelife.vaccinelifeapi.model.UserRole;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Set;
@@ -22,7 +20,7 @@ import java.util.Set;
 public class JwtTokenProvider {
 
     private String secretKey = "";
-
+    private Key key;
     // 토큰 유효시간 120분
     private long tokenValidTime = 120 * 60 * 1000L;
     private final UserDetailsServiceImpl userDetailsService;
@@ -38,16 +36,16 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(userPk);
         // claim : JWT payload 에 저장되는 정보단위
         //토큰으로 넘겨줄 user data 저장 -> 프론트에서 token decode 해서 사용
-        claims.put("id",id);
+        claims.put("id", id);
         claims.put("roles", roles); // 정보는 key / value 쌍으로 저장
         claims.put("nickname", nickname);
-        claims.put("isVaccine",isVaccine);
-        claims.put("type",type);
-        claims.put("degree",degree);
-        claims.put("gender",gender);
-        claims.put("age",age);
-        claims.put("disease",disease);
-        claims.put("afterEffect",afterEffect);
+        claims.put("isVaccine", isVaccine);
+        claims.put("type", type);
+        claims.put("degree", degree);
+        claims.put("gender", gender);
+        claims.put("age", age);
+        claims.put("disease", disease);
+        claims.put("afterEffect", afterEffect);
 
 
         Date now = new Date();
@@ -86,7 +84,6 @@ public class JwtTokenProvider {
             return false;
         }
     }
-
 
 
 }

@@ -9,6 +9,8 @@ import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import com.vaccinelife.vaccinelifeapi.repository.MedicalRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
+import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
+import com.vaccinelife.vaccinelifeapi.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -35,19 +38,29 @@ public class MedicalService {
 
     private final MedicalRepository medicalRepository;
     private final UserRepository userRepository;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtTokenProvider jwtTokenProvider;
+
 
     //    의료진 한마디 조회 기능
     @Transactional
     public List<MedicalResponseDto> getMedicalRequestDto() {
-        LocalDateTime month = LocalDateTime.of(LocalDate.now().minusDays(30), LocalTime.of(0,0,0));
-        LocalDateTime now = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+        LocalDateTime month = LocalDateTime.of(LocalDate.now().minusDays(30), LocalTime.of(0, 0, 0));
+        LocalDateTime now = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
 
         List<Medical> medicals = medicalRepository.findAllByCreatedAtBetweenOrderByCreatedAtDesc(month, now);
         return MedicalResponseDto.list(medicals);
     }
 
+    //내가 쓴 의료진 한마디 조회 하기
     @Transactional
-    public List<MedicalResponseDto> getMypageMedical(Long userId) {
+    public List<MedicalResponseDto> getMypageMedical(String token) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
+        String username =  userDetails.getUsername();
+
+        Optional<User> user = userRepository.findByUsername(username);
+        Long userId = user.get().getId();
+
         List<Medical> medicals = medicalRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
         return MedicalResponseDto.list(medicals);
     }
@@ -76,8 +89,8 @@ public class MedicalService {
     //    탑 3
     @Transactional
     public List<MedicalTop3RequestDto> getTopList() {
-        LocalDateTime week = LocalDateTime.of(LocalDate.now().minusDays(7), LocalTime.of(0,0,0));
-        LocalDateTime now = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+        LocalDateTime week = LocalDateTime.of(LocalDate.now().minusDays(7), LocalTime.of(0, 0, 0));
+        LocalDateTime now = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
         List<Medical> medicals = medicalRepository.findTop3ByCreatedAtBetweenOrderByLikeCountDescCreatedAtDesc(week, now);
         return MedicalTop3RequestDto.list(medicals);
     }
@@ -87,7 +100,7 @@ public class MedicalService {
     @Transactional
     public ResponseEntity<Medical> patch(Long medicalId, Map<Object, Object> fields) {
         Optional<Medical> medical = medicalRepository.findById(medicalId);
-        if(medical.isPresent()) {
+        if (medical.isPresent()) {
             fields.forEach((key, value) -> {
                 Field field = ReflectionUtils.findField(Medical.class, (String) key);
                 field.setAccessible(true);

@@ -1,18 +1,26 @@
 package com.vaccinelife.vaccinelifeapi.service;
 
-import com.vaccinelife.vaccinelifeapi.dto.*;
-import com.vaccinelife.vaccinelifeapi.model.Ip;
+import com.vaccinelife.vaccinelifeapi.dto.VacBoardRequestDto;
+import com.vaccinelife.vaccinelifeapi.dto.VacBoardSimRequestDto;
+import com.vaccinelife.vaccinelifeapi.dto.VacBoardTopRequestDto;
+import com.vaccinelife.vaccinelifeapi.dto.VacPrevNextDto;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
-import com.vaccinelife.vaccinelifeapi.repository.IpRepository;
+import com.vaccinelife.vaccinelifeapi.model.ip.VacBoardIp;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
+import com.vaccinelife.vaccinelifeapi.repository.ip.VacBoardIpRepository;
+import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
+import com.vaccinelife.vaccinelifeapi.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -24,6 +32,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -33,7 +42,9 @@ public class VacBoardService {
 
     private final VacBoardRepository vacBoardRepository;
     private final UserRepository userRepository;
-    private final IpRepository ipRepository;
+    private final VacBoardIpRepository ipRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserDetailsServiceImpl userDetailsService;
 
     //이전글 다음글
     @Transactional
@@ -104,7 +115,7 @@ public class VacBoardService {
     //    ip로 조회수 체크
     @Transactional
     public Object IpChecker(Long id) {
-        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
         String clientIp = request.getHeader("X-Forwarded-For");
         if (StringUtils.isEmpty(clientIp) || "unknown".equalsIgnoreCase(clientIp)) {
@@ -127,7 +138,7 @@ public class VacBoardService {
         VacBoard vacBoard = vacBoardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시물 오류")
         );
-        Ip ip = new Ip(clientIp, vacBoard);
+        VacBoardIp ip = new VacBoardIp(clientIp, vacBoard);
 //        List<Ip> IpList = ipRepository.findAll();
         boolean isExist = ipRepository.existsByVacBoardAndIp(vacBoard, clientIp);
         if (!isExist) {
@@ -141,13 +152,18 @@ public class VacBoardService {
 
     //mypage vacboard
     @Transactional
-    public List<VacBoardSimRequestDto> getMypageVacBoard(Long userId) {
+    public List<VacBoardSimRequestDto> getMypageVacBoard(String token) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
+        String username = userDetails.getUsername();
+
+        Optional<User> user = userRepository.findByUsername(username);
+        Long userId = user.get().getId();
         List<VacBoard> vacBoards = vacBoardRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
         return VacBoardSimRequestDto.list(vacBoards);
+
     }
 
-    
-    
+
     //게시판 무한스크롤
     public Page<VacBoardSimRequestDto> readVacBoard(int page, int size, String sortBy, boolean isAsc) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
