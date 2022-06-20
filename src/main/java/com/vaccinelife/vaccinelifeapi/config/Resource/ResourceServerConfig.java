@@ -1,5 +1,7 @@
 package com.vaccinelife.vaccinelifeapi.config.Resource;
 
+import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerTokenServicesConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +16,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        resources.resourceId("vacBoard");
+        resources.resourceId("tokenId");
     }
 
     @Override
@@ -24,9 +26,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.GET, "/api/**").anonymous()
+                .antMatchers("/css/**","/js/**","/fonts/**","/images/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()//예외가 발생할 경우
                 .accessDeniedHandler(new OAuth2AccessDeniedHandler());//OAuth2AccessDeniedHandler사용  403status로 반응
     }
+
 }

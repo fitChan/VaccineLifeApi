@@ -16,21 +16,21 @@ public class VaccinelifeApiApplication {
 		SpringApplication.run(VaccinelifeApiApplication.class, args);
 	}
 
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .maxAge(3000)
-                        .allowedHeaders("header1", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method"
-                                , "Access-Control-Request-Headers", "Authorization")
-                        .exposedHeaders("header1", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method"
-                                , "Access-Control-Request-Headers", "Authorization")
-                        .allowedMethods("PUT", "DELETE", "GET", "HEAD", "PATCH", "POST");
-			}
-		};
-	}
+//	@Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//		return new WebMvcConfigurer() {
+//			@Override
+//			public void addCorsMappings(CorsRegistry registry) {
+//				registry.addMapping("/**")
+//                        .allowedOrigins("*")
+//                        .maxAge(3000)
+//                        .allowedHeaders("header1", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method"
+//                                , "Access-Control-Request-Headers", "Authorization")
+//                        .exposedHeaders("header1", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method"
+//                                , "Access-Control-Request-Headers", "Authorization")
+//                        .allowedMethods("PUT", "DELETE", "GET", "HEAD", "PATCH", "POST");
+//			}
+//		};
+//	}
 
 }

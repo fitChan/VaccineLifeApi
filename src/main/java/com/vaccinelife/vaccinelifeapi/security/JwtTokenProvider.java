@@ -1,29 +1,36 @@
 package com.vaccinelife.vaccinelifeapi.security;
 
+import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.UserRole;
+import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
+import com.vaccinelife.vaccinelifeapi.service.UserService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
-
-    private String secretKey = "";
-    private Key key;
+    private String secretKey = "HRlELXqpSB";
     // 토큰 유효시간 120분
     private long tokenValidTime = 120 * 60 * 1000L;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserService userDetailsService;
 
     // 객체 초기화, secretKey를 Base64로 인코딩
     @PostConstruct
@@ -84,6 +91,7 @@ public class JwtTokenProvider {
             return false;
         }
     }
+
 
 
 }

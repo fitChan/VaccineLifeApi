@@ -8,7 +8,6 @@ import com.vaccinelife.vaccinelifeapi.repository.QuarBoardRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.ip.QuarBoardIpRepository;
 import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
-import com.vaccinelife.vaccinelifeapi.security.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,7 +35,7 @@ public class QuarBoardService {
     private final QuarBoardRepository quarBoardRepository;
     private final UserRepository userRepository;
     private final QuarBoardIpRepository quarBoardIpRepo;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserService userDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
 
     //    상세 조회

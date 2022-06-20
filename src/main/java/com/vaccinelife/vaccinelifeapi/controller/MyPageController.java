@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Spliterator;
@@ -30,11 +31,9 @@ public class MyPageController {
 //        return ResponseEntity.ok().body(vacBoardService.getMypageVacBoard(Token));
 //    }
     @GetMapping("/mypage/vacBoard")
-    public ResponseEntity<List<VacBoardSimRequestDto>> getMypageVacBoard(@RequestHeader Map<String, String> data) {
-        String headerToken = data.get("Authorization");
-        String[] split = headerToken.split(" ");
-        String token = split[1];
-        return ResponseEntity.ok().body(vacBoardService.getMypageVacBoard(token));
+    public ResponseEntity<List<VacBoardSimRequestDto>> getMypageVacBoard(Principal principal) {
+        String username = principal.getName();
+        return ResponseEntity.ok().body(vacBoardService.getMypageVacBoard(username));
     }
 
 //    //자가 격리 List 받기
@@ -44,25 +43,21 @@ public class MyPageController {
 //    }
 
     @GetMapping(value = "/mypage/quarBoard")
-    public ResponseEntity<List<QuarBoardSimRequestDto>> getMypageQuarBoard(@RequestHeader Map<String, String> data){
-        String headerToken = data.get("Authorization");
-        String[] split = headerToken.split(" ");
-        String token = split[1];
-        return ResponseEntity.ok().body(quarBoardService.getMypageQuarBoard(token));
+    public ResponseEntity<List<QuarBoardSimRequestDto>> getMypageQuarBoard(Principal principal) {
+        String username = principal.getName();
+        return ResponseEntity.ok().body(quarBoardService.getMypageQuarBoard(username));
     }
 
-//    //의료진 분들께 한마디 List 받기
+    //    //의료진 분들께 한마디 List 받기
 //    @GetMapping("/{Token}/medical")
 //    public ResponseEntity<List<MedicalResponseDto>> getMypageMedical(@PathVariable  String Token){
 //        return ResponseEntity.ok().body(medicalService.getMypageMedical(Token));
 //    }
     //의료진 분들께 한마디 List 받기
     @GetMapping("/mypage/medical")
-    public ResponseEntity<List<MedicalResponseDto>> getMypageMedical(@RequestHeader Map<String, String> data){
-        String headerToken = data.get("Authorization");
-        String[] split = headerToken.split(" ");
-        String token = split[1];
-        return ResponseEntity.ok().body(medicalService.getMypageMedical(token));
+    public ResponseEntity<List<MedicalResponseDto>> getMypageMedical(Principal principal) {
+        String username = principal.getName();
+        return ResponseEntity.ok().body(medicalService.getMypageMedical(username));
     }
 
 

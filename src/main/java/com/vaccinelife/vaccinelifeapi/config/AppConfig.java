@@ -48,7 +48,23 @@ public class AppConfig {
                         .afterEffect("인후통")
                         .build();
                 userService.registerUser(cksdntjd);
+                SignupRequestDto cksdntjd2 = SignupRequestDto.builder()
+                        .username("cksdntjd2")
+                        .password("cksdn123")
+                        .nickname("chans")
+                        .isVaccine(true)
+                        .type("화이자")
+                        .degree(2)
+                        .gender("남")
+                        .age("28")
+                        .disease("없음")
+                        .afterEffect("인후통")
+                        .build();
+                userService.registerUser(cksdntjd2);
                 User user = userRepository.findById(1L).orElseThrow(
+                        ()-> new IllegalArgumentException("없는 유저입니다.")
+                );
+                User user2 = userRepository.findById(2L).orElseThrow(
                         ()-> new IllegalArgumentException("없는 유저입니다.")
                 );
                 for (int i = 0; i < 50; i++) {
@@ -59,6 +75,12 @@ public class AppConfig {
                             .build();
                     vacBoardRepository.save(vacBoard);
                 }
+                VacBoard vacBoard = VacBoard.builder()
+                        .user(user2)
+                        .title("user2의 title")
+                        .contents("user2의 contents")
+                        .build();
+                vacBoardRepository.save(vacBoard);
             }
         };
     }

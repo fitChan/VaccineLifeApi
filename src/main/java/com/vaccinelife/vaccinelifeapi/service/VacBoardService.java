@@ -11,16 +11,13 @@ import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
 import com.vaccinelife.vaccinelifeapi.repository.ip.VacBoardIpRepository;
 import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
-import com.vaccinelife.vaccinelifeapi.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -44,7 +41,7 @@ public class VacBoardService {
     private final UserRepository userRepository;
     private final VacBoardIpRepository ipRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserService userDetailsService;
 
     //이전글 다음글
     @Transactional

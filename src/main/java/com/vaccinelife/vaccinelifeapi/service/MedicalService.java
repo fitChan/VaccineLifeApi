@@ -1,16 +1,13 @@
 package com.vaccinelife.vaccinelifeapi.service;
 
-import javax.transaction.Transactional;
-
-import com.vaccinelife.vaccinelifeapi.dto.*;
+import com.vaccinelife.vaccinelifeapi.dto.MedicalRequestDto;
+import com.vaccinelife.vaccinelifeapi.dto.MedicalResponseDto;
+import com.vaccinelife.vaccinelifeapi.dto.MedicalTop3RequestDto;
 import com.vaccinelife.vaccinelifeapi.model.Medical;
-import com.vaccinelife.vaccinelifeapi.model.QuarBoard;
 import com.vaccinelife.vaccinelifeapi.model.User;
-import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import com.vaccinelife.vaccinelifeapi.repository.MedicalRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
-import com.vaccinelife.vaccinelifeapi.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
+import javax.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,7 +36,7 @@ public class MedicalService {
 
     private final MedicalRepository medicalRepository;
     private final UserRepository userRepository;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserService userDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
 
 
