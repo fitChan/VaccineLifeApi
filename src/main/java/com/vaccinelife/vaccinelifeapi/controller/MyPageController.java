@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,21 +19,21 @@ import java.util.Spliterator;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/mypage")
+@RequestMapping("/api")
 public class MyPageController {
 
     private final VacBoardService vacBoardService;
     private final QuarBoardService quarBoardService;
     private final MedicalService medicalService;
-
+    private final JwtTokenProvider jwtTokenProvider;
     //백신 후기 List 받기
 //    @GetMapping("/{Token}/vacBoard")
 //    public ResponseEntity<List<VacBoardSimRequestDto>> getMypageVacBoard(@PathVariable String Token) {
 //        return ResponseEntity.ok().body(vacBoardService.getMypageVacBoard(Token));
 //    }
     @GetMapping("/mypage/vacBoard")
-    public ResponseEntity<List<VacBoardSimRequestDto>> getMypageVacBoard(Principal principal) {
-        String username = principal.getName();
+    public ResponseEntity<List<VacBoardSimRequestDto>> getMypageVacBoard(@RequestHeader(value = "Token")String token) {
+        String username = jwtTokenProvider.getUserPk(token);
         return ResponseEntity.ok().body(vacBoardService.getMypageVacBoard(username));
     }
 
@@ -42,9 +43,9 @@ public class MyPageController {
 //        return ResponseEntity.ok().body(quarBoardService.getMypageQuarBoard(Token));
 //    }
 
-    @GetMapping(value = "/mypage/quarBoard")
-    public ResponseEntity<List<QuarBoardSimRequestDto>> getMypageQuarBoard(Principal principal) {
-        String username = principal.getName();
+    @GetMapping("/mypage/quarBoard")
+    public ResponseEntity<List<QuarBoardSimRequestDto>> getMypageQuarBoard(@RequestHeader(value = "Token")String token) {
+        String username = jwtTokenProvider.getUserPk(token);
         return ResponseEntity.ok().body(quarBoardService.getMypageQuarBoard(username));
     }
 
@@ -55,8 +56,8 @@ public class MyPageController {
 //    }
     //의료진 분들께 한마디 List 받기
     @GetMapping("/mypage/medical")
-    public ResponseEntity<List<MedicalResponseDto>> getMypageMedical(Principal principal) {
-        String username = principal.getName();
+    public ResponseEntity<List<MedicalResponseDto>> getMypageMedical(@RequestHeader(value = "Token")String token) {
+        String username = jwtTokenProvider.getUserPk(token);
         return ResponseEntity.ok().body(medicalService.getMypageMedical(username));
     }
 

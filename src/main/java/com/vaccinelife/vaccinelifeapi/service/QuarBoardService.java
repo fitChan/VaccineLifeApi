@@ -162,11 +162,10 @@ public class QuarBoardService {
     //마이페이지 내가 쓴글
     @Transactional
     public List<QuarBoardSimRequestDto> getMypageQuarBoard(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
-        String username = userDetails.getUsername();
-        Optional<User> user = userRepository.findByUsername(username);
-
-        Long userId = user.get().getId();
+        User user = userRepository.findByUsername(token).orElseThrow(
+                () -> new IllegalArgumentException("no user")
+        );
+        Long userId = user.getId();
 
         List<QuarBoard> quarBoards = quarBoardRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
         return QuarBoardSimRequestDto.list(quarBoards);

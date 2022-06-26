@@ -53,11 +53,10 @@ public class MedicalService {
     //내가 쓴 의료진 한마디 조회 하기
     @Transactional
     public List<MedicalResponseDto> getMypageMedical(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
-        String username =  userDetails.getUsername();
-
-        Optional<User> user = userRepository.findByUsername(username);
-        Long userId = user.get().getId();
+        User user = userRepository.findByUsername(token).orElseThrow(
+                () -> new IllegalArgumentException("no user")
+        );
+        Long userId = user.getId();
 
         List<Medical> medicals = medicalRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
         return MedicalResponseDto.list(medicals);

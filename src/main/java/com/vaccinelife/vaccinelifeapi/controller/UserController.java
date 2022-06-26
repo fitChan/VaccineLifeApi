@@ -35,7 +35,7 @@ public class UserController {
     public String login(@RequestBody SignupRequestDto requestDto) {
         User user = userRepository.findByUsername(requestDto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 유저입니다."));
-        if (!userService.bad(requestDto, user)) {
+        if (!userService.wrongpassword(requestDto, user)) {
             throw new IllegalArgumentException("비밀번호 확인을 부탁드립니다");
         } else {
             return jwtTokenProvider.createToken(user.getUsername(), user.getId(), user.getRole(), user.getNickname(), user.getIsVaccine(), user.getType(), user.getDegree(), user.getGender(), user.getAge(), user.getDisease(), user.getAfterEffect());
@@ -100,6 +100,5 @@ public class UserController {
                 HttpStatus.BAD_REQUEST
         );
     }
-
 
 }

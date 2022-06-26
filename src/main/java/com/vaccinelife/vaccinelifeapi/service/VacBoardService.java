@@ -147,14 +147,24 @@ public class VacBoardService {
         return clientIp;
     }
 
-    //mypage vacboard
+    //    //mypage vacboard
+//    @Transactional
+//    public List<VacBoardSimRequestDto> getMypageVacBoard(String token) {
+//        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
+//        String username = userDetails.getUsername();
+//
+//        Optional<User> user = userRepository.findByUsername(username);
+//        Long userId = user.get().getId();
+//        List<VacBoard> vacBoards = vacBoardRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
+//        return VacBoardSimRequestDto.list(vacBoards);
+//
+//    }
     @Transactional
     public List<VacBoardSimRequestDto> getMypageVacBoard(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
-        String username = userDetails.getUsername();
-
-        Optional<User> user = userRepository.findByUsername(username);
-        Long userId = user.get().getId();
+        User user = userRepository.findByUsername(token).orElseThrow(
+                () -> new IllegalArgumentException("no user")
+        );
+        Long userId = user.getId();
         List<VacBoard> vacBoards = vacBoardRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
         return VacBoardSimRequestDto.list(vacBoards);
 

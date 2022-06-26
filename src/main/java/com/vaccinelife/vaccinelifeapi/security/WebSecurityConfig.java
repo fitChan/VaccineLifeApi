@@ -64,6 +64,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http
+                .headers().frameOptions().sameOrigin().and()
+                .httpBasic().disable() // REST API만을 고려, 기본 설정 해제
+                .csrf().disable() // csrf 사용 X
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .mvcMatchers("/docs/**").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .mvcMatchers("/api/signup", "/api/login").permitAll()
+                .mvcMatchers("/api/mypage/**").permitAll()
+                .antMatchers("/css/**", "/js/**", "/fonts/**", "/images/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+
+                .exceptionHandling()//예외가 발생할 경우
+                .accessDeniedHandler(new OAuth2AccessDeniedHandler());//OAuth2AccessDeniedHandler사용  403status로 반응
+
+    }
 
     // 암호화에 필요한 PasswordEncoder Bean 등록
 
