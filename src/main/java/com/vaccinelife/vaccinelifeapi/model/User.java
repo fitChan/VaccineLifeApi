@@ -38,7 +38,6 @@ public class User extends Timestamped{
     @Column(nullable = false)
     private Boolean isVaccine;
 
-
     @Column(nullable = false)
     private String type;
 

@@ -1,9 +1,7 @@
 package com.vaccinelife.vaccinelifeapi.dto;
 
-import io.swagger.models.auth.In;
 import lombok.*;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 
 @AllArgsConstructor

@@ -5,7 +5,7 @@ import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,11 +14,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserControllerTest extends BaseControllerTest {
 
 
-    @Autowired UserService userService;
-    @Autowired UserRepository userRepository;
+    @Autowired
+    UserService userService;
+    @Autowired
+    UserRepository userRepository;
 
     @Test
-    public void 회원가입(){
+    public void 회원가입() {
         SignupRequestDto user = new SignupRequestDto();
         user.setId(1L);
         user.setUsername("아이디");

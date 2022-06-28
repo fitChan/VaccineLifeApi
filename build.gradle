@@ -23,55 +23,34 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.jetbrains:annotations:20.1.0'
-    implementation 'junit:junit:4.13.1'
     implementation 'org.projectlombok:lombok:1.18.18'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.springframework.security:spring-security-test'
-    // https://mvnrepository.com/artifact/org.json/json
-    implementation group: 'org.json', name: 'json', version: '20210307'
     // Validation
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     // 스프링 시큐리티
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: '2.6.8'
+//    implementation group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: '2.6.8'
     implementation group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.1.1.RELEASE'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
-    // 스웨거
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-
-    compileOnly "org.springframework.boot:spring-boot-starter-data-jpa"
-//	compileOnly "mysql:mysql-connector-java"
-
-    compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.7.0'
-
-
-//    implementation group: 'org.asciidoctor', name: 'asciidoctor-gradle-plugin', version: '1.5.3'
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-//    testImplementation group: 'org.springframework.restdocs', name: 'spring-restdocs-mockmvc', version: '2.0.4.RELEASE'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     implementation group: 'org.springframework.restdocs', name: 'spring-restdocs-core', version: '2.0.4.RELEASE'
 
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-    runtimeOnly 'org.postgresql:postgresql'
-
-
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.7.0'
-    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.4'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.9'
+
+
 
 
 }

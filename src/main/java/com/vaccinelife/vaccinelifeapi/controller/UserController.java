@@ -10,6 +10,8 @@ import com.vaccinelife.vaccinelifeapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,7 +20,7 @@ import javax.validation.Valid;
 @RestController
 public class UserController {
 
-        private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final UserRepository userRepository;
 
@@ -30,17 +32,21 @@ public class UserController {
     }
 
 
-    //로그인 Post api
+    /*//로그인 Post api
     @PostMapping("/api/login")
     public String login(@RequestBody SignupRequestDto requestDto) {
-        User user = userRepository.findByUsername(requestDto.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 유저입니다."));
-        if (!userService.wrongpassword(requestDto, user)) {
+//        User user = userRepository.findByUsername(requestDto.getUsername())
+//                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 유저입니다."));
+        UserDetails userDetails = userService.loadUserByUsername(requestDto.getUsername());
+        String username = userDetails.getUsername();
+        String password = userDetails.getPassword();
+        if (!userService.wrongpassword(requestDto, password)) {
             throw new IllegalArgumentException("비밀번호 확인을 부탁드립니다");
         } else {
-            return jwtTokenProvider.createToken(user.getUsername(), user.getId(), user.getRole(), user.getNickname(), user.getIsVaccine(), user.getType(), user.getDegree(), user.getGender(), user.getAge(), user.getDisease(), user.getAfterEffect());
+//            return jwtTokenProvider.createToken(user.getUsername(), user.getId(), user.getRole(), user.getNickname(), user.getIsVaccine(), user.getType(), user.getDegree(), user.getGender(), user.getAge(), user.getDisease(), user.getAfterEffect());
+            return jwtTokenProvider.createToken(username);
         }
-    }
+    }*/
 
     //user ID 조회로 중복체크 메소드
     @GetMapping("/api/signup/username")
@@ -69,13 +75,13 @@ public class UserController {
     }
 
     //유저 정보 수정 후 새로 바뀐 정보로 토큰 재발급
-    @PutMapping("api/signup/{id}")
-    public String Userinfo(@PathVariable Long id, @RequestBody SignupRequestDto requestDto) {
-        User user = userRepository.findByUsername(requestDto.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 유저입니다."));
-        userService.update(id, requestDto);
-        return jwtTokenProvider.createToken(user.getUsername(), user.getId(), user.getRole(), user.getNickname(), user.getIsVaccine(), user.getType(), user.getDegree(), user.getGender(), user.getAge(), user.getDisease(), user.getAfterEffect());
-    }
+//    @PutMapping("api/signup/{id}")
+//    public String Userinfo(@PathVariable Long id, @RequestBody SignupRequestDto requestDto) {
+//        User user = userRepository.findByUsername(requestDto.getUsername())
+//                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 유저입니다."));
+//        userService.update(id, requestDto);
+//        return jwtTokenProvider.createToken(user.getUsername());
+//    }
 
 //    @GetMapping("/test")
 //    public ResponseEntity<List<TestAfterEffect>> findAfterEffect(){

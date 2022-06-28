@@ -12,12 +12,11 @@ import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
 import com.vaccinelife.vaccinelifeapi.service.VacBoardService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.common.util.Jackson2JsonParser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
@@ -130,8 +129,9 @@ public class VacBoardControllerTest extends BaseControllerTest {
                 .param("grant_type", "password")
         );
         var responseBody = perform.andReturn().getResponse().getContentAsString();
-        Jackson2JsonParser parse = new Jackson2JsonParser();
-        return parse.parseMap(responseBody).get("access_token").toString();
+//        Jackson2JsonParser parse = new Jackson2JsonParser();
+//        return parse.parseMap(responseBody).get("access_token").toString();
+        return "a";
     }
 
     @Test

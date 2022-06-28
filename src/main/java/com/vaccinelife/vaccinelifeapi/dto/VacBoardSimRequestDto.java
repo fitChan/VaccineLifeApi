@@ -10,6 +10,8 @@ import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -71,5 +73,6 @@ public class VacBoardSimRequestDto {
         }
         return VacBoardSimRequestDtos;
     }
+
 
 }
