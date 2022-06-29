@@ -4,6 +4,8 @@ package com.vaccinelife.vaccinelifeapi.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
+import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +41,8 @@ public class User extends Timestamped{
     private Boolean isVaccine;
 
     @Column(nullable = false)
-    private String type;
+    @Enumerated(value = EnumType.STRING)
+    private Type type;
 
     @Column(nullable = true)
     private Integer degree;
@@ -54,7 +57,9 @@ public class User extends Timestamped{
     private String disease;
 
     @Column(nullable = true)
-    private String afterEffect;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(value = EnumType.STRING)
+    private Set<AfterEffect> afterEffect;
 
 
     @JsonIgnore
@@ -109,7 +114,7 @@ public class User extends Timestamped{
 
 
 
-    public User(Long id, String username, String password, Set<UserRole> role, String nickname, Boolean isVaccine, String type,Integer degree, String gender, String age, String disease, String afterEffect) {
+    public User(Long id, String username, String password, Set<UserRole> role, String nickname, Boolean isVaccine, Type type,Integer degree, String gender, String age, String disease, Set<AfterEffect> afterEffect) {
         this.id = id;
         this.username = username;
         this.password = password;

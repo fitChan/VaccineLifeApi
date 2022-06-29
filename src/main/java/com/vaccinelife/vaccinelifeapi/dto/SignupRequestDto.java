@@ -1,8 +1,11 @@
 package com.vaccinelife.vaccinelifeapi.dto;
 
+import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +29,7 @@ public class SignupRequestDto {
 
     private Boolean isVaccine;
 
-    private String type;
+    private Type type;
 
     private int degree;
 
@@ -36,10 +39,10 @@ public class SignupRequestDto {
 
     private String disease;
 
-    private String afterEffect;
+    private Set<AfterEffect> afterEffect;
 
 
-    public SignupRequestDto(Long id, String username, String password, String passwordCheck, String nickname,Boolean isVaccine, String type, int degree, String gender, String age, String disease, String afterEffect){
+    public SignupRequestDto(Long id, String username, String password, String passwordCheck, String nickname,Boolean isVaccine, Type type, int degree, String gender, String age, String disease, Set<AfterEffect> afterEffect){
 
 
     }

@@ -4,6 +4,8 @@ package com.vaccinelife.vaccinelifeapi.service;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.UserRole;
+import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,12 +67,12 @@ public class UserService implements UserDetailsService {
         String passwordChecker = requestDto.getPasswordChecker();
         String nickname = requestDto.getNickname();
         Boolean isVaccine = requestDto.getIsVaccine();
-        String type = requestDto.getType();
+        Type type = requestDto.getType();
         int degree = requestDto.getDegree();
         String gender = requestDto.getGender();
         String age = requestDto.getAge();
         String disease = requestDto.getDisease();
-        String afterEffect = requestDto.getAfterEffect();
+        Set<AfterEffect> afterEffect = requestDto.getAfterEffect();
         Set<UserRole> role = Collections.singleton(UserRole.USER);
 
         password = passwordEncoder.encode(password);

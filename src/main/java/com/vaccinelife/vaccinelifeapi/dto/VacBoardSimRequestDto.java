@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
+import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -27,7 +28,7 @@ public class VacBoardSimRequestDto {
     private int likeCount;
     private int totalVisitors;
     private int commentCount;
-    private String type;
+    private Type type;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
@@ -40,7 +41,7 @@ public class VacBoardSimRequestDto {
     @LastModifiedDate // 마지막 변경 시점
     private LocalDateTime modifiedAt;
     @Builder
-    public VacBoardSimRequestDto(Long id, String title, String nickname,int likeCount, int totalVisitors, int commentCount, String type, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public VacBoardSimRequestDto(Long id, String title, String nickname,int likeCount, int totalVisitors, int commentCount, Type type, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.title = title;
         this.nickname = nickname;

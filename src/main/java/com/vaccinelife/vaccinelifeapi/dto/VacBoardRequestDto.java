@@ -6,12 +6,15 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
+import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @Getter
@@ -28,12 +31,12 @@ public class VacBoardRequestDto {
     private String username;
     private String nickname;
     private Boolean isVaccine;
-    private String type;
+    private Type type;
     private Integer degree;
     private String gender;
     private String age;
     private String disease;
-    private String afterEffect;
+    private Set<AfterEffect> afterEffect;
 
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)

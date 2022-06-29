@@ -3,6 +3,8 @@ package com.vaccinelife.vaccinelifeapi.config;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
+import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
@@ -11,6 +13,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Collections;
 
 @Configuration
 public class AppConfig {
@@ -35,12 +39,12 @@ public class AppConfig {
                         .password("cksdn123")
                         .nickname("chanoo")
                         .isVaccine(true)
-                        .type("화이자")
+                        .type(Type.AZ)
                         .degree(2)
                         .gender("남")
                         .age("28")
                         .disease("없음")
-                        .afterEffect("인후통")
+                        .afterEffect(Collections.singleton(AfterEffect.ALLERGY))
                         .build();
                 userService.registerUser(cksdntjd);
                 SignupRequestDto cksdntjd2 = SignupRequestDto.builder()
@@ -48,12 +52,12 @@ public class AppConfig {
                         .password("cksdn123")
                         .nickname("chans")
                         .isVaccine(true)
-                        .type("화이자")
+                        .type(Type.AZ_PFIZER)
                         .degree(2)
                         .gender("남")
                         .age("28")
                         .disease("없음")
-                        .afterEffect("인후통")
+                        .afterEffect(Collections.singleton(AfterEffect.ALLERGY))
                         .build();
                 userService.registerUser(cksdntjd2);
                 User user = userRepository.findById(1L).orElseThrow(

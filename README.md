@@ -17,7 +17,7 @@
   
 ### Contact
 
-- **Email** quokkalee654@gmail.com 
+- **Email** fitchan@naver.com 
 - **Project Link** https://github.com/Vaccine-life  
 <br/><br/>
   
@@ -35,6 +35,8 @@
     JPA
     hibernate
     MySQL
+    Spring Security
+    asciidoctor
 <br/><br/>
   
 ### Environment
@@ -46,17 +48,7 @@
 ### License
 
     GNU General Public License v2.0
-<br/><br/>
-  
-### 개발 기간
 
-2021.07.23. ~ 2021.08.31.  
-<br/><br/>
-  
-### 유저 피드백 및 개선기간
-
-2021.08.19. ~ 2021.08.31.  
-<br/><br/>
   
 ### 협업 툴
 
@@ -66,3 +58,18 @@ Notion, Slack, Gather
 ### 버전 관리
 
 git, GitHub
+
+###ERD 
+
+![erdImg](https://user-images.githubusercontent.com/84306157/176438231-c022ea68-4ab9-4cef-b53b-abfd5a7cf3e3.png)
+
+###시퀀스 
+
+- 로그인
+![로그인 시퀀스](https://user-images.githubusercontent.com/84306157/176438321-13b1c2b1-801d-454b-8c1a-df9a75843563.png)
+- 회원가입
+![회원가입 시퀀스](https://user-images.githubusercontent.com/84306157/176438329-eb66c6c2-b652-4a14-93b4-f258b1f7f543.png)
+- 백신 게시판 GetMapping
+![게시판 조회시퀀스](https://user-images.githubusercontent.com/84306157/176438333-b29524af-c546-4fce-9b0f-bf01f53fe95c.png)
+- 백신 게시판 PostMapping
+![VacBoard게시판작성](https://user-images.githubusercontent.com/84306157/176438341-ce18cd85-ebb0-49da-a01d-2b8aa2fb2ec1.png)

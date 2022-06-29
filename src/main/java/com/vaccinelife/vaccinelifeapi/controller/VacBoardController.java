@@ -20,6 +20,8 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -89,20 +91,26 @@ public class VacBoardController {
     /*2022-06-09 하단 게시글 작성으로 수정*/
     @PostMapping("")
     public ResponseEntity createVacBoard(@RequestBody VacBoardPostRequestDto requestDto) {
-        VacBoard vacBoard = modelMapper.map(requestDto, VacBoard.class);
         User user = userRepository.findById(requestDto.getUser()).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
         );
-        vacBoard.setUser(user);
-        VacBoard newVacBoard = this.vacBoardRepository.save(vacBoard);
-        WebMvcLinkBuilder selfLinkBuilder = linkTo(VacBoardController.class).slash(newVacBoard.getId());
-        URI createdUri
-                = selfLinkBuilder.toUri();
-        VacBoardResource vacBoardResource = new VacBoardResource(vacBoard);
-        vacBoardResource.add(linkTo(VacBoardController.class).withRel("query-vacBoards"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated() && user.getIsVaccine()) {
+            VacBoard vacBoard = modelMapper.map(requestDto, VacBoard.class);
+
+            vacBoard.setUser(user);
+            VacBoard newVacBoard = this.vacBoardRepository.save(vacBoard);
+            WebMvcLinkBuilder selfLinkBuilder = linkTo(VacBoardController.class).slash(newVacBoard.getId());
+            URI createdUri
+                    = selfLinkBuilder.toUri();
+            VacBoardResource vacBoardResource = new VacBoardResource(vacBoard);
+            vacBoardResource.add(linkTo(VacBoardController.class).withRel("query-vacBoards"));
 //        vacBoardResource.add(selfLinkBuilder.withSelfRel());
-        vacBoardResource.add(new Link("/docs/index.html#resources-vacBoard-create").withRel("profile"));
-        return ResponseEntity.created(createdUri).body(vacBoardResource);
+            vacBoardResource.add(new Link("/docs/index.html#resources-vacBoard-create").withRel("profile"));
+            return ResponseEntity.created(createdUri).body(vacBoardResource);
+        } else{
+            return ResponseEntity.badRequest().body(new IllegalArgumentException("로그인이 되어있지 않습니다."));
+        }
     }
 
     //    게시글 수정
