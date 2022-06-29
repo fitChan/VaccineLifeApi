@@ -59,11 +59,11 @@ Notion, Slack, Gather
 
 git, GitHub
 
-###ERD 
+### ERD 
 
 ![erdImg](https://user-images.githubusercontent.com/84306157/176438231-c022ea68-4ab9-4cef-b53b-abfd5a7cf3e3.png)
 
-###시퀀스 
+### 시퀀스 
 
 - 로그인
 ![로그인 시퀀스](https://user-images.githubusercontent.com/84306157/176438321-13b1c2b1-801d-454b-8c1a-df9a75843563.png)
