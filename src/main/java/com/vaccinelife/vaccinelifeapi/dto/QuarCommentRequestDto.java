@@ -22,7 +22,7 @@ import java.util.List;
 public class QuarCommentRequestDto {
     private Long id;
     private Long quarBoardId;
-    private Long userId;
+
     private String quarcomment;
     private String nickname;
 
@@ -38,10 +38,10 @@ public class QuarCommentRequestDto {
     @LastModifiedDate // 마지막 변경 시점
     private LocalDateTime modifiedAt;
 
-    public QuarCommentRequestDto(Long id, Long quarBoardId, Long userId, String quarcomment, String nickname, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public QuarCommentRequestDto(Long id, Long quarBoardId,  String quarcomment, String nickname, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.quarBoardId = quarBoardId;
-        this.userId = userId;
+
         this.quarcomment = quarcomment;
         this.nickname = nickname;
         this.createdAt = createdAt;
@@ -51,7 +51,6 @@ public class QuarCommentRequestDto {
         return QuarCommentRequestDto.builder()
                 .id(quarcomment.getId())
                 .quarBoardId(quarcomment.getQuarBoard().getId())
-                .userId(quarcomment.getUser().getId())
                 .quarcomment(quarcomment.getQuarcomment())
                 .nickname(quarcomment.getUser().getNickname())
                 .createdAt(quarcomment.getCreatedAt())

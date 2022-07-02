@@ -2,6 +2,8 @@ package com.vaccinelife.vaccinelifeapi.serviceTest;
 
 
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
+import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,12 +44,12 @@ public class UserServiceTest {
                 .passwordChecker(password)
                 .nickname("chanoo")
                 .isVaccine(true)
-                .type("화이자")
+                .type(Type.AZ)
                 .degree(2)
                 .gender("남")
                 .age("28")
                 .disease("없음")
-                .afterEffect("인후통")
+                .afterEffect(Collections.singleton(AfterEffect.FATIGUEPAIN))
                 .build();
         this.userService.registerUser(user);
         //When

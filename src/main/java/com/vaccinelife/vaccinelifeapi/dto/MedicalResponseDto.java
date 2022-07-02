@@ -24,7 +24,7 @@ public class MedicalResponseDto {
     private Long id;
     private String contents;
     private String nickname;
-    private Long userId;
+
     private int likeCount;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -38,7 +38,6 @@ public class MedicalResponseDto {
                 .id(medical.getId())
                 .contents(medical.getContents())
                 .nickname(medical.getUser().getNickname())
-                .userId(medical.getUser().getId())
                 .likeCount(medical.getLikeCount())
                 .createdAt(medical.getCreatedAt())
                 .build();

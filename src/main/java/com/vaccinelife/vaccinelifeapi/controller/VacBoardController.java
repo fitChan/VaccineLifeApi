@@ -1,6 +1,7 @@
 package com.vaccinelife.vaccinelifeapi.controller;
 
 
+import com.sun.xml.bind.v2.TODO;
 import com.vaccinelife.vaccinelifeapi.dto.*;
 import com.vaccinelife.vaccinelifeapi.exception.ApiException;
 import com.vaccinelife.vaccinelifeapi.config.Resource.VacBoardRequestDtoResource;
@@ -87,28 +88,32 @@ public class VacBoardController {
         return ResponseEntity.created(URI.create("/api/vacBoard")).body(vacBoard);
     }*/
 
-
+    /*TODO Dto 에 있는 ID 싹 삭제 이거 sevice 계층으로 좀 뺴야해 리팩토링 하자  */
     /*2022-06-09 하단 게시글 작성으로 수정*/
     @PostMapping("")
     public ResponseEntity createVacBoard(@RequestBody VacBoardPostRequestDto requestDto) {
-        User user = userRepository.findById(requestDto.getUser()).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
-        );
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated() && user.getIsVaccine()) {
-            VacBoard vacBoard = modelMapper.map(requestDto, VacBoard.class);
 
-            vacBoard.setUser(user);
-            VacBoard newVacBoard = this.vacBoardRepository.save(vacBoard);
-            WebMvcLinkBuilder selfLinkBuilder = linkTo(VacBoardController.class).slash(newVacBoard.getId());
-            URI createdUri
-                    = selfLinkBuilder.toUri();
-            VacBoardResource vacBoardResource = new VacBoardResource(vacBoard);
-            vacBoardResource.add(linkTo(VacBoardController.class).withRel("query-vacBoards"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.valueOf(authentication.getPrincipal().toString());
+        if (authentication.isAuthenticated()) {
+            User user = userRepository.getById(userId);
+            if (user.getIsVaccine()) {
+                VacBoard vacBoard = modelMapper.map(requestDto, VacBoard.class);
+
+                vacBoard.setUser(user);
+                VacBoard newVacBoard = this.vacBoardRepository.save(vacBoard);
+                WebMvcLinkBuilder selfLinkBuilder = linkTo(VacBoardController.class).slash(newVacBoard.getId());
+                URI createdUri
+                        = selfLinkBuilder.toUri();
+                VacBoardResource vacBoardResource = new VacBoardResource(vacBoard);
+                vacBoardResource.add(linkTo(VacBoardController.class).withRel("query-vacBoards"));
 //        vacBoardResource.add(selfLinkBuilder.withSelfRel());
-            vacBoardResource.add(new Link("/docs/index.html#resources-vacBoard-create").withRel("profile"));
-            return ResponseEntity.created(createdUri).body(vacBoardResource);
-        } else{
+                vacBoardResource.add(new Link("/docs/index.html#resources-vacBoard-create").withRel("profile"));
+                return ResponseEntity.created(createdUri).body(vacBoardResource);
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        } else {
             return ResponseEntity.badRequest().body(new IllegalArgumentException("로그인이 되어있지 않습니다."));
         }
     }

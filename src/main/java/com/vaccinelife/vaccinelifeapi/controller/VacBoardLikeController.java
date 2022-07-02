@@ -7,6 +7,8 @@ import com.vaccinelife.vaccinelifeapi.service.VacBoardLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +22,9 @@ public class VacBoardLikeController {
     //    좋아요 누르기
     @PostMapping("/api/vacBoard/like")
     public ResponseDto Like(@RequestBody VacBoardLikeRequestDto vacBoardLikeRequestDto) {
-        return vacBoardLikeService.Like(vacBoardLikeRequestDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.valueOf(authentication.getPrincipal().toString());
+        return vacBoardLikeService.Like(vacBoardLikeRequestDto, userId);
     }
 
     //   유저 기본키로 유저별 좋아요 조회

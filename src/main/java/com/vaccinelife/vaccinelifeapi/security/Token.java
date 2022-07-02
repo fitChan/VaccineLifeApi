@@ -18,7 +18,7 @@ public class Token {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static final class Response {
+    public static final class Response{
         private String token;
     }
 }

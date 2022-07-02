@@ -1,12 +1,16 @@
-package com.vaccinelife.vaccinelifeapi.ControllerTest;
+package com.vaccinelife.vaccinelifeapi.controllerTest;
 
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.User;
+import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,12 +32,12 @@ public class UserControllerTest extends BaseControllerTest {
         user.setPasswordChecker("cksdn123");
         user.setNickname("닉네임");
         user.setIsVaccine(true);
-        user.setType("화이자");
+        user.setType(Type.AZ);
         user.setDegree(2);
         user.setGender("남");
         user.setAge("28");
         user.setDisease("없음");
-        user.setAfterEffect("인후통");
+        user.setAfterEffect(Collections.singleton(AfterEffect.NONE));
 
         userService.registerUser(user);
 

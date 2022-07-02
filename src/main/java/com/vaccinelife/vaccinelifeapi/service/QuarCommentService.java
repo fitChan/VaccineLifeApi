@@ -22,13 +22,11 @@ public class QuarCommentService {
 
 //    댓글 작성
     @Transactional
-    public void createQuarComment(QuarCommentPostRequestDto requestDto) {
+    public void createQuarComment(QuarCommentPostRequestDto requestDto, Long userId) {
         QuarBoard quarBoard = quarBoardRepository.findById(requestDto.getQuarBoardId()).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다.")
         );
-        User user = userRepository.findById(requestDto.getUserId()).orElseThrow(
-                () -> new IllegalArgumentException("해당 아이디가 존재하지 안습니다.")
-        );
+        User user = userRepository.getById(userId);
 
         List<QuarComment> quarComments = quarCommentRepository.findByQuarBoardId(requestDto.getQuarBoardId());
         int commentSize = quarComments.size();

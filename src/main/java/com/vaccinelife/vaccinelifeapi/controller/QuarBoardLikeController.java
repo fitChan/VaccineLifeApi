@@ -7,6 +7,8 @@ import com.vaccinelife.vaccinelifeapi.service.QuarBoardLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +22,9 @@ public class QuarBoardLikeController {
 //    좋아요 동작
     @PostMapping("/api/quarBoard/like")
     public ResponseDto Like(@RequestBody QuarBoardLikeRequestDto requestDto) {
-        return quarBoardLikeService.Like(requestDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.valueOf(authentication.getPrincipal().toString());
+        return quarBoardLikeService.Like(requestDto, userId);
     }
 
 //   유저 기본키로 유저별 좋아요 조회

@@ -26,7 +26,6 @@ import java.util.List;
 @AllArgsConstructor
 public class VacBoardLikeRequestDto {
     private Long vacBoardId;
-    private Long userId;
     private String title;
     private String contents;
     private int likeCount;
@@ -49,7 +48,6 @@ public class VacBoardLikeRequestDto {
     public static VacBoardLikeRequestDto of(VacBoardLike vacBoardLike) {
         return VacBoardLikeRequestDto.builder()
                 .vacBoardId(vacBoardLike.getVacBoard().getId())
-                .userId(vacBoardLike.getUser().getId())
                 .title(vacBoardLike.getVacBoard().getTitle())
                 .contents(vacBoardLike.getVacBoard().getContents())
                 .likeCount(vacBoardLike.getVacBoard().getLikeCount())

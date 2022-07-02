@@ -1,11 +1,12 @@
 package com.vaccinelife.vaccinelifeapi.dto;
 
 import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Set;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,10 +40,10 @@ public class SignupRequestDto {
 
     private String disease;
 
-    private Set<AfterEffect> afterEffect;
+    private List<SideEffectname> afterEffect;
 
 
-    public SignupRequestDto(Long id, String username, String password, String passwordCheck, String nickname,Boolean isVaccine, Type type, int degree, String gender, String age, String disease, Set<AfterEffect> afterEffect){
+    public SignupRequestDto(Long id, String username, String password, String passwordCheck, String nickname,Boolean isVaccine, Type type, int degree, String gender, String age, String disease, AfterEffect afterEffect){
 
 
     }

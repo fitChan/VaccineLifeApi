@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
@@ -49,7 +51,9 @@ public class QuarBoardController {
 //    게시글 작성
     @PostMapping("")
     public ResponseEntity<Void> createQuarBoard(@RequestBody QuarBoardPostRequestDto requestDto) {
-    quarBoardService.createQuarBoard(requestDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.valueOf(authentication.getPrincipal().toString());
+        quarBoardService.createQuarBoard(requestDto, userId);
     return ResponseEntity.created(URI.create("/api/quarBoard")).build();
 }
 

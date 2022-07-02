@@ -19,8 +19,5 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MedicalRequestDto {
-
     private String contents;
-    private Long userId;
-
 }

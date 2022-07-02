@@ -78,10 +78,8 @@ public class QuarBoardService {
 
     //    게시물 작성
     @Transactional
-    public void createQuarBoard(QuarBoardPostRequestDto requestDto) {
-        User user = userRepository.findById(requestDto.getUserId()).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
-        );
+    public void createQuarBoard(QuarBoardPostRequestDto requestDto, Long userId) {
+        User user = userRepository.getById(userId);
         QuarBoard quarBoard = QuarBoard.builder()
                 .user(user)
                 .title(requestDto.getTitle())
@@ -161,12 +159,7 @@ public class QuarBoardService {
 
     //마이페이지 내가 쓴글
     @Transactional
-    public List<QuarBoardSimRequestDto> getMypageQuarBoard(String token) {
-        User user = userRepository.findByUsername(token).orElseThrow(
-                () -> new IllegalArgumentException("no user")
-        );
-        Long userId = user.getId();
-
+    public List<QuarBoardSimRequestDto> getMypageQuarBoard(Long userId) {
         List<QuarBoard> quarBoards = quarBoardRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
         return QuarBoardSimRequestDto.list(quarBoards);
     }

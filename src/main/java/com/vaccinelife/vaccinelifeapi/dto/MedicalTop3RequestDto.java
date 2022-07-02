@@ -24,7 +24,6 @@ public class MedicalTop3RequestDto {
     private Long id;
     private String contents;
     private String nickname;
-    private Long userId;
     private int likeCount;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -33,11 +32,10 @@ public class MedicalTop3RequestDto {
     @CreatedDate // 최초 생성 시점
     private LocalDateTime createdAt;
 
-    public MedicalTop3RequestDto(Long id,String contents, String nickname, Long userId, int likeCount, LocalDateTime createdAt) {
+    public MedicalTop3RequestDto(Long id,String contents, String nickname, int likeCount, LocalDateTime createdAt) {
         this.id = id;
         this.contents = contents;
         this.nickname = nickname;
-        this.userId = userId;
         this.likeCount = likeCount;
         this.createdAt = createdAt;
     }
@@ -47,7 +45,6 @@ public class MedicalTop3RequestDto {
                 .id(medical.getId())
                 .contents(medical.getContents())
                 .nickname(medical.getUser().getNickname())
-                .userId(medical.getUser().getId())
                 .likeCount(medical.getLikeCount())
                 .createdAt(medical.getCreatedAt())
                 .build();

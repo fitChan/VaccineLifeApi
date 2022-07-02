@@ -160,11 +160,8 @@ public class VacBoardService {
 //
 //    }
     @Transactional
-    public List<VacBoardSimRequestDto> getMypageVacBoard(String token) {
-        User user = userRepository.findByUsername(token).orElseThrow(
-                () -> new IllegalArgumentException("no user")
-        );
-        Long userId = user.getId();
+    public List<VacBoardSimRequestDto> getMypageVacBoard(Long userId) {
+
         List<VacBoard> vacBoards = vacBoardRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
         return VacBoardSimRequestDto.list(vacBoards);
 

@@ -24,7 +24,6 @@ public class QuarBoardRequestDto {
     private int totalVisitors;
     private int likeCount;
     private int commentCount;
-    private Long userId;
     private String username;
     private String nickname;
 
@@ -47,7 +46,6 @@ public class QuarBoardRequestDto {
                 .contents(quarBoard.getContents())
                 .totalVisitors(quarBoard.getTotalVisitors())
                 .likeCount(quarBoard.getLikeCount())
-                .userId(quarBoard.getUser().getId())
                 .username(quarBoard.getUser().getUsername())
                 .nickname(quarBoard.getUser().getNickname())
                 .createdAt(quarBoard.getCreatedAt())

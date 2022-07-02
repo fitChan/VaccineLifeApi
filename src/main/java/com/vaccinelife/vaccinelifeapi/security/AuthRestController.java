@@ -7,6 +7,7 @@ import com.vaccinelife.vaccinelifeapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -53,14 +54,13 @@ public class AuthRestController {
         );
 
 
-
         String encode = passwordEncoder.encode(request.getPassword());
-        if (passwordEncoder.matches(encode,user.getPassword())){
+        if (passwordEncoder.matches(encode, user.getPassword())) {
             throw new IllegalArgumentException("비밀번호를 확인하세요.");
         }
 
-            Authentication authentication = new UserAuthentication(request.getUsername(), null, null);
-        String token = jwtTokenProvider.createToken(authentication);
+        Authentication authentication = new UserAuthentication( user.getId(), null, null);
+        String token = jwtTokenProvider.createToken(String.valueOf(user.getId()));
 
         Token.Response response = Token.Response.builder().token(token).build();
 

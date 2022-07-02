@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
@@ -29,23 +31,9 @@ public class JwtTokenProvider {
 //    }
 
     // JWT 토큰 생성
-    public String createToken(Authentication  authentication) {
-        String username = authentication.getName();
-
-        Claims claims = Jwts.claims().setSubject((String) authentication.getPrincipal());
-
-        claims.put("id", username);
-//        claims.put("roles", userRole);
-//        claims.put("nickname", user.getNickname());
-//        claims.put("isVaccine", user.getIsVaccine());
-//        claims.put("type", user.getType());
-//        claims.put("degree", user.getDegree());
-//        claims.put("gender", user.getGender());
-//        claims.put("age", user.getAge());
-//        claims.put("disease", user.getDisease());
-//        claims.put("afterEffect", user.getAfterEffect());
-
-
+    public String createToken(String userId) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id",userId);
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
@@ -59,7 +47,12 @@ public class JwtTokenProvider {
 
     // 토큰에서 회원 정보 추출
     public String getUserIdFromJwt(String token) {
-        return Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token).getBody().getSubject();
+        Claims claims = Jwts.parser()
+                .setSigningKey(JWT_SECRET)
+                .parseClaimsJws(token)
+                .getBody();
+        Object id = claims.get("id");
+        return id.toString();
     }
 
     // 토큰의 유효성 + 만료일자 확인

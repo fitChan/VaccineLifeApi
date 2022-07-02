@@ -25,7 +25,7 @@ public class VacBoardLikeService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ResponseDto Like(VacBoardLikeRequestDto vacBoardLikeRequestDto) {
+    public ResponseDto Like(VacBoardLikeRequestDto vacBoardLikeRequestDto, Long userId) {
         VacBoard vacBoard = vacBoardRepository.findById(vacBoardLikeRequestDto.getVacBoardId()).orElseThrow(
                 () -> new NullPointerException("해당 게시물이 존재하지 않습니다.")
         );
@@ -33,9 +33,7 @@ public class VacBoardLikeService {
 //        User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
 
 
-        User user = userRepository.findById(vacBoardLikeRequestDto.getUserId()).orElseThrow(
-                () -> new NullPointerException("해당 유저가 존재하지 않습니다.")
-        );
+        User user = userRepository.getById(userId);
 
         boolean isExist = vacBoardLikeRepository.existsByVacBoardAndUser(vacBoard, user);
 

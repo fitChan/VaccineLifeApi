@@ -24,7 +24,6 @@ import java.util.List;
 public class CommentRequestDto {
     private  Long id;
     private Long vacBoardId;
-    private Long userId;
     private String comment;
     private String nickname;
 
@@ -41,10 +40,10 @@ public class CommentRequestDto {
     @LastModifiedDate // 마지막 변경 시점
     private LocalDateTime modifiedAt;
 
-    public CommentRequestDto(Long id, Long vacBoardId, Long userId, String comment, String nickname, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public CommentRequestDto(Long id, Long vacBoardId,  String comment, String nickname, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.vacBoardId = vacBoardId;
-        this.userId = userId;
+
         this.comment = comment;
         this.nickname = nickname;
         this.createdAt = createdAt;
@@ -55,7 +54,7 @@ public class CommentRequestDto {
         return CommentRequestDto.builder()
                 .id(comment.getId())
                 .vacBoardId(comment.getVacBoard().getId())
-                .userId(comment.getUser().getId())
+
                 .comment(comment.getComment())
                 .nickname(comment.getUser().getNickname())
                 .createdAt(comment.getCreatedAt())

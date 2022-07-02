@@ -21,14 +21,12 @@ public class QuarBoardLikeService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ResponseDto Like(QuarBoardLikeRequestDto requestDto) {
+    public ResponseDto Like(QuarBoardLikeRequestDto requestDto, Long userId) {
         QuarBoard quarBoard = quarBoardRepository.findById(requestDto.getQuarBoardId()).orElseThrow(
                 () -> new NullPointerException("해당 게시물이 존재하지 않습니다.")
         );
 
-        User user = userRepository.findById(requestDto.getUserId()).orElseThrow(
-                () -> new NullPointerException("해당 게시물이 존재하지 않습니다.")
-        );
+        User user = userRepository.getById(userId);
 
         boolean isExist = quarBoardLikeRepository.existsByQuarBoardAndUser(quarBoard, user);
 

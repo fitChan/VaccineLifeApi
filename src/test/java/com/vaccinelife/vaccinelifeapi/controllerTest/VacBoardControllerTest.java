@@ -1,4 +1,4 @@
-package com.vaccinelife.vaccinelifeapi.ControllerTest;
+package com.vaccinelife.vaccinelifeapi.controllerTest;
 
 
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
@@ -8,8 +8,13 @@ import com.vaccinelife.vaccinelifeapi.dto.VacBoardRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
+import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
+import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
+import com.vaccinelife.vaccinelifeapi.security.Token;
+import com.vaccinelife.vaccinelifeapi.security.UserAuthentication;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
 import com.vaccinelife.vaccinelifeapi.service.VacBoardService;
 import org.junit.jupiter.api.Test;
@@ -17,7 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.security.core.Authentication;
+
+import java.util.Collections;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
@@ -26,7 +33,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -43,18 +49,19 @@ public class VacBoardControllerTest extends BaseControllerTest {
     UserRepository userRepository;
     @Autowired
     UserService userService;
-
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
 
     @Test
     @TestDescription("정상적으로 vacBoard를 생성함")
     public void createVacBoard() throws Exception {
 
         User user = userRepository.findByUsername("cksdntjd").orElseThrow(
-                ()-> new IllegalArgumentException("없는 유저")
+                () -> new IllegalArgumentException("없는 유저")
         );
         Long id = user.getId();
         VacBoardPostRequestDto vacBoardPostRequestDto = VacBoardPostRequestDto.builder()
-                .user(id)
+
                 .title("the title")
                 .contents("the content")
                 .build();
@@ -114,24 +121,18 @@ public class VacBoardControllerTest extends BaseControllerTest {
     private String getAccessToken() throws Exception {
         String username = "cksdntjd";
         String password = "cksdn123";
-        SignupRequestDto signupRequestDto = SignupRequestDto.builder()
-                .username(username)
-                .password(password)
-                .build();
-        this.mockMvc.perform(post("/api/signup"));
-        String userId = "myApp";
-        String userSecret = "pass";
-
-        ResultActions perform = this.mockMvc.perform(post("/oauth/token")
-                .with(httpBasic(userId, userSecret))
-                .param("username", username)
-                .param("password", password)
-                .param("grant_type", "password")
+        User user = userRepository.findByUsername(username).orElseThrow(
+                ()-> new IllegalArgumentException("없는 유저 ")
         );
-        var responseBody = perform.andReturn().getResponse().getContentAsString();
-//        Jackson2JsonParser parse = new Jackson2JsonParser();
-//        return parse.parseMap(responseBody).get("access_token").toString();
-        return "a";
+        Authentication authentication = new UserAuthentication(user.getId(), null, null);
+
+        String token = jwtTokenProvider.createToken(authentication.getPrincipal().toString());
+        Token.Response response = Token.Response.builder().token(token).build();
+
+        String res = String.valueOf(response);
+        String replace = res.substring(21, res.length()-1);
+
+        return replace;
     }
 
     @Test
@@ -258,7 +259,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
     public void update_vacBoard() throws Exception {
         Long id = 2L;
         VacBoard vacBoard = vacBoardRepository.findById(id).orElseThrow(
-                ()-> new IllegalArgumentException("없는 게시물입니다.")
+                () -> new IllegalArgumentException("없는 게시물입니다.")
         );
         vacBoard.update(new VacBoardRequestDto().builder()
                 .title("updated title")

@@ -11,8 +11,8 @@ import java.util.Optional;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CommentPostRequestDto {
     private Long vacBoardId;
-    private Long userId;
     private String comment;
 }

@@ -9,6 +9,8 @@ import com.vaccinelife.vaccinelifeapi.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -23,13 +25,16 @@ public class CommentController {
 
     @PostMapping("")
     public ResponseEntity<Void> createComment( @RequestBody CommentPostRequestDto requestDto){
-        commentService.createComment(requestDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        Long userId = (Long) principal;
+        commentService.createComment(requestDto, userId);
         return ResponseEntity.created(URI.create("/api/comment")).build();
     }
 
-    @DeleteMapping("/{vacBoardId}/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long vacBoardId,@PathVariable Long commentId) {
-        commentService.deleteComment(vacBoardId,commentId);
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
         return ResponseEntity.ok().build();
     }
 

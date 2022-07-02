@@ -40,10 +40,6 @@ public class User extends Timestamped{
     @Column(nullable = false)
     private Boolean isVaccine;
 
-    @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private Type type;
-
     @Column(nullable = true)
     private Integer degree;
 
@@ -56,18 +52,19 @@ public class User extends Timestamped{
     @Column(nullable = true)
     private String disease;
 
-    @Column(nullable = true)
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private Set<AfterEffect> afterEffect;
+    private Type type;
+
+    // 중복으로 못들어가는거 확인. @OneToMany 관계 연결 해주기.
+    @OneToMany
+    private Set<AfterEffect> afterEffect = new HashSet<>();
 
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties({"comment"})
     private Set<Comment> comment = new HashSet<>();
-
-
 
     public void add(Comment comment) {
         comment.setUser(this);
@@ -112,9 +109,13 @@ public class User extends Timestamped{
     private Set<UserRole> role;
 
 
+   /* TODO AfterEffectEnum + AfterEffect 로직 처리해야함 . */
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
-
-    public User(Long id, String username, String password, Set<UserRole> role, String nickname, Boolean isVaccine, Type type,Integer degree, String gender, String age, String disease, Set<AfterEffect> afterEffect) {
+    public User(Long id, String username, String password, Set<UserRole> role, String nickname, Boolean isVaccine, Type type, Integer degree, String gender, String age, String disease) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -126,11 +127,15 @@ public class User extends Timestamped{
         this.gender=gender;
         this.age= age;
         this.disease= disease;
-        this.afterEffect=afterEffect;
+
     }
 
 
     public void update(SignupRequestDto requestDto) {
+//        List<AfterEffect> sample = new ArrayList<>();
+//        for(SampleEffect i : requestDto.getAfterEffect()) {
+//            sample.add(new AfterEffect(SampleEffect.AZ, requestDto.getId()));
+//        }
         this.id=requestDto.getId();
         this.username=requestDto.getUsername();
         this.nickname=requestDto.getNickname();
@@ -140,7 +145,11 @@ public class User extends Timestamped{
         this.gender=requestDto.getGender();
         this.age=requestDto.getAge();
         this.disease= requestDto.getDisease();
-        this.afterEffect= requestDto.getAfterEffect();
+//        this.afterEffect=
 
+    }
+
+    public void updateAfterEffect(Set<AfterEffect> afterEffect) {
+        this.afterEffect = afterEffect;
     }
 }

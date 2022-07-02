@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Data
 public class QuarBoardPostRequestDto {
-    private Long userId;
+
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;
     @NotBlank(message = "내용을 적어주세요")

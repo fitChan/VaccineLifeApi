@@ -60,9 +60,8 @@ public class MyPageController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         //contextHolder 해서 가져오면 될것 같다. annotation 은 나중에 하는거로
-        String username = principal.toString();
-
-        List<VacBoardSimRequestDto> mypageVacBoard = vacBoardService.getMypageVacBoard(username);
+        Long userId = Long.valueOf(principal.toString());
+        List<VacBoardSimRequestDto> mypageVacBoard = vacBoardService.getMypageVacBoard(userId);
 
         List<VacBoardSimResResource> test = new ArrayList<>();
         for(VacBoardSimRequestDto vacBoardSimRequestDto : mypageVacBoard) {
@@ -82,8 +81,8 @@ public class MyPageController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
-        String username = principal.toString();
-        return ResponseEntity.ok().body(quarBoardService.getMypageQuarBoard(username));
+        Long userId = Long.valueOf(principal.toString());
+        return ResponseEntity.ok().body(quarBoardService.getMypageQuarBoard(userId));
     }
 
     //    //의료진 분들께 한마디 List 받기
@@ -95,25 +94,11 @@ public class MyPageController {
     @GetMapping("/medical")
     public ResponseEntity<List<MedicalResponseDto>> getMypageMedical(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String principal = authentication.getPrincipal().toString();
-
-
-        String username = jwtTokenProvider.getUserIdFromJwt(principal);
-        return ResponseEntity.ok().body(medicalService.getMypageMedical(username));
+        Object principal = authentication.getPrincipal();
+        Long userId = Long.valueOf(principal.toString());
+        return ResponseEntity.ok().body(medicalService.getMypageMedical(userId));
     }
 
-    /*TODO
-    USER의 정보를 Token 으로 받는것에 있어서 문제가 있을 것 같음.
-    그냥 UserCotextHolder에 있는 정보를 그대로 가져다 쓰는건 어떨까? 되는건가?
-    토큰을 사용하는 과정인데 이게 되는지 의문.
-     */
-    @GetMapping("/medical/sample")
-    public ResponseEntity<List<MedicalResponseDto>> SampleGetMypageMedical() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
-        String username = principal.getUsername();
-        return ResponseEntity.ok().body(medicalService.getMypageMedical(username));
-    }
 
 
     //예외처리 메세지 던질 핸들러

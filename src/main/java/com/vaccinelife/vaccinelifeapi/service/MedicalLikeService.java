@@ -22,15 +22,11 @@ public class MedicalLikeService {
     private final MedicalLikeRepository medicalLikeRepository;
 
     @Transactional
-    public ResponseDto Like(MedicalLikeRequestDto requestDto) {
+    public ResponseDto Like(MedicalLikeRequestDto requestDto, Long userId) {
         Medical medical = medicalRepository.findById(requestDto.getMedicalId()).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다.")
         );
-
-        User user = userRepository.findById(requestDto.getUserId()).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다.")
-        );
-
+        User user = userRepository.getById(userId);
         boolean isExist = medicalLikeRepository.existsByMedicalAndUser(medical, user);
 
         if (isExist) {
@@ -47,9 +43,7 @@ public class MedicalLikeService {
 
     public List<MedicalLikeRequestDto> getLike(Long id) {
         List<MedicalLike> medicalLike = medicalLikeRepository.findAllByUserId(id);
-        if(id==null){
-            new NullPointerException("아이디가 존재하지 않습니다.");
-        }
+
         return MedicalLikeRequestDto.list(medicalLike);
     }
 

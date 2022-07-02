@@ -23,7 +23,6 @@ import java.util.List;
 public class QuarBoardLikeRequestDto {
 
     private Long quarBoardId;
-    private Long userId;
     private String title;
     private String contents;
     private int likeCount;
@@ -48,7 +47,6 @@ public class QuarBoardLikeRequestDto {
     public static QuarBoardLikeRequestDto of(QuarBoardLike quarBoardLike){
         return QuarBoardLikeRequestDto.builder()
                 .quarBoardId(quarBoardLike.getQuarBoard().getId())
-                .userId(quarBoardLike.getUser().getId())
                 .title(quarBoardLike.getQuarBoard().getTitle())
                 .contents(quarBoardLike.getQuarBoard().getContents())
                 .likeCount(quarBoardLike.getQuarBoard().getLikeCount())

@@ -5,28 +5,22 @@ import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.UserRole;
 import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
+import com.vaccinelife.vaccinelifeapi.repository.AfterEffectRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +31,7 @@ public class UserService implements UserDetailsService {
 
     private final BCryptPasswordEncoder passwordEncoder;
     private final  UserRepository userRepository;
+    private final AfterEffectRepository afterEffectRepository;
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
 
 
@@ -72,12 +67,19 @@ public class UserService implements UserDetailsService {
         String gender = requestDto.getGender();
         String age = requestDto.getAge();
         String disease = requestDto.getDisease();
-        Set<AfterEffect> afterEffect = requestDto.getAfterEffect();
+        List<SideEffectname> afterEffect = requestDto.getAfterEffect();
         Set<UserRole> role = Collections.singleton(UserRole.USER);
 
         password = passwordEncoder.encode(password);
 
-        User user = new User(id, username, password, role, nickname, isVaccine, type, degree, gender, age, disease, afterEffect);
+        Set<AfterEffect> afterEffectList = new HashSet<>();
+        User user = new User(id, username, password, role, nickname, isVaccine, type, degree, gender, age, disease);
+        for(SideEffectname e : afterEffect) {
+            AfterEffect afterEffect1 = new AfterEffect(e, user);
+            afterEffectRepository.save(afterEffect1);
+            afterEffectList.add(afterEffect1);
+        }
+        user.updateAfterEffect(afterEffectList);
         userRepository.save(user);
 
 

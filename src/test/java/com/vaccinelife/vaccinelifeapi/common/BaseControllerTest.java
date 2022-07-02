@@ -1,6 +1,8 @@
 package com.vaccinelife.vaccinelifeapi.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
+import com.vaccinelife.vaccinelifeapi.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,10 @@ public class BaseControllerTest {
     protected MockMvc mockMvc;
     @Autowired
     protected ObjectMapper objectMapper;
+    @Autowired
+    protected JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    protected UserService userService;
 
     @BeforeEach
     void setup(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
@@ -38,4 +44,6 @@ public class BaseControllerTest {
                 .apply(springSecurity())    // springSecurity설정이 되어있지 않으면 생략
                 .apply(documentationConfiguration(restDocumentation)).build();
     }
+
+
 }

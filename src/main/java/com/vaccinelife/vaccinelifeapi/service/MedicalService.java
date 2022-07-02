@@ -52,11 +52,8 @@ public class MedicalService {
 
     //내가 쓴 의료진 한마디 조회 하기
     @Transactional
-    public List<MedicalResponseDto> getMypageMedical(String token) {
-        User user = userRepository.findByUsername(token).orElseThrow(
-                () -> new IllegalArgumentException("no user")
-        );
-        Long userId = user.getId();
+    public List<MedicalResponseDto> getMypageMedical(Long userId) {
+
 
         List<Medical> medicals = medicalRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
         return MedicalResponseDto.list(medicals);
@@ -65,10 +62,8 @@ public class MedicalService {
 
     //    의료진 한마디 작성 기능
     @Transactional
-    public void createMedical(MedicalRequestDto requestDto) {
-        User user = userRepository.findById(requestDto.getUserId()).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
-        );
+    public void createMedical(MedicalRequestDto requestDto, Long userId) {
+        User user = userRepository.getById(userId);
         Medical medical = new Medical(requestDto);
         medical.setUser(user);
         medicalRepository.save(medical);

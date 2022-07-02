@@ -27,7 +27,6 @@ public class VacBoardRequestDto {
     private String contents;
     private int totalVisitors;
     private int likeCount;
-    private Long userId;
     private String username;
     private String nickname;
     private Boolean isVaccine;
@@ -59,7 +58,6 @@ public class VacBoardRequestDto {
                 .contents(vacBoard.getContents())
                 .totalVisitors(vacBoard.getTotalVisitors())
                 .likeCount(vacBoard.getLikeCount())
-                .userId(vacBoard.getUser().getId())
                 .username(vacBoard.getUser().getUsername())
                 .nickname(vacBoard.getUser().getNickname())
                 .isVaccine(vacBoard.getUser().getIsVaccine())

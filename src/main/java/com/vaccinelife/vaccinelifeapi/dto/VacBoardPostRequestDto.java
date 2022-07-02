@@ -12,18 +12,10 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder
 public class VacBoardPostRequestDto {
-    private Long user;
-
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;
     @NotBlank(message = "내용을 적어주세요")
     private String contents;
 
-    public VacBoard toEntity(User user){
-        return VacBoard.builder()
-                .user(user)
-                .title(title)
-                .contents(contents)
-                .build();
-    }
+
 }

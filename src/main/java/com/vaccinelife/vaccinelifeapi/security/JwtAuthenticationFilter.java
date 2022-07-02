@@ -32,10 +32,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String jwt = getJwtFromRequest(request); //토큰 정보 가져옴
 
-            if (!jwt.isEmpty()&& jwtTokenProvider.validateToken(jwt)) {
-                String username = jwtTokenProvider.getUserIdFromJwt(jwt);
+            if (!StringUtils.isEmpty(jwt) && jwtTokenProvider.validateToken(jwt)) {
+                String userId = jwtTokenProvider.getUserIdFromJwt(jwt);
 
-                UserAuthentication authentication = new UserAuthentication(username, null, null);
+                UserAuthentication authentication = new UserAuthentication(userId, null, null);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
-        if (!bearerToken.isEmpty() && bearerToken.startsWith("Bearer ")) {
+        if (!StringUtils.isEmpty(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring("Bearer ".length());
         }
         return null;

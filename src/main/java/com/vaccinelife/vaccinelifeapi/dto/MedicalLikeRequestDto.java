@@ -22,7 +22,6 @@ import java.util.List;
 @NoArgsConstructor
 public class MedicalLikeRequestDto {
     private Long medicalId;
-    private Long userId;
     private String contents;
     private int likeCount;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -38,9 +37,8 @@ public class MedicalLikeRequestDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    public MedicalLikeRequestDto(Long medicalId, Long userId, String contents, int likeCount, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public MedicalLikeRequestDto(Long medicalId, String contents, int likeCount, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.medicalId = medicalId;
-        this.userId = userId;
         this.contents = contents;
         this.likeCount = likeCount;
         this.createdAt = createdAt;
@@ -49,7 +47,6 @@ public class MedicalLikeRequestDto {
 
     public static MedicalLikeRequestDto of(MedicalLike medicalLike) {
         return MedicalLikeRequestDto.builder()
-                .userId(medicalLike.getUser().getId())
                 .medicalId(medicalLike.getMedical().getId())
                 .contents(medicalLike.getMedical().getContents())
                 .likeCount(medicalLike.getMedical().getLikeCount())

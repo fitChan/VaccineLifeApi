@@ -5,6 +5,8 @@ import com.vaccinelife.vaccinelifeapi.dto.QuarCommentPostRequestDto;
 import com.vaccinelife.vaccinelifeapi.service.QuarCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -20,7 +22,10 @@ public class QuarCommentController {
 //    댓글 작성
    @PostMapping("")
     public ResponseEntity<Void> createQuarComment(@RequestBody QuarCommentPostRequestDto requestDto){
-        quarCommentService.createQuarComment(requestDto);
+       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+       Long userId = Long.valueOf(authentication.getPrincipal().toString());
+
+       quarCommentService.createQuarComment(requestDto, userId);
         return ResponseEntity.created(URI.create("/api/quarcomment")).build();
     }
 
