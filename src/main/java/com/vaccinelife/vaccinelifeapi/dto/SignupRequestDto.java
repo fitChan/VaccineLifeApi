@@ -14,8 +14,6 @@ import java.util.List;
 @Getter
 public class SignupRequestDto {
 
-    private Long id;
-
     @NotBlank(message = "ID는 필수 입력 값입니다.")
     private String username;
 
@@ -43,13 +41,12 @@ public class SignupRequestDto {
     private List<SideEffectname> afterEffect;
 
 
-    public SignupRequestDto(Long id, String username, String password, String passwordCheck, String nickname,Boolean isVaccine, Type type, int degree, String gender, String age, String disease, AfterEffect afterEffect){
+    public SignupRequestDto( String username, String password, String passwordCheck, String nickname,Boolean isVaccine, Type type, int degree, String gender, String age, String disease, AfterEffect afterEffect){
 
 
     }
 
     public SignupRequestDto(SignupRequestDto signupRequestDto) {
-       this.id=signupRequestDto.getId();
         this.username=signupRequestDto.getUsername();
         this.nickname=signupRequestDto.getNickname();
         this.isVaccine=signupRequestDto.getIsVaccine();

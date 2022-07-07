@@ -1,9 +1,8 @@
 package com.vaccinelife.vaccinelifeapi.service;
 
-import com.vaccinelife.vaccinelifeapi.dto.VacBoardRequestDto;
-import com.vaccinelife.vaccinelifeapi.dto.VacBoardSimRequestDto;
-import com.vaccinelife.vaccinelifeapi.dto.VacBoardTopRequestDto;
-import com.vaccinelife.vaccinelifeapi.dto.VacPrevNextDto;
+import com.vaccinelife.vaccinelifeapi.config.Resource.VacBoardResource;
+import com.vaccinelife.vaccinelifeapi.controller.VacBoardController;
+import com.vaccinelife.vaccinelifeapi.dto.*;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import com.vaccinelife.vaccinelifeapi.model.ip.VacBoardIp;
@@ -13,11 +12,14 @@ import com.vaccinelife.vaccinelifeapi.repository.ip.VacBoardIpRepository;
 import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -25,11 +27,13 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 
 @RequiredArgsConstructor
@@ -42,7 +46,7 @@ public class VacBoardService {
     private final VacBoardIpRepository ipRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userDetailsService;
-
+private final ModelMapper modelMapper;
     //이전글 다음글
     @Transactional
 
@@ -186,4 +190,18 @@ public class VacBoardService {
     }
 
 
+    public ResponseEntity<VacBoardResource> createVacBoardUrl(VacBoardPostRequestDto requestDto, User user) {
+        VacBoard vacBoard = modelMapper.map(requestDto, VacBoard.class);
+
+        vacBoard.setUser(user);
+        VacBoard newVacBoard = this.vacBoardRepository.save(vacBoard);
+        WebMvcLinkBuilder selfLinkBuilder = linkTo(VacBoardController.class).slash(newVacBoard.getId());
+        URI createdUri
+                = selfLinkBuilder.toUri();
+
+        VacBoardResource vacBoardResource = new VacBoardResource(vacBoard);
+        vacBoardResource.add(linkTo(VacBoardController.class).withRel("query-vacBoards"));
+        vacBoardResource.add(new Link("/docs/index.html#resources-vacBoard-create").withRel("profile"));
+        return ResponseEntity.created(createdUri).body(vacBoardResource);
+    }
 }

@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void registerUser(SignupRequestDto requestDto) {
-        Long id = requestDto.getId();
+
         String username = requestDto.getUsername();
         String password = requestDto.getPassword();
         String passwordChecker = requestDto.getPasswordChecker();
@@ -73,7 +73,7 @@ public class UserService implements UserDetailsService {
         password = passwordEncoder.encode(password);
 
         Set<AfterEffect> afterEffectList = new HashSet<>();
-        User user = new User(id, username, password, role, nickname, isVaccine, type, degree, gender, age, disease);
+        User user = new User(username, password, role, nickname, isVaccine, type, degree, gender, age, disease);
         for(SideEffectname e : afterEffect) {
             AfterEffect afterEffect1 = new AfterEffect(e, user);
             afterEffectRepository.save(afterEffect1);

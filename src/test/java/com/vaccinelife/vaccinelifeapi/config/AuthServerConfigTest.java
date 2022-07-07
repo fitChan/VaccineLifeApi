@@ -1,36 +1,16 @@
 package com.vaccinelife.vaccinelifeapi.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
-import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
 import com.vaccinelife.vaccinelifeapi.model.User;
-import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
-import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
-import com.vaccinelife.vaccinelifeapi.security.Token;
-import com.vaccinelife.vaccinelifeapi.security.UserAuthentication;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean;
-import org.springframework.boot.test.json.GsonTester;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
-import javax.sound.sampled.DataLine;
-import java.util.Collections;
-import java.util.EnumSet;
-
-import static com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect.FATIGUEPAIN;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AuthServerConfigTest extends BaseControllerTest {
 
@@ -44,7 +24,6 @@ public class AuthServerConfigTest extends BaseControllerTest {
 //    public void getAuthToken() throws Exception {
 //        String username = "cksdntjd123";
 //        String password = "cksdn123";
-        EnumSet<AfterEffect> set = EnumSet.of(AfterEffect.ALLERGY, AfterEffect.FATIGUEPAIN);
 //
 //        SignupRequestDto cksdntjd = SignupRequestDto.builder()
 //                .username(username)

@@ -1,36 +1,30 @@
 package com.vaccinelife.vaccinelifeapi.controller;
 
-import com.sun.xml.bind.v2.TODO;
-import com.vaccinelife.vaccinelifeapi.config.Resource.VacBoardResource;
 import com.vaccinelife.vaccinelifeapi.config.Resource.VacBoardSimResResource;
-import com.vaccinelife.vaccinelifeapi.dto.*;
+import com.vaccinelife.vaccinelifeapi.dto.MedicalResponseDto;
+import com.vaccinelife.vaccinelifeapi.dto.QuarBoardSimRequestDto;
+import com.vaccinelife.vaccinelifeapi.dto.VacBoardSimRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.ApiException;
-import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
-import com.vaccinelife.vaccinelifeapi.service.*;
+import com.vaccinelife.vaccinelifeapi.service.MedicalService;
+import com.vaccinelife.vaccinelifeapi.service.QuarBoardService;
+import com.vaccinelife.vaccinelifeapi.service.VacBoardService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Spliterator;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 

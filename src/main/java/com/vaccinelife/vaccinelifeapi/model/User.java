@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Setter
@@ -115,8 +118,8 @@ public class User extends Timestamped{
         this.password = password;
     }
 
-    public User(Long id, String username, String password, Set<UserRole> role, String nickname, Boolean isVaccine, Type type, Integer degree, String gender, String age, String disease) {
-        this.id = id;
+    public User( String username, String password, Set<UserRole> role, String nickname, Boolean isVaccine, Type type, Integer degree, String gender, String age, String disease) {
+
         this.username = username;
         this.password = password;
         this.role = role;
@@ -132,11 +135,6 @@ public class User extends Timestamped{
 
 
     public void update(SignupRequestDto requestDto) {
-//        List<AfterEffect> sample = new ArrayList<>();
-//        for(SampleEffect i : requestDto.getAfterEffect()) {
-//            sample.add(new AfterEffect(SampleEffect.AZ, requestDto.getId()));
-//        }
-        this.id=requestDto.getId();
         this.username=requestDto.getUsername();
         this.nickname=requestDto.getNickname();
         this.isVaccine=requestDto.getIsVaccine();
@@ -145,8 +143,6 @@ public class User extends Timestamped{
         this.gender=requestDto.getGender();
         this.age=requestDto.getAge();
         this.disease= requestDto.getDisease();
-//        this.afterEffect=
-
     }
 
     public void updateAfterEffect(Set<AfterEffect> afterEffect) {

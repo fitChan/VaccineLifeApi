@@ -224,7 +224,6 @@ public class VacBoardControllerTest extends BaseControllerTest {
                 .contents(vacBoard.getContents())
                 .totalVisitors(vacBoard.getTotalVisitors())
                 .likeCount(vacBoard.getLikeCount())
-                .userId(vacBoard.getUser().getId())
                 .createdAt(vacBoard.getCreatedAt())
                 .modifiedAt(vacBoard.getModifiedAt())
                 .build();

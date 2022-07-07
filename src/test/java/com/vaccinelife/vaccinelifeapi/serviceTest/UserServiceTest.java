@@ -3,6 +3,7 @@ package com.vaccinelife.vaccinelifeapi.serviceTest;
 
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
@@ -38,7 +39,6 @@ public class UserServiceTest {
         String password = "cksdn123";
         String username = "아이디";
         SignupRequestDto user = SignupRequestDto.builder()
-                .id(123490871234L)
                 .username(username)
                 .password(password)
                 .passwordChecker(password)
@@ -49,7 +49,7 @@ public class UserServiceTest {
                 .gender("남")
                 .age("28")
                 .disease("없음")
-                .afterEffect(Collections.singleton(AfterEffect.FATIGUEPAIN))
+                .afterEffect(Collections.singletonList(SideEffectname.AZ))
                 .build();
         this.userService.registerUser(user);
         //When

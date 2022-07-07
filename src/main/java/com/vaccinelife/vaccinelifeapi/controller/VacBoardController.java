@@ -1,11 +1,10 @@
 package com.vaccinelife.vaccinelifeapi.controller;
 
 
-import com.sun.xml.bind.v2.TODO;
-import com.vaccinelife.vaccinelifeapi.dto.*;
-import com.vaccinelife.vaccinelifeapi.exception.ApiException;
 import com.vaccinelife.vaccinelifeapi.config.Resource.VacBoardRequestDtoResource;
 import com.vaccinelife.vaccinelifeapi.config.Resource.VacBoardResource;
+import com.vaccinelife.vaccinelifeapi.dto.*;
+import com.vaccinelife.vaccinelifeapi.exception.ApiException;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
@@ -98,18 +97,7 @@ public class VacBoardController {
         if (authentication.isAuthenticated()) {
             User user = userRepository.getById(userId);
             if (user.getIsVaccine()) {
-                VacBoard vacBoard = modelMapper.map(requestDto, VacBoard.class);
-
-                vacBoard.setUser(user);
-                VacBoard newVacBoard = this.vacBoardRepository.save(vacBoard);
-                WebMvcLinkBuilder selfLinkBuilder = linkTo(VacBoardController.class).slash(newVacBoard.getId());
-                URI createdUri
-                        = selfLinkBuilder.toUri();
-                VacBoardResource vacBoardResource = new VacBoardResource(vacBoard);
-                vacBoardResource.add(linkTo(VacBoardController.class).withRel("query-vacBoards"));
-//        vacBoardResource.add(selfLinkBuilder.withSelfRel());
-                vacBoardResource.add(new Link("/docs/index.html#resources-vacBoard-create").withRel("profile"));
-                return ResponseEntity.created(createdUri).body(vacBoardResource);
+                return vacBoardService.createVacBoardUrl(requestDto, user);
             } else {
                 return ResponseEntity.badRequest().build();
             }
