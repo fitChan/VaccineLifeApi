@@ -6,17 +6,22 @@ import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.UserRole;
 import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
 import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
+import com.vaccinelife.vaccinelifeapi.model.enums.StatisticsAfterEffect;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.AfterEffectRepository;
+import com.vaccinelife.vaccinelifeapi.repository.StatisticsAfterEffectRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,15 +31,16 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Component
+@Log
 public class UserService implements UserDetailsService {
 
 
     private final BCryptPasswordEncoder passwordEncoder;
-    private final  UserRepository userRepository;
+    private final UserRepository userRepository;
     private final AfterEffectRepository afterEffectRepository;
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
-
-
+    private final StatisticsAfterEffectRepository statisticsAfterEffectRepository;
 
     public boolean wrongpassword(SignupRequestDto requestDto, String password) {
         if (!passwordEncoder.matches(requestDto.getPassword(), password)) {
@@ -74,7 +80,7 @@ public class UserService implements UserDetailsService {
 
         Set<AfterEffect> afterEffectList = new HashSet<>();
         User user = new User(username, password, role, nickname, isVaccine, type, degree, gender, age, disease);
-        for(SideEffectname e : afterEffect) {
+        for (SideEffectname e : afterEffect) {
             AfterEffect afterEffect1 = new AfterEffect(e, user);
             afterEffectRepository.save(afterEffect1);
             afterEffectList.add(afterEffect1);
@@ -85,40 +91,79 @@ public class UserService implements UserDetailsService {
 
     }
 
+
+    @Scheduled(cron = "0 0 1 * * *")
+    public void runEveryHour() {
+        findAfterEffect();
+        log.info("유저 부작용 업데이트");
+    }
+
     @Transactional
-    public String findAfterEffect() {
-        List<User> none = userRepository.findAllByAfterEffectContaining("없음");
-        List<User> fever = userRepository.findAllByAfterEffectContaining("발열");
-        List<User> headache = userRepository.findAllByAfterEffectContaining("두통");
-        List<User> fatigue = userRepository.findAllByAfterEffectContaining("피로감");
-        List<User> pain = userRepository.findAllByAfterEffectContaining("통증");
-        List<User> swell = userRepository.findAllByAfterEffectContaining("부기");
-        List<User> sickness = userRepository.findAllByAfterEffectContaining("구토");
-        List<User> allergy = userRepository.findAllByAfterEffectContaining("알러지");
-        List<User> others = userRepository.findAllByAfterEffectContaining("기타");
+    public void findAfterEffect() {
+        List<AfterEffect> afterEffect = afterEffectRepository.findAll();
+        if (afterEffect.size() > 0) {
+            statisticsAfterEffectRepository.deleteAll();
+        }
+            int none = 0, fever = 0, headache = 0, fatigue = 0, pain = 0, swell = 0, sickness = 0, allergy = 0, others = 0;
+            for (int i = 0; i < afterEffect.size(); i++) {
+                if(afterEffect.get(i).getSideEffectname().toString().startsWith("no")){
+                    none++;
+                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("fev")){
+                    fever++;
+                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("headac")){
+                    headache++;
+                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("fatig")){
+                    fatigue++;
+                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("pa")){
+                    pain++;
+                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("swe")){
+                    swell++;
+                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("fev")){
+                    fever++;
+                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("sickne")){
+                    sickness++;
+                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("aller")){
+                    allergy++;
+                }else{
+                    others++;
+                }
+//                switch (afterEffect.get(i).getSideEffectname().toString()) {
+//                    case "none":
+//                        System.out.println("none ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//                        none += 1;
+//                    case "fever":
+//                        fever += 1;
+//                    case "headache":
+//                        headache += 1;
+//                    case "fatigue":
+//                        fatigue += 1;
+//                    case "pain":
+//                        pain += 1;
+//                    case "swell":
+//                        swell += 1;
+//                    case "sickness":
+//                        sickness += 1;
+//                    case "allergy":
+//                        allergy += 1;
+//                    case "others":
+//                        others += 1;
+//                }
+            }
 
-        int noneNum = none.size();
-        int feverNum = fever.size();
-        int headacheNum = headache.size();
-        int fatigueNum = fatigue.size();
-        int painNum = pain.size();
-        int swellNum = swell.size();
-        int sicknessNum = sickness.size();
-        int allergyNum = allergy.size();
-        int othersNum = others.size();
+            StatisticsAfterEffect realstatisticsAfterEffect = StatisticsAfterEffect.builder()
+                    .none(none)
+                    .fever(fever)
+                    .fatigue(fatigue)
+                    .headache(headache)
+                    .fatigue(fatigue)
+                    .pain(pain)
+                    .swell(swell)
+                    .sickness(sickness)
+                    .allergy(allergy)
+                    .others(others)
+                    .build();
+            statisticsAfterEffectRepository.save(realstatisticsAfterEffect);
 
-
-        return "{" + "\n" +
-                "\"" + "none" + "\"" + ":" + noneNum + "," + "\n" +
-                "\"" + "fever" + "\"" + ":" + feverNum + "," + "\n" +
-                "\"" + "headache" + "\"" + ":" + headacheNum + "," + "\n" +
-                "\"" + "fatigue" + "\"" + ":" + fatigueNum + "," + "\n" +
-                "\"" + "pain" + "\"" + ":" + painNum + "," + "\n" +
-                "\"" + "swell" + "\"" + ":" + swellNum + "," + "\n" +
-                "\"" + "sickness" + "\"" + ":" + sicknessNum + "," + "\n" +
-                "\"" + "allergy" + "\"" + ":" + allergyNum + "," + "\n" +
-                "\"" + "others" + "\"" + ":" + othersNum + "\n" +
-                "}";
     }
 
     @Override

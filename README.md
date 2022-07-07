@@ -65,7 +65,8 @@ git, GitHub
 
 ### ERD 
 
-![erd](https://user-images.githubusercontent.com/84306157/177777036-6027834d-b638-4bc1-a62a-bc6495a1c815.png)
+![erdDia](https://user-images.githubusercontent.com/84306157/177786995-14912899-0bf1-49f3-b411-08b4fc69008c.png)
+
 
 ### 시퀀스 
 

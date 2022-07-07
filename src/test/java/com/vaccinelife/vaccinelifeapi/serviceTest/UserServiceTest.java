@@ -49,7 +49,7 @@ public class UserServiceTest {
                 .gender("남")
                 .age("28")
                 .disease("없음")
-                .afterEffect(Collections.singletonList(SideEffectname.AZ))
+                .afterEffect(Collections.singletonList(SideEffectname.none))
                 .build();
         this.userService.registerUser(user);
         //When

@@ -4,6 +4,8 @@ import com.vaccinelife.vaccinelifeapi.dto.ResponseDto;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.ApiException;
 import com.vaccinelife.vaccinelifeapi.model.User;
+import com.vaccinelife.vaccinelifeapi.model.enums.StatisticsAfterEffect;
+import com.vaccinelife.vaccinelifeapi.repository.StatisticsAfterEffectRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,6 +26,7 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final StatisticsAfterEffectRepository statisticsAfterEffectRepository;
 
 
     //회원가입 Post api
@@ -89,8 +93,9 @@ public class UserController {
 //    }
 
     @GetMapping("/api/main/afterEffect")
-    public String findAfterEffect() {
-        return userService.findAfterEffect();
+    public ResponseEntity findAfterEffect() {
+        List<StatisticsAfterEffect> all = statisticsAfterEffectRepository.findAll();
+        return ResponseEntity.ok().body(all);
     }
 
     //예외처리 메세지 던질 핸들러

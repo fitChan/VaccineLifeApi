@@ -30,8 +30,8 @@ public class UserControllerTest extends BaseControllerTest {
     @Test
     public void 회원가입() {
         List<SideEffectname> afterEffects= new ArrayList<>();
-        afterEffects.add(SideEffectname.AZ);
-        afterEffects.add(SideEffectname.HW);
+        afterEffects.add(SideEffectname.fever);
+        afterEffects.add(SideEffectname.fatigue);
         SignupRequestDto user = new SignupRequestDto();
         user.setUsername("아이디");
         user.setPassword("cksdn123");

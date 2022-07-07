@@ -41,8 +41,8 @@ public class AppConfig {
             @Override
             public void run(ApplicationArguments args) throws Exception {
                 List<SideEffectname> sam = new ArrayList<>();
-                sam.add(SideEffectname.AZ_PF);
-                sam.add(SideEffectname.AZ);
+                sam.add(SideEffectname.fatigue);
+                sam.add(SideEffectname.headache);
                 SignupRequestDto cksdntjd = SignupRequestDto.builder()
                         .username("cksdntjd")
                         .password("cksdn123")
@@ -57,8 +57,8 @@ public class AppConfig {
                         .build();
                 userService.registerUser(cksdntjd);
                 List<SideEffectname> sam2 = new ArrayList<>();
-                sam.add(SideEffectname.HW);
-                sam.add(SideEffectname.PF);
+                sam.add(SideEffectname.fatigue);
+                sam.add(SideEffectname.fever);
                 SignupRequestDto cksdntjd2 = SignupRequestDto.builder()
                         .username("cksdntjd2")
                         .password("cksdn123")
