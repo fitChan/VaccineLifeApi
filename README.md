@@ -59,9 +59,13 @@ Notion, Slack, Gather
 
 git, GitHub
 
+### 아키텍처
+![아키텍처](https://user-images.githubusercontent.com/84306157/177777623-6aa3a6ae-02d7-42df-8a0e-732385022dc9.png)
+
+
 ### ERD 
 
-![erdImg](https://user-images.githubusercontent.com/84306157/176438231-c022ea68-4ab9-4cef-b53b-abfd5a7cf3e3.png)
+![erd](https://user-images.githubusercontent.com/84306157/177777036-6027834d-b638-4bc1-a62a-bc6495a1c815.png)
 
 ### 시퀀스 
 
@@ -70,6 +74,13 @@ git, GitHub
 - 회원가입
 ![회원가입 시퀀스](https://user-images.githubusercontent.com/84306157/176438329-eb66c6c2-b652-4a14-93b4-f258b1f7f543.png)
 - 백신 게시판 GetMapping
-![게시판 조회시퀀스](https://user-images.githubusercontent.com/84306157/176438333-b29524af-c546-4fce-9b0f-bf01f53fe95c.png)
+![VacBoard게시판 조회시퀀스](https://user-images.githubusercontent.com/84306157/176438333-b29524af-c546-4fce-9b0f-bf01f53fe95c.png)
 - 백신 게시판 PostMapping
-![VacBoard게시판작성](https://user-images.githubusercontent.com/84306157/176438341-ce18cd85-ebb0-49da-a01d-2b8aa2fb2ec1.png)
+![VacBoard게시판작성 시퀀스](https://user-images.githubusercontent.com/84306157/176438341-ce18cd85-ebb0-49da-a01d-2b8aa2fb2ec1.png)
+- 백신 게시판 댓글 GetMapping
+![댓글조회시퀀스](https://user-images.githubusercontent.com/84306157/177777172-56d03a76-eead-492c-bb74-03f340430615.png)
+
+- 백신 게시판 댓글 PostMapping
+![댓글 작성](https://user-images.githubusercontent.com/84306157/177777183-5fca1f7b-35c9-415b-b24c-c2ae1cfe024d.png)
+
+
