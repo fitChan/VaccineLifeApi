@@ -20,7 +20,7 @@ public class VacBoardLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "vacBoardId")
     private VacBoard vacBoard;
 

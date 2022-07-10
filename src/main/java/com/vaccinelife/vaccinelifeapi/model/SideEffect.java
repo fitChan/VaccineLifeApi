@@ -1,6 +1,7 @@
-package com.vaccinelife.vaccinelifeapi.model.enums;
+package com.vaccinelife.vaccinelifeapi.model;
 
 import com.vaccinelife.vaccinelifeapi.model.User;
+import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,21 +12,21 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class AfterEffect {
+public class SideEffect {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(value = EnumType.STRING)
     @Column
     private SideEffectname sideEffectname;
 
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "userId")
     @ManyToOne
     private User user;
 
 
-    public AfterEffect(SideEffectname sideEffectname, User user) {
+    public SideEffect(SideEffectname sideEffectname, User user) {
         this.sideEffectname = sideEffectname;
         this.user = user;
     }

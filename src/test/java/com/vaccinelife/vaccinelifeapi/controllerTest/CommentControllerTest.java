@@ -2,26 +2,19 @@ package com.vaccinelife.vaccinelifeapi.controllerTest;
 
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
 import com.vaccinelife.vaccinelifeapi.dto.CommentPostRequestDto;
-import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
-import com.vaccinelife.vaccinelifeapi.model.Comment;
 import com.vaccinelife.vaccinelifeapi.model.User;
-import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
-import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.CommentRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.security.Token;
 import com.vaccinelife.vaccinelifeapi.security.UserAuthentication;
 import com.vaccinelife.vaccinelifeapi.service.CommentService;
-import com.vaccinelife.vaccinelifeapi.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-
-import java.util.Collections;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;

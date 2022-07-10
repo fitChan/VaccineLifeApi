@@ -61,6 +61,8 @@ public class VacBoard extends Timestamped {
     @OneToMany(mappedBy = "vacBoard", cascade = {CascadeType.REMOVE})
     @JsonIgnore
     private Set<VacBoardLike> vacBoardLikeList = new HashSet<>();
+
+
     public void updateLikeNum(int count) {
         this.likeCount += count;
     }

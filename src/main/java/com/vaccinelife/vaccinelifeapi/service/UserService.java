@@ -1,12 +1,13 @@
 package com.vaccinelife.vaccinelifeapi.service;
 
 
+import com.sun.xml.bind.v2.TODO;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.UserRole;
-import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.SideEffect;
 import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
-import com.vaccinelife.vaccinelifeapi.model.enums.StatisticsAfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.StatisticsAfterEffect;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.AfterEffectRepository;
 import com.vaccinelife.vaccinelifeapi.repository.StatisticsAfterEffectRepository;
@@ -15,25 +16,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 @Component
 @Log
-public class UserService implements UserDetailsService {
+public class UserService{
 
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -78,14 +76,14 @@ public class UserService implements UserDetailsService {
 
         password = passwordEncoder.encode(password);
 
-        Set<AfterEffect> afterEffectList = new HashSet<>();
+        Set<SideEffect> sideEffectList = new HashSet<>();
         User user = new User(username, password, role, nickname, isVaccine, type, degree, gender, age, disease);
         for (SideEffectname e : afterEffect) {
-            AfterEffect afterEffect1 = new AfterEffect(e, user);
-            afterEffectRepository.save(afterEffect1);
-            afterEffectList.add(afterEffect1);
+            SideEffect sideEffect1 = new SideEffect(e, user);
+            afterEffectRepository.save(sideEffect1);
+            sideEffectList.add(sideEffect1);
         }
-        user.updateAfterEffect(afterEffectList);
+        user.updateAfterEffect(sideEffectList);
         userRepository.save(user);
 
 
@@ -100,85 +98,72 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void findAfterEffect() {
-        List<AfterEffect> afterEffect = afterEffectRepository.findAll();
-        if (afterEffect.size() > 0) {
-            statisticsAfterEffectRepository.deleteAll();
-        }
-            int none = 0, fever = 0, headache = 0, fatigue = 0, pain = 0, swell = 0, sickness = 0, allergy = 0, others = 0;
-            for (int i = 0; i < afterEffect.size(); i++) {
-                if(afterEffect.get(i).getSideEffectname().toString().startsWith("no")){
-                    none++;
-                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("fev")){
-                    fever++;
-                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("headac")){
-                    headache++;
-                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("fatig")){
-                    fatigue++;
-                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("pa")){
-                    pain++;
-                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("swe")){
-                    swell++;
-                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("fev")){
-                    fever++;
-                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("sickne")){
-                    sickness++;
-                }else if(afterEffect.get(i).getSideEffectname().toString().startsWith("aller")){
-                    allergy++;
-                }else{
-                    others++;
-                }
-//                switch (afterEffect.get(i).getSideEffectname().toString()) {
-//                    case "none":
-//                        System.out.println("none ++++++++++++++++++++++++++++++++++++++++++++++++++++");
-//                        none += 1;
-//                    case "fever":
-//                        fever += 1;
-//                    case "headache":
-//                        headache += 1;
-//                    case "fatigue":
-//                        fatigue += 1;
-//                    case "pain":
-//                        pain += 1;
-//                    case "swell":
-//                        swell += 1;
-//                    case "sickness":
-//                        sickness += 1;
-//                    case "allergy":
-//                        allergy += 1;
-//                    case "others":
-//                        others += 1;
-//                }
+        /*TODO
+        1. STREAM() 쓸꺼고, GROUP BY(?) SUM -> ENUM 으로 들어가서 될거야 , 공부할 것.
+        2. 유지 보수 문제가 분명 존재할 것. 문자열 가공은 하지말고 ENUM 으로 TYPE SAFE 하게 할것.
+        3. groupBy (or) switch+case
+        4. if (sideEffect.get(i).getSideEffectname() == SideEffectname.none) {
+        */
+
+        List<SideEffect> sideEffect = afterEffectRepository.findAll();
+        int none = 0, fever = 0, headache = 0, fatigue = 0, pain = 0, swell = 0, sickness = 0, allergy = 0, others = 0;
+        for (int i = 0; i < sideEffect.size(); i++) {
+            if (sideEffect.get(i).getSideEffectname() == SideEffectname.none) {
+                none++;
+            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("fev")) {
+                fever++;
+            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("headac")) {
+                headache++;
+            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("fatig")) {
+                fatigue++;
+            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("pa")) {
+                pain++;
+            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("swe")) {
+                swell++;
+            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("fev")) {
+                fever++;
+            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("sickne")) {
+                sickness++;
+            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("aller")) {
+                allergy++;
+            } else {
+                others++;
             }
+        }
 
-            StatisticsAfterEffect realstatisticsAfterEffect = StatisticsAfterEffect.builder()
-                    .none(none)
-                    .fever(fever)
-                    .fatigue(fatigue)
-                    .headache(headache)
-                    .fatigue(fatigue)
-                    .pain(pain)
-                    .swell(swell)
-                    .sickness(sickness)
-                    .allergy(allergy)
-                    .others(others)
-                    .build();
-            statisticsAfterEffectRepository.save(realstatisticsAfterEffect);
+        /*TODO CREATE,UPDATE 같이 되는게 있는 것같다. */
+        StatisticsAfterEffect realstatisticsAfterEffect = StatisticsAfterEffect.builder()
+                .none(none)
+                .fever(fever)
+                .fatigue(fatigue)
+                .headache(headache)
+                .fatigue(fatigue)
+                .pain(pain)
+                .swell(swell)
+                .sickness(sickness)
+                .allergy(allergy)
+                .others(others)
+                .build();
+        statisticsAfterEffectRepository.save(realstatisticsAfterEffect);
 
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException(username)
-        );
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities(user.getRole()));
-    }
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User user = userRepository.findByUsername(username).orElseThrow(
+//                () -> new UsernameNotFoundException(username)
+//        );
+//        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities(user.getRole()));
+//    }
+//
+//    private Collection<? extends GrantedAuthority> authorities(Set<UserRole> role) {
+//        return role.stream()
+//                .map(r -> new SimpleGrantedAuthority("ROLE" + r.name()))
+//                .collect(Collectors.toSet());
+//    }
 
-    private Collection<? extends GrantedAuthority> authorities(Set<UserRole> role) {
-        return role.stream()
-                .map(r -> new SimpleGrantedAuthority("ROLE" + r.name()))
-                .collect(Collectors.toSet());
-    }
+
+
 
 
 }

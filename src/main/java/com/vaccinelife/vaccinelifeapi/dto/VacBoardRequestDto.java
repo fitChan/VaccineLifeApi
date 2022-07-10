@@ -6,14 +6,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
-import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.SideEffect;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -35,7 +34,7 @@ public class VacBoardRequestDto {
     private String gender;
     private String age;
     private String disease;
-    private Set<AfterEffect> afterEffect;
+    private Set<SideEffect> sideEffect;
 
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -66,7 +65,7 @@ public class VacBoardRequestDto {
                 .gender(vacBoard.getUser().getGender())
                 .age(vacBoard.getUser().getAge())
                 .disease(vacBoard.getUser().getDisease())
-                .afterEffect(vacBoard.getUser().getAfterEffect())
+                .sideEffect(vacBoard.getUser().getSideEffect())
                 .createdAt(vacBoard.getCreatedAt())
                 .modifiedAt(vacBoard.getModifiedAt())
                 .build();

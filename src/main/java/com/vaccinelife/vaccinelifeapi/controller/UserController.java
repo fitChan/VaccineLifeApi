@@ -3,8 +3,7 @@ package com.vaccinelife.vaccinelifeapi.controller;
 import com.vaccinelife.vaccinelifeapi.dto.ResponseDto;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.ApiException;
-import com.vaccinelife.vaccinelifeapi.model.User;
-import com.vaccinelife.vaccinelifeapi.model.enums.StatisticsAfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.StatisticsAfterEffect;
 import com.vaccinelife.vaccinelifeapi.repository.StatisticsAfterEffectRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
@@ -12,8 +11,6 @@ import com.vaccinelife.vaccinelifeapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

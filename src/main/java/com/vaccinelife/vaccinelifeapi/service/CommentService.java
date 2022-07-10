@@ -1,9 +1,10 @@
 package com.vaccinelife.vaccinelifeapi.service;
 
-import com.vaccinelife.vaccinelifeapi.dto.CommentDeleteRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.CommentPostRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.CommentRequestDto;
-import com.vaccinelife.vaccinelifeapi.model.*;
+import com.vaccinelife.vaccinelifeapi.model.Comment;
+import com.vaccinelife.vaccinelifeapi.model.User;
+import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import com.vaccinelife.vaccinelifeapi.repository.CommentRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
@@ -12,10 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service

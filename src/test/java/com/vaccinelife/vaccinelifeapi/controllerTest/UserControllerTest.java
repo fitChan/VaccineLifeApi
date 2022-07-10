@@ -3,7 +3,6 @@ package com.vaccinelife.vaccinelifeapi.controllerTest;
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.User;
-import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
 import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.AfterEffectRepository;

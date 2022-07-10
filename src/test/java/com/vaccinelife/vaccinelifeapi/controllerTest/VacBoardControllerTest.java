@@ -1,15 +1,13 @@
 package com.vaccinelife.vaccinelifeapi.controllerTest;
 
 
+import com.sun.xml.bind.v2.TODO;
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
-import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardPostRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
-import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
-import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
 import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
@@ -17,14 +15,14 @@ import com.vaccinelife.vaccinelifeapi.security.Token;
 import com.vaccinelife.vaccinelifeapi.security.UserAuthentication;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
 import com.vaccinelife.vaccinelifeapi.service.VacBoardService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-
-import java.util.Collections;
+import org.springframework.test.context.event.annotation.PrepareTestInstance;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
@@ -51,6 +49,9 @@ public class VacBoardControllerTest extends BaseControllerTest {
     UserService userService;
     @Autowired
     JwtTokenProvider jwtTokenProvider;
+    @BeforeEach
+   /* TODO BeforeEach 문 사용하기 + mock user(user 생성)*/
+
 
     @Test
     @TestDescription("정상적으로 vacBoard를 생성함")
@@ -59,7 +60,6 @@ public class VacBoardControllerTest extends BaseControllerTest {
         User user = userRepository.findByUsername("cksdntjd").orElseThrow(
                 () -> new IllegalArgumentException("없는 유저")
         );
-        Long id = user.getId();
         VacBoardPostRequestDto vacBoardPostRequestDto = VacBoardPostRequestDto.builder()
 
                 .title("the title")
@@ -151,6 +151,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
 
     }
 
+
     @Test
     @TestDescription("30개의 게시물을 10개씩 페이지 조회하기.")
     public void queryVacBoardList() throws Exception {
@@ -200,17 +201,17 @@ public class VacBoardControllerTest extends BaseControllerTest {
         ;
     }
 
-//    private VacBoard generateVacboard(int i) {
-//        User user = userRepository.findById(1L).orElseThrow(
-//                () -> new IllegalArgumentException("없는 유저입니다.")
-//        );
-//        VacBoard vacBoard = VacBoard.builder()
-//                .user(user)
-//                .title("vacBoard" + i)
-//                .contents("generated contents for JUnit Test")
-//                .build();
-//        return this.vacBoardRepository.save(vacBoard);
-//    }
+    private VacBoard generateVacboard(int i) {
+        User user = userRepository.findById(1L).orElseThrow(
+                () -> new IllegalArgumentException("없는 유저입니다.")
+        );
+        VacBoard vacBoard = VacBoard.builder()
+                .user(user)
+                .title("vacBoard" + i)
+                .contents("generated contents for JUnit Test")
+                .build();
+        return this.vacBoardRepository.save(vacBoard);
+    }
 
     @Test
     @TestDescription("vacBoard 게시물 하나를 조회하는 테스트")

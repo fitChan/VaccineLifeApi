@@ -2,7 +2,6 @@ package com.vaccinelife.vaccinelifeapi.serviceTest;
 
 
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
-import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
 import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;

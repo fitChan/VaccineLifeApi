@@ -1,6 +1,6 @@
 package com.vaccinelife.vaccinelifeapi.dto;
 
-import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
+import com.vaccinelife.vaccinelifeapi.model.SideEffect;
 import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import lombok.*;
@@ -41,7 +41,7 @@ public class SignupRequestDto {
     private List<SideEffectname> afterEffect;
 
 
-    public SignupRequestDto( String username, String password, String passwordCheck, String nickname,Boolean isVaccine, Type type, int degree, String gender, String age, String disease, AfterEffect afterEffect){
+    public SignupRequestDto( String username, String password, String passwordCheck, String nickname,Boolean isVaccine, Type type, int degree, String gender, String age, String disease, SideEffect sideEffect){
 
 
     }

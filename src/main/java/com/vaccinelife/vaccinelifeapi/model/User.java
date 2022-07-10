@@ -4,8 +4,6 @@ package com.vaccinelife.vaccinelifeapi.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
-import com.vaccinelife.vaccinelifeapi.model.enums.AfterEffect;
-import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,17 +11,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Setter
 @Entity
 @Getter
 @NoArgsConstructor @AllArgsConstructor
-@Table(uniqueConstraints=
-@UniqueConstraint(columnNames = {"username", "nickname"}))
+//@Table(uniqueConstraints=
+//@UniqueConstraint(columnNames = {"username", "nickname"}))
 public class User extends Timestamped{
 
 
@@ -60,8 +56,8 @@ public class User extends Timestamped{
     private Type type;
 
     // 중복으로 못들어가는거 확인. @OneToMany 관계 연결 해주기.
-    @OneToMany
-    private Set<AfterEffect> afterEffect = new HashSet<>();
+    @OneToMany(mappedBy = "user")
+    private Set<SideEffect> sideEffect = new HashSet<>();
 
 
     @JsonIgnore
@@ -145,7 +141,7 @@ public class User extends Timestamped{
         this.disease= requestDto.getDisease();
     }
 
-    public void updateAfterEffect(Set<AfterEffect> afterEffect) {
-        this.afterEffect = afterEffect;
+    public void updateAfterEffect(Set<SideEffect> sideEffect) {
+        this.sideEffect = sideEffect;
     }
 }

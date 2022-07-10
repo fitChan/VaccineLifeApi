@@ -9,7 +9,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 public class VacBoardRequestDtoResource extends EntityModel<VacBoardRequestDto> {
     public VacBoardRequestDtoResource(VacBoardRequestDto vacBoard, Link... links) {
-        super(vacBoard, links);
-        add(linkTo(VacBoardController.class).slash(vacBoard.getId()).withSelfRel());
+        EntityModel<VacBoardRequestDto> of = EntityModel.of(vacBoard, links);
+        of.add(linkTo(VacBoardController.class).slash(vacBoard.getId()).withSelfRel());
     }
 }

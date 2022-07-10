@@ -34,12 +34,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
     private final JwtTokenProvider jwtTokenProvider;
-    // authenticationManager를 Bean 등록
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -65,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/docs/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .mvcMatchers("/api/signup", "/auth/**").permitAll()
-                .mvcMatchers("/api/mypage/**").permitAll()
+//                .mvcMatchers("/api/mypage/**").permitAll()
                 .antMatchers("/css/**", "/js/**", "/fonts/**", "/images/**").permitAll()
                 .anyRequest().authenticated();
     }

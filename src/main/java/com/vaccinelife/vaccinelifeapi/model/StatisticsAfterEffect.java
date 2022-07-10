@@ -1,4 +1,4 @@
-package com.vaccinelife.vaccinelifeapi.model.enums;
+package com.vaccinelife.vaccinelifeapi.model;
 
 import lombok.*;
 
@@ -12,9 +12,10 @@ import javax.persistence.Id;
 @Getter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatisticsAfterEffect {
+public class StatisticsAfterEffect extends Timestamped{
 
-    @Id @GeneratedValue(strategy = GenerationType.TABLE)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int none,fever,headache,fatigue,pain,swell,sickness,allergy,others;
+
 }
