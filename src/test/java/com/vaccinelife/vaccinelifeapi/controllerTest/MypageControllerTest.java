@@ -16,8 +16,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class MypageControllerTest extends BaseControllerTest {
@@ -57,16 +65,37 @@ public class MypageControllerTest extends BaseControllerTest {
                 .accept(MediaTypes.HAL_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-//                .andExpect(jsonPath("id").exists())
-//                .andExpect(jsonPath("title").exists())
-//                .andExpect(jsonPath("nickname").exists())
-//                .andExpect(jsonPath("likeCount").exists())
-//                .andExpect(jsonPath("totalVisitors").exists())
-//                .andExpect(jsonPath("commentCount").exists())
-//                .andExpect(jsonPath("type").exists())
-//                .andExpect(jsonPath("_links.href").exists())
-
-         /*TODO List 조회이므로 body 확인 할것. */
+                .andExpect(jsonPath("_embedded.vacBoardSimRequestDtoList[0].id").exists())
+                .andExpect(jsonPath("_embedded.vacBoardSimRequestDtoList[0].title").exists())
+                .andExpect(jsonPath("_embedded.vacBoardSimRequestDtoList[0].nickname").exists())
+                .andExpect(jsonPath("_embedded.vacBoardSimRequestDtoList[0].likeCount").exists())
+                .andExpect(jsonPath("_embedded.vacBoardSimRequestDtoList[0].totalVisitors").exists())
+                .andExpect(jsonPath("_embedded.vacBoardSimRequestDtoList[0].commentCount").exists())
+                .andExpect(jsonPath("_embedded.vacBoardSimRequestDtoList[0].type").exists())
+                .andExpect(jsonPath("_embedded.vacBoardSimRequestDtoList[0]._links.vacBoardLink.href").exists())
+                .andExpect(jsonPath("_embedded.vacBoardSimRequestDtoList[0]._links.profile.href").exists())
+        .andDo(document("mypage-vacBoard-List",
+                requestHeaders(
+                        headerWithName(HttpHeaders.ACCEPT).description("accept Header"),
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("Content type")
+                ),
+                relaxedResponseFields(
+                        fieldWithPath("_embedded.vacBoardSimRequestDtoList[0].createdAt").description("created date and time"),
+                        fieldWithPath("_embedded.vacBoardSimRequestDtoList[0].modifiedAt").description("modified date and time"),
+                        fieldWithPath("_embedded.vacBoardSimRequestDtoList[0].id").description("the id of the vacBoard post"),
+                        fieldWithPath("_embedded.vacBoardSimRequestDtoList[0].title").description("title of the vacBoard"),
+                        fieldWithPath("_embedded.vacBoardSimRequestDtoList[0].nickname").description("nickname of the user who posted the vacBoard"),
+                        fieldWithPath("_embedded.vacBoardSimRequestDtoList[0].totalVisitors").description("number of Visitors of the vacBoard"),
+                        fieldWithPath("_embedded.vacBoardSimRequestDtoList[0].commentCount").description("number of comments on the vacBoard"),
+                        fieldWithPath("_embedded.vacBoardSimRequestDtoList[0].likeCount").description("number of likeCount on the vacBoard"),
+                        fieldWithPath("_embedded.vacBoardSimRequestDtoList[0].type").description("the vaccine type of the user who posted the vacBoard"),
+                        fieldWithPath("_embedded.vacBoardSimRequestDtoList[0]._links.vacBoardLink.href").description("link to vacBoard self"),
+                        fieldWithPath("_embedded.vacBoardSimRequestDtoList[0]._links.profile.href").description("profile")
+                )
+        ))
         ;
     }
 
@@ -78,7 +107,41 @@ public class MypageControllerTest extends BaseControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+        .andExpect(jsonPath("_embedded.quarBoardSimRequestDtoList[0].quarBoardId").exists())
+        .andExpect(jsonPath("_embedded.quarBoardSimRequestDtoList[0].title").exists())
+        .andExpect(jsonPath("_embedded.quarBoardSimRequestDtoList[0].nickname").exists())
+        .andExpect(jsonPath("_embedded.quarBoardSimRequestDtoList[0].likeCount").exists())
+        .andExpect(jsonPath("_embedded.quarBoardSimRequestDtoList[0].commentCount").exists())
+        .andExpect(jsonPath("_embedded.quarBoardSimRequestDtoList[0].totalVisitors").exists())
+        .andExpect(jsonPath("_embedded.quarBoardSimRequestDtoList[0].createdAt").exists())
+        .andExpect(jsonPath("_embedded.quarBoardSimRequestDtoList[0].quarBoardId").exists())
+        .andExpect(jsonPath("_embedded.quarBoardSimRequestDtoList[0].modifiedAt").exists())
+        .andExpect(jsonPath("_embedded.quarBoardSimRequestDtoList[0]._links.quarBoardLink.href").exists())
+        .andExpect(jsonPath("_embedded.quarBoardSimRequestDtoList[0]._links.profile.href").exists())
+
+        .andDo(document("mypage-quarBoard-list",
+                requestHeaders(
+                        headerWithName(HttpHeaders.ACCEPT).description("accept Header"),
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("Content type")
+                ),
+                relaxedResponseFields(
+                        fieldWithPath("_embedded.quarBoardSimRequestDtoList[0].createdAt").description("created date and time"),
+                        fieldWithPath("_embedded.quarBoardSimRequestDtoList[0].modifiedAt").description("modified date and time"),
+                        fieldWithPath("_embedded.quarBoardSimRequestDtoList[0].quarBoardId").description("the id of the quarBoard post"),
+                        fieldWithPath("_embedded.quarBoardSimRequestDtoList[0].title").description("title of the quarBoard"),
+                        fieldWithPath("_embedded.quarBoardSimRequestDtoList[0].nickname").description("nickname of the user who posted the quarBoard"),
+                        fieldWithPath("_embedded.quarBoardSimRequestDtoList[0].likeCount").description("number of likeCount on the quarBoard"),
+                        fieldWithPath("_embedded.quarBoardSimRequestDtoList[0].totalVisitors").description("number of Visitors of the quarBoard"),
+                        fieldWithPath("_embedded.quarBoardSimRequestDtoList[0].commentCount").description("number of comments on the quarBoard"),
+                        fieldWithPath("_embedded.quarBoardSimRequestDtoList[0]._links.quarBoardLink.href").description("link to quarBoard self"),
+                        fieldWithPath("_embedded.quarBoardSimRequestDtoList[0]._links.profile.href").description("profile")
+                )
+                ))
+        ;
     }
 
     @Test
@@ -89,6 +152,33 @@ public class MypageControllerTest extends BaseControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("_embedded.medicalResponseDtoList[0].id").exists())
+                .andExpect(jsonPath("_embedded.medicalResponseDtoList[0].contents").exists())
+                .andExpect(jsonPath("_embedded.medicalResponseDtoList[0].nickname").exists())
+                .andExpect(jsonPath("_embedded.medicalResponseDtoList[0].likeCount").exists())
+                .andExpect(jsonPath("_embedded.medicalResponseDtoList[0].createdAt").exists())
+                .andExpect(jsonPath("_embedded.medicalResponseDtoList[0].modifiedAt").exists())
+                .andExpect(jsonPath("_embedded.medicalResponseDtoList[0]._links.medicalLink.href").exists())
+                .andExpect(jsonPath("_embedded.medicalResponseDtoList[0]._links.profile.href").exists())
+        .andDo(document("mypage-medical-list",
+                requestHeaders(
+                        headerWithName(HttpHeaders.ACCEPT).description("accept Header"),
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("Content type")
+                ),
+                relaxedResponseFields(
+                        fieldWithPath("_embedded.medicalResponseDtoList[0].createdAt").description("created date and time"),
+                        fieldWithPath("_embedded.medicalResponseDtoList[0].modifiedAt").description("modified date and time"),
+                        fieldWithPath("_embedded.medicalResponseDtoList[0].id").description("the id of the medical post"),
+                        fieldWithPath("_embedded.medicalResponseDtoList[0].nickname").description("nickname of the user who posted the medical"),
+                        fieldWithPath("_embedded.medicalResponseDtoList[0].likeCount").description("number of likeCount on the medical"),
+                        fieldWithPath("_embedded.medicalResponseDtoList[0]._links.medicalLink.href").description("link to medical self"),
+                        fieldWithPath("_embedded.medicalResponseDtoList[0]._links.profile.href").description("profile")
+                )
+                ))
+        ;
     }
 }

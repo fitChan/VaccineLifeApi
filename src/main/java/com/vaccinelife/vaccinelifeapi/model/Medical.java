@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor
-@Setter
+@Setter @Builder
 public class Medical extends Timestamped {
 
 

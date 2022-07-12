@@ -102,7 +102,8 @@ class CommentControllerTest extends BaseControllerTest {
                 .accept(MediaTypes.HAL_JSON)
         )
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+        ;
     }
 
     @Test

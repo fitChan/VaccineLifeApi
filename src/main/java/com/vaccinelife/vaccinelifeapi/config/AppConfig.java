@@ -1,15 +1,10 @@
 package com.vaccinelife.vaccinelifeapi.config;
 
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
-import com.vaccinelife.vaccinelifeapi.model.Comment;
-import com.vaccinelife.vaccinelifeapi.model.User;
-import com.vaccinelife.vaccinelifeapi.model.VacBoard;
+import com.vaccinelife.vaccinelifeapi.model.*;
 import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
-import com.vaccinelife.vaccinelifeapi.repository.SideEffectRepository;
-import com.vaccinelife.vaccinelifeapi.repository.CommentRepository;
-import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
-import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
+import com.vaccinelife.vaccinelifeapi.repository.*;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -32,6 +27,10 @@ public class AppConfig {
             VacBoardRepository vacBoardRepository;
             @Autowired
             CommentRepository commentRepository;
+            @Autowired
+            MedicalRepository medicalRepository;
+            @Autowired
+            QuarBoardRepository quarBoardRepository;
             @Autowired
             UserRepository userRepository;
             @Autowired
@@ -85,15 +84,43 @@ public class AppConfig {
                                 .title("user1의 the title" + i + "번째 for Junit Test")
                                 .contents("the content" + i + "번째 for Junit Test")
                                 .build();
+
+                        QuarBoard quarBoard = QuarBoard.builder()
+                                .user(user)
+                                .title("user1의"+i+"번 째 QuarBoard for Junit Test")
+                                .contents("user1의"+i+"번 째 QuarBoard for Junit Test")
+                                .build();
+
+                        Medical medical = Medical.builder()
+                                .user(user)
+                                .contents("user1의"+i+"번 째 Medical for Junit Test")
+                                .build();
+
                         vacBoardRepository.save(vacBoard);
+                        quarBoardRepository.save(quarBoard);
+                        medicalRepository.save(medical);
                     } else {
                         VacBoard vacBoard = VacBoard.builder()
                                 .user(user2)
                                 .title("user2의 the title" + i + "번째 for Junit Test")
                                 .contents("the content" + i + "번째 for Junit Test")
                                 .build();
+
+                        QuarBoard quarBoard = QuarBoard.builder()
+                                .user(user2)
+                                .title("user1의"+i+"번 째 QuarBoard for Junit Test")
+                                .contents("user1의"+i+"번 째 QuarBoard for Junit Test")
+                                .build();
+
+                        Medical medical = Medical.builder()
+                                .user(user2)
+                                .contents("user1의"+i+"번 째 Medical for Junit Test")
+                                .build();
                         vacBoardRepository.save(vacBoard);
+                        quarBoardRepository.save(quarBoard);
+                        medicalRepository.save(medical);
                     }
+
                 }
 
                 for (long i = 0L; i < 50L; i++) {

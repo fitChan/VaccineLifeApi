@@ -1,6 +1,7 @@
 package com.vaccinelife.vaccinelifeapi.controller;
 
 
+import com.vaccinelife.vaccinelifeapi.config.Resource.CommentResource;
 import com.vaccinelife.vaccinelifeapi.config.Resource.VacBoardRequestDtoResource;
 import com.vaccinelife.vaccinelifeapi.config.Resource.VacBoardResource;
 import com.vaccinelife.vaccinelifeapi.dto.*;
@@ -81,7 +82,9 @@ public class VacBoardController {
     public ResponseEntity<CollectionModel<CommentRequestDto>> getComment(@PathVariable Long vacBoardId) {
         List<CommentRequestDto> comment = commentService.getComment(vacBoardId);
         CollectionModel<CommentRequestDto> entityModel = CollectionModel.of(comment);
+
         entityModel.add(linkTo((this.getClass())).slash(vacBoardId).withSelfRel());
+
         entityModel.add(Link.of("/docs/index.html#resources_query_comment_list_in_vacBoard").withRel("profile"));
 
         return ResponseEntity.ok(entityModel);
