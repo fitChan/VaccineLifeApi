@@ -16,7 +16,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +26,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RequiredArgsConstructor
 @RestController
@@ -42,7 +46,7 @@ public class VacBoardController {
 
     //    전체 게시판 조회
     @GetMapping("")
-    public ResponseEntity getSimpleVacBoard(Pageable pageable, PagedResourcesAssembler<VacBoard> assembler) {
+    public ResponseEntity<PagedModel<VacBoardResource>> getSimpleVacBoard(Pageable pageable, PagedResourcesAssembler<VacBoard> assembler) {
         Page<VacBoard> page = this.vacBoardRepository.findAll(pageable);
         var pagedResources = assembler.toModel(page, VacBoardResource::new);
         pagedResources.add(new Link("/docs/index.html#resources-vacBoard-query").withRel("profile"));
@@ -63,34 +67,28 @@ public class VacBoardController {
 
     //    상세 게시판 조회
     @GetMapping("/{vacBoardId}")
-    public ResponseEntity<VacBoardRequestDtoResource> getDetailVacBoard(@PathVariable Long vacBoardId) {
+    public ResponseEntity<VacBoardRequestDto> getDetailVacBoard(@PathVariable Long vacBoardId) {
         vacBoardService.IpChecker(vacBoardId); // 방문자 체크 로직
 
         VacBoardRequestDto newVacBoardRequestDto = vacBoardService.getDetailVacBoard(vacBoardId);
         VacBoardRequestDtoResource vacBoardRequestDtoResource = new VacBoardRequestDtoResource(newVacBoardRequestDto);
         vacBoardRequestDtoResource.add(Link.of("/docs/index.html#resources-get-vacBoard").withRel("profile"));
 
-        return ResponseEntity.ok(vacBoardRequestDtoResource);
+        return ResponseEntity.ok().body(newVacBoardRequestDto);
     }
 
     @GetMapping("/{vacBoardId}/comments")
-    public ResponseEntity<List<CommentRequestDto>> getComment(@PathVariable Long vacBoardId) {
-        commentService.getComment(vacBoardId);
-        return ResponseEntity.ok().body(commentService.getComment(vacBoardId));
+    public ResponseEntity<CollectionModel<CommentRequestDto>> getComment(@PathVariable Long vacBoardId) {
+        List<CommentRequestDto> comment = commentService.getComment(vacBoardId);
+        CollectionModel<CommentRequestDto> entityModel = CollectionModel.of(comment);
+        entityModel.add(linkTo((this.getClass())).slash(vacBoardId).withSelfRel());
+        entityModel.add(Link.of("/docs/index.html#resources_query_comment_list_in_vacBoard").withRel("profile"));
+
+        return ResponseEntity.ok(entityModel);
     }
 
-    /*    게시글 작성
     @PostMapping("")
-    public ResponseEntity createVacBoard(@RequestBody VacBoardPostRequestDto requestDto) {
-        VacBoard vacBoard = modelMapper.map(requestDto, VacBoard.class);
-        vacBoardService.createVacBoard(requestDto);
-        return ResponseEntity.created(URI.create("/api/vacBoard")).body(vacBoard);
-    }*/
-
-    /*TODO Dto 에 있는 ID 싹 삭제 이거 sevice 계층으로 좀 뺴야해 리팩토링 하자  */
-    /*2022-06-09 하단 게시글 작성으로 수정*/
-    @PostMapping("")
-    public ResponseEntity createVacBoard(@RequestBody VacBoardPostRequestDto requestDto) {
+    public ResponseEntity<?> createVacBoard(@RequestBody @Valid VacBoardPostRequestDto requestDto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.valueOf(authentication.getPrincipal().toString());

@@ -1,5 +1,6 @@
 package com.vaccinelife.vaccinelifeapi.config;
 
+import com.vaccinelife.vaccinelifeapi.accountUser.WithUser;
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
 import com.vaccinelife.vaccinelifeapi.model.User;
@@ -52,7 +53,7 @@ public class AuthServerConfigTest extends BaseControllerTest {
 //                .andExpect(jsonPath("access_token").exists());
 //    }
     @Test
-    @TestDescription("인증 토큰 발급 테스트")
+    @TestDescription("인증 토큰 발급 테스트") @WithUser
     public void getAuthToken() throws Exception {
         String username = "cksdntjd";
         String password = "cksdn123";

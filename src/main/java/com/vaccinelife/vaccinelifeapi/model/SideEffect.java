@@ -1,6 +1,6 @@
 package com.vaccinelife.vaccinelifeapi.model;
 
-import com.vaccinelife.vaccinelifeapi.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

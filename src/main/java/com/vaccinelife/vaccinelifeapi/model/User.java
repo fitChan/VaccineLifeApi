@@ -57,6 +57,7 @@ public class User extends Timestamped{
 
     // 중복으로 못들어가는거 확인. @OneToMany 관계 연결 해주기.
     @OneToMany(mappedBy = "user")
+
     private Set<SideEffect> sideEffect = new HashSet<>();
 
 

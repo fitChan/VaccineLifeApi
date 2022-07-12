@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().mvcMatchers("/docs/index.html");
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-        web.ignoring().mvcMatchers("/auth/**");
+//        web.ignoring().mvcMatchers("/auth/**");
     }
 
     @Override
@@ -53,15 +53,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
 //                .mvcMatchers("/auth/**").permitAll()
                 .mvcMatchers("/docs/**").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/api/vacBoard/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .mvcMatchers("/api/signup", "/auth/**").permitAll()
 //                .mvcMatchers("/api/mypage/**").permitAll()
                 .antMatchers("/css/**", "/js/**", "/fonts/**", "/images/**").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
 
 

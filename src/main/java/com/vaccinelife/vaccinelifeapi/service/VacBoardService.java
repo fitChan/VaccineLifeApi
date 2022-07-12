@@ -201,7 +201,7 @@ private final ModelMapper modelMapper;
 
         VacBoardResource vacBoardResource = new VacBoardResource(vacBoard);
         vacBoardResource.add(linkTo(VacBoardController.class).withRel("query-vacBoards"));
-        vacBoardResource.add(new Link("/docs/index.html#resources-vacBoard-create").withRel("profile"));
+        vacBoardResource.add(Link.of("/docs/index.html#resources-vacBoard-create").withRel("profile"));
         return ResponseEntity.created(createdUri).body(vacBoardResource);
     }
 }

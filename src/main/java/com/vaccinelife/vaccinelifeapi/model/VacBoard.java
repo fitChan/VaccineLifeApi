@@ -38,7 +38,7 @@ public class VacBoard extends Timestamped {
 
     @JoinColumn(name = "userId")
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
     @JsonIgnore

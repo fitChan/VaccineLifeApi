@@ -1,6 +1,7 @@
 package com.vaccinelife.vaccinelifeapi.controller;
 
 
+import com.vaccinelife.vaccinelifeapi.config.Resource.CommentResource;
 import com.vaccinelife.vaccinelifeapi.dto.CommentDeleteRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.CommentPostRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.CommentRequestDto;
@@ -24,12 +25,13 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("")
-    public ResponseEntity<Void> createComment( @RequestBody CommentPostRequestDto requestDto){
+    public ResponseEntity<CommentResource> createComment(@RequestBody CommentPostRequestDto requestDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        Long userId = (Long) principal;
-        commentService.createComment(requestDto, userId);
-        return ResponseEntity.created(URI.create("/api/comment")).build();
+        String principal = authentication.getPrincipal().toString();
+        Long userId = Long.valueOf(principal);
+        CommentResource comment = commentService.createComment(requestDto, userId);
+
+        return ResponseEntity.created(URI.create("/api/comment")).body(comment);
     }
 
     @DeleteMapping("/{commentId}")

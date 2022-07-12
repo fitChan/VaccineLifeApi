@@ -1,7 +1,6 @@
 package com.vaccinelife.vaccinelifeapi.service;
 
 
-import com.sun.xml.bind.v2.TODO;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.UserRole;
@@ -9,7 +8,7 @@ import com.vaccinelife.vaccinelifeapi.model.SideEffect;
 import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import com.vaccinelife.vaccinelifeapi.model.StatisticsAfterEffect;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
-import com.vaccinelife.vaccinelifeapi.repository.AfterEffectRepository;
+import com.vaccinelife.vaccinelifeapi.repository.SideEffectRepository;
 import com.vaccinelife.vaccinelifeapi.repository.StatisticsAfterEffectRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +35,7 @@ public class UserService{
 
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final AfterEffectRepository afterEffectRepository;
+    private final SideEffectRepository sideEffectRepository;
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
     private final StatisticsAfterEffectRepository statisticsAfterEffectRepository;
 
@@ -80,7 +79,7 @@ public class UserService{
         User user = new User(username, password, role, nickname, isVaccine, type, degree, gender, age, disease);
         for (SideEffectname e : afterEffect) {
             SideEffect sideEffect1 = new SideEffect(e, user);
-            afterEffectRepository.save(sideEffect1);
+            sideEffectRepository.save(sideEffect1);
             sideEffectList.add(sideEffect1);
         }
         user.updateAfterEffect(sideEffectList);
@@ -105,7 +104,7 @@ public class UserService{
         4. if (sideEffect.get(i).getSideEffectname() == SideEffectname.none) {
         */
 
-        List<SideEffect> sideEffect = afterEffectRepository.findAll();
+        List<SideEffect> sideEffect = sideEffectRepository.findAll();
         int none = 0, fever = 0, headache = 0, fatigue = 0, pain = 0, swell = 0, sickness = 0, allergy = 0, others = 0;
         for (int i = 0; i < sideEffect.size(); i++) {
             if (sideEffect.get(i).getSideEffectname() == SideEffectname.none) {

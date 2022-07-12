@@ -7,12 +7,16 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import com.vaccinelife.vaccinelifeapi.model.SideEffect;
+import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -26,7 +30,6 @@ public class VacBoardRequestDto {
     private String contents;
     private int totalVisitors;
     private int likeCount;
-    private String username;
     private String nickname;
     private Boolean isVaccine;
     private Type type;
@@ -34,7 +37,7 @@ public class VacBoardRequestDto {
     private String gender;
     private String age;
     private String disease;
-    private Set<SideEffect> sideEffect;
+    private List<SideEffectname> sideEffect;
 
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -51,13 +54,19 @@ public class VacBoardRequestDto {
 
 
     public static VacBoardRequestDto of(VacBoard vacBoard) {
+        Set<SideEffect> sideEffect = vacBoard.getUser().getSideEffect();
+        List<SideEffectname> sideEffectnames = new ArrayList<>();
+        for (SideEffect effect : sideEffect) {
+            SideEffectname sideEffectname = effect.getSideEffectname();
+            sideEffectnames.add(sideEffectname);
+        }
+
         return VacBoardRequestDto.builder()
                 .id(vacBoard.getId())
                 .title(vacBoard.getTitle())
                 .contents(vacBoard.getContents())
                 .totalVisitors(vacBoard.getTotalVisitors())
                 .likeCount(vacBoard.getLikeCount())
-                .username(vacBoard.getUser().getUsername())
                 .nickname(vacBoard.getUser().getNickname())
                 .isVaccine(vacBoard.getUser().getIsVaccine())
                 .type(vacBoard.getUser().getType())
@@ -65,7 +74,7 @@ public class VacBoardRequestDto {
                 .gender(vacBoard.getUser().getGender())
                 .age(vacBoard.getUser().getAge())
                 .disease(vacBoard.getUser().getDisease())
-                .sideEffect(vacBoard.getUser().getSideEffect())
+                .sideEffect(sideEffectnames)
                 .createdAt(vacBoard.getCreatedAt())
                 .modifiedAt(vacBoard.getModifiedAt())
                 .build();

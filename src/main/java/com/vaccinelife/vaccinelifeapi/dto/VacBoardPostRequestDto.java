@@ -5,6 +5,7 @@ import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter

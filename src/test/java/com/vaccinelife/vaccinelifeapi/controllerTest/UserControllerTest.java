@@ -5,7 +5,7 @@ import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
 import com.vaccinelife.vaccinelifeapi.model.enums.Type;
-import com.vaccinelife.vaccinelifeapi.repository.AfterEffectRepository;
+import com.vaccinelife.vaccinelifeapi.repository.SideEffectRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class UserControllerTest extends BaseControllerTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    AfterEffectRepository afterEffectRepository;
+    SideEffectRepository sideEffectRepository;
 
     @Test
     public void 회원가입() {

@@ -1,5 +1,7 @@
 package com.vaccinelife.vaccinelifeapi.service;
 
+import com.vaccinelife.vaccinelifeapi.config.Resource.CommentResource;
+import com.vaccinelife.vaccinelifeapi.controller.CommentController;
 import com.vaccinelife.vaccinelifeapi.dto.CommentPostRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.CommentRequestDto;
 import com.vaccinelife.vaccinelifeapi.model.Comment;
@@ -9,12 +11,17 @@ import com.vaccinelife.vaccinelifeapi.repository.CommentRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.Link;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 
 @Service
@@ -24,10 +31,11 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final VacBoardRepository vacBoardRepository;
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
 
     @Transactional
-    public void createComment(CommentPostRequestDto requestDto, Long userId) {
+    public CommentResource createComment(CommentPostRequestDto requestDto, Long userId) {
         VacBoard vacBoard = vacBoardRepository.findById(requestDto.getVacBoardId()).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다.")
         );
@@ -36,12 +44,19 @@ public class CommentService {
         List<Comment> commentCount = commentRepository.findByVacBoardId(requestDto.getVacBoardId());
         int commentSize = commentCount.size();
         vacBoard.setCommentCount(commentSize + 1);
-
+//        Comment comment = modelMapper.map(requestDto, Comment.class);
         Comment comment = Comment.builder()
                 .user(user)
                 .vacBoard(vacBoard)
                 .comment(requestDto.getComment()).build();
         commentRepository.save(comment);
+
+
+        CommentResource commentResource = new CommentResource(comment);
+
+        commentResource.add(linkTo(CommentController.class).withRel("create-comment"));
+        commentResource.add(Link.of("/docs/index.html#resources_comment_create_in_vacBoard").withRel("profile"));
+        return commentResource;
     }
 
     @Transactional(readOnly = true)
@@ -60,10 +75,10 @@ public class CommentService {
         VacBoard vacBoard = comment.getVacBoard();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        String username = principal.toString();
+        String principal = authentication.getPrincipal().toString();
+        Long userId = Long.valueOf(principal);
 
-        User user = userRepository.findByUsername(username).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저는 존재 하지 않습니다.")
         );
         Long realId = user.getId();

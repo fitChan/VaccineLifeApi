@@ -2,12 +2,16 @@ package com.vaccinelife.vaccinelifeapi.controllerTest;
 
 
 import com.sun.xml.bind.v2.TODO;
+import com.vaccinelife.vaccinelifeapi.accountUser.WithUser;
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardPostRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
+import com.vaccinelife.vaccinelifeapi.model.SideEffect;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
+import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
+import com.vaccinelife.vaccinelifeapi.repository.SideEffectRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
 import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
@@ -24,6 +28,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.event.annotation.PrepareTestInstance;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.IntStream;
+
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
@@ -36,6 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
+@WithUser
 public class VacBoardControllerTest extends BaseControllerTest {
 
 
@@ -48,9 +58,12 @@ public class VacBoardControllerTest extends BaseControllerTest {
     @Autowired
     UserService userService;
     @Autowired
+    SideEffectRepository sideEffectRepository;
+    @Autowired
     JwtTokenProvider jwtTokenProvider;
+
     @BeforeEach
-   /* TODO BeforeEach 문 사용하기 + mock user(user 생성)*/
+    /* TODO BeforeEach 문 사용하기 + mock user(user 생성)*/
 
 
     @Test
@@ -62,8 +75,8 @@ public class VacBoardControllerTest extends BaseControllerTest {
         );
         VacBoardPostRequestDto vacBoardPostRequestDto = VacBoardPostRequestDto.builder()
 
-                .title("the title")
-                .contents("the content")
+                .title("the title 정상적으로 vacBoard를 생성함")
+                .contents("the content 정상적으로 vacBoard를 생성함")
                 .build();
 
         this.mockMvc.perform(post("/api/vacBoard")
@@ -80,7 +93,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("contents").exists())
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.query-vacBoards").exists())
-                .andDo(document("create_vacBoard",
+                .andDo(document("vacBoard-create",
                         links(
                                 linkWithRel("self").description("link to self"),
                                 linkWithRel("query-vacBoards").description("link to query vacBoards"),
@@ -91,7 +104,6 @@ public class VacBoardControllerTest extends BaseControllerTest {
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
                         ),
                         requestFields(
-                                fieldWithPath("user").description("userId that is vacBoard information of the PK"),
                                 fieldWithPath("title").description("title of the vacBoard"),
                                 fieldWithPath("contents").description("contests of the vacBoard")
                         ),
@@ -122,7 +134,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
         String username = "cksdntjd";
         String password = "cksdn123";
         User user = userRepository.findByUsername(username).orElseThrow(
-                ()-> new IllegalArgumentException("없는 유저 ")
+                () -> new IllegalArgumentException("없는 유저 ")
         );
         Authentication authentication = new UserAuthentication(user.getId(), null, null);
 
@@ -130,7 +142,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
         Token.Response response = Token.Response.builder().token(token).build();
 
         String res = String.valueOf(response);
-        String replace = res.substring(21, res.length()-1);
+        String replace = res.substring(21, res.length() - 1);
 
         return replace;
     }
@@ -139,7 +151,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
     @TestDescription("입력값이 없을경우 vacBoard 생성 오류")
     public void createVacBoard_Empty_Request() throws Exception {
 
-        VacBoard vacBoard = VacBoard.builder().build();
+        VacBoardPostRequestDto vacBoard = VacBoardPostRequestDto.builder().build();
 
         this.mockMvc.perform(post("/api/vacBoard")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
@@ -156,7 +168,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
     @TestDescription("30개의 게시물을 10개씩 페이지 조회하기.")
     public void queryVacBoardList() throws Exception {
         //Given
-//        IntStream.range(0, 30).forEach(this::generateVacboard); Appconfig로 test용 게시판 설정
+//        IntStream.range(0, 30).forEach(this::generateVacboard);
         //When
         this.mockMvc.perform(get("/api/vacBoard")
                 .param("page", "1")
@@ -171,7 +183,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("_embedded.vacBoardList[0]._links.self").exists())
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.profile").exists())
-                .andDo(document("query-vacBoard-List",
+                .andDo(document("vacBoard-query-List",
                         links(
                                 linkWithRel("self").description("link to self"),
                                 linkWithRel("first").description("link to vacBoard"),
@@ -201,17 +213,17 @@ public class VacBoardControllerTest extends BaseControllerTest {
         ;
     }
 
-    private VacBoard generateVacboard(int i) {
-        User user = userRepository.findById(1L).orElseThrow(
-                () -> new IllegalArgumentException("없는 유저입니다.")
-        );
-        VacBoard vacBoard = VacBoard.builder()
-                .user(user)
-                .title("vacBoard" + i)
-                .contents("generated contents for JUnit Test")
-                .build();
-        return this.vacBoardRepository.save(vacBoard);
-    }
+//    private VacBoard generateVacboard(int i) {
+//        User user = userRepository.findById(1L).orElseThrow(
+//                () -> new IllegalArgumentException("없는 유저입니다.")
+//        );
+//        VacBoard vacBoard = VacBoard.builder()
+//                .user(user)
+//                .title("vacBoard" + i)
+//                .contents("generated contents for JUnit Test")
+//                .build();
+//        return this.vacBoardRepository.save(vacBoard);
+//    }
 
     @Test
     @TestDescription("vacBoard 게시물 하나를 조회하는 테스트")
@@ -219,25 +231,21 @@ public class VacBoardControllerTest extends BaseControllerTest {
         VacBoard vacBoard = vacBoardRepository.findById(2L).orElseThrow(
                 () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")
         );
-        VacBoardRequestDto vacBoardRequestDto = VacBoardRequestDto.builder()
-                .id(vacBoard.getId())
-                .title(vacBoard.getTitle())
-                .contents(vacBoard.getContents())
-                .totalVisitors(vacBoard.getTotalVisitors())
-                .likeCount(vacBoard.getLikeCount())
-                .createdAt(vacBoard.getCreatedAt())
-                .modifiedAt(vacBoard.getModifiedAt())
-                .build();
+
         this.mockMvc.perform(get("/api/vacBoard/{vacBoardId}", vacBoard.getId())
-                .content(objectMapper.writeValueAsString(vacBoardRequestDto)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("utf-8")
+                .accept(MediaTypes.HAL_JSON)
+        )
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").exists())
                 .andExpect(jsonPath("title").exists())
                 .andExpect(jsonPath("contents").exists())
                 .andExpect(jsonPath("totalVisitors").exists())
                 .andExpect(jsonPath("likeCount").exists())
-                .andExpect(jsonPath("userId").exists())
-                .andExpect(jsonPath("username").exists())
+//                .andExpect(jsonPath("userId").exists())
+//                .andExpect(jsonPath("username").exists())
                 .andExpect(jsonPath("nickname").exists())
                 .andExpect(jsonPath("isVaccine").exists())
                 .andExpect(jsonPath("type").exists())
@@ -245,11 +253,36 @@ public class VacBoardControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("gender").exists())
                 .andExpect(jsonPath("age").exists())
                 .andExpect(jsonPath("disease").exists())
-                .andExpect(jsonPath("afterEffect").exists())
+                .andExpect(jsonPath("sideEffect").exists())
                 .andExpect(jsonPath("degree").exists())
                 .andExpect(jsonPath("createdAt").exists())
                 .andExpect(jsonPath("modifiedAt").exists())
-                .andExpect(jsonPath("_links.self").exists())
+                .andDo(document("vacBoard-query",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.ACCEPT).description("accept Header"),
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("content type Header")
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("Content type")
+                        ),
+                        responseFields(
+                                fieldWithPath("createdAt").description("created date and time"),
+                                fieldWithPath("modifiedAt").description("modified date and time"),
+                                fieldWithPath("id").description("the id of the vacBoard"),
+                                fieldWithPath("title").description("title of the vacBoard"),
+                                fieldWithPath("contents").description("content of the vacBoard"),
+                                fieldWithPath("totalVisitors").description("number of Visitors of the vacBoard"),
+                                fieldWithPath("likeCount").description("number of likeCount on the vacBoard"),
+                                fieldWithPath("nickname").description("nickname of the user who posted the vacBoard"),
+                                fieldWithPath("isVaccine").description("whether the user who posted the vacBoard has a vaccine"),
+                                fieldWithPath("type").description("the vaccine type of the user who posted the vacBoard"),
+                                fieldWithPath("degree").description("vaccine rounds"),
+                                fieldWithPath("gender").description("the gender of the user who posted the vacBoard"),
+                                fieldWithPath("age").description("the age of the user who posted the vacBoard"),
+                                fieldWithPath("disease").description("the disease of the user who posted the vacBoard"),
+                                fieldWithPath("sideEffect").description("the sideEffect of the user who posted the vacBoard after vaccination")
+                        )
+                        ))
         ;
     }
 
@@ -277,7 +310,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("title").value("updated title"))
                 .andExpect(jsonPath("contents").value("updated contents"))
                 .andExpect(jsonPath("modifiedAt").exists())
-                .andDo(document("update-vacBoard",
+                .andDo(document("vacBoard-update",
                         links(
                                 linkWithRel("self").description("link to self"),
                                 linkWithRel("update-vacBoard").description("link to updated vacBoard"),

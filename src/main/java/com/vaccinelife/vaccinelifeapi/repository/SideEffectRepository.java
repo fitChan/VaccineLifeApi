@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AfterEffectRepository extends JpaRepository<SideEffect, Long> {
+public interface SideEffectRepository extends JpaRepository<SideEffect, Long> {
         List<SideEffect> findAllByUser(User user);
 }
