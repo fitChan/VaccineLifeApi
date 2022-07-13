@@ -4,7 +4,7 @@
 //
 //operation::update-vacBoard[snippets='request-fields,curl-request,request-headers,http-response,response-headers,response-fields,links']
 
-= RESTful Notes API Guide
+= API Document
 Baeldung;
 :doctype: book
 :icons: font
@@ -14,32 +14,29 @@ Baeldung;
 :sectlinks:
 
 [[overview]]
-= Overview
+= 소개
+VaccineLife(슬기로운 백신 생활) API
 
 [[overview-http-verbs]]
 == HTTP verbs
 
-RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
-use of HTTP verbs.
+[[overview-http-verbs]]
+== 공통사항
 
 |===
-| Verb | Usage
+| 게시판 Entity | 설명
 
-| `GET`
-| Used to retrieve a resource
+| `VacBoard`
+| 백신 후기 게시판입니다. 백신 접종 유저만 작성이 가능합니다.
 
-| `POST`
-| Used to create a new resource
+| `QuarBoard`
+| 격리 후기 게시판입니다.
 
-| `PATCH`
-| Used to update an existing resource, including partial updates
+| `Medical`
+| 의료진 분들께 응원의 메세지를 남길 수 있는 카드 형태의 게시판입니다.
 
-| `DELETE`
-| Used to delete an existing resource
 |===
 
-RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
-use of HTTP status codes.
 
 |===
 | Status code | Usage
@@ -61,130 +58,203 @@ use of HTTP status codes.
 | The requested resource did not exist
 |===
 
-[[overview-hypermedia]]
-== Hypermedia
-
-RESTful Notes uses hypermedia and resources include links to other resources in their
-responses. Responses are in http://stateless.co/hal_specification.html[Hypertext Application
-from resource to resource.
-Language (HAL)] format. Links can be found beneath the `_links` key. Users of the API should
-not create URIs themselves, instead they should use the above-described links to navigate
 
 [[resources]]
 = Resources
 
 
-[[resources-crud-get]]
+== VacBoard Resource
 
-== Accessing the VacBoard-List GET
+=== 게시물 생성
+게시물을 생성할 때 사용되는 리소스
 
-A `GET` request is used to access the CRUD read.
+==== Request
 
-=== Request structure
+.Request Fields
+include::{snippets}/vacBoard-create/request-fields.adoc[]
 
-include::{snippets}/query-vacBoard-List/http-request.adoc[]
+.Request HTTP Example
+include::{snippets}/vacBoard-create/http-request.adoc[]
 
-=== Example response
+==== Response
 
-include::{snippets}/query-vacBoard-List/http-response.adoc[]
+.Response Fields
+include::{snippets}/vacBoard-create/response-fields.adoc[]
 
-=== CURL request
+.Response HTTP Example
+include::{snippets}/vacBoard-create/http-response.adoc[]
 
-include::{snippets}/query-vacBoard-List/curl-request.adoc[]
-
-=== Response Body & field
-
-include::{snippets}/query-vacBoard-List/response-fields.adoc[]
-
-=== Links
-include::{snippets}/query-vacBoard-List/links.adoc[]
-
-
-[[resources-crud-post]]
-== Accessing the VacBoard POST
-
-A `POST` request is used to access the CRUD create.
-
-=== Request structure
-
-include::{snippets}/create_vacBoard/http-request.adoc[]
-
-=== Example response
-
-include::{snippets}/create_vacBoard/http-response.adoc[]
-
-=== CURL request
-
-include::{snippets}/create_vacBoard/curl-request.adoc[]
-
-=== Response Body & field
-
-include::{snippets}/create_vacBoard/request-body.adoc[]
-include::{snippets}/create_vacBoard/request-fields.adoc[]
-
-=== Links
-include::{snippets}/create_vacBoard/links.adoc[]
-
-//[[resources-crud-delete]]
-//=== Accessing the crud DELETE
-//
-//A `DELETE` request is used to access the CRUD delete.
-//
-//==== Request structure
-//
-//include::{snippets}/crud-delete-example/http-request.adoc[]
-//
-//==== Path Parameters
-//include::{snippets}/crud-delete-example/path-parameters.adoc[]
-//
-//==== Example response
-//
-//include::{snippets}/crud-delete-example/http-response.adoc[]
-//
-//==== CURL request
-//
-//include::{snippets}/crud-delete-example/curl-request.adoc[]
-//
-//[[resources-crud-patch]]
-//=== Accessing the crud PATCH
-//
-//A `PATCH` request is used to access the CRUD update.
-//
-//==== Request structure
-//
-//include::{snippets}/crud-patch-example/http-request.adoc[]
-//
-//==== Example response
-//
-//include::{snippets}/crud-patch-example/http-response.adoc[]
-//
-//==== CURL request
-//
-//include::{snippets}/crud-patch-example/curl-request.adoc[]
-//
-
-[[resources-crud-put]]
-== Accessing the VacBoard PUT
-
-A `PUT` request is used to access the CRUD update.
-
-=== Request structure
-
-include::{snippets}/update-vacBoard/http-request.adoc[]
-
-=== Example response
-
-include::{snippets}/update-vacBoard/http-response.adoc[]
-
-=== CURL request
-
-include::{snippets}/update-vacBoard/curl-request.adoc[]
-
-=== Request Body & Field
-include::{snippets}/update-vacBoard/request-body.adoc[]
-include::{snippets}/update-vacBoard/request-fields.adoc[]
+.Links
+include::{snippets}/vacBoard-create/links.adoc[]
 
 
-=== Response Body & Field
-include::{snippets}/update-vacBoard/response-body.adoc[]
-include::{snippets}/update-vacBoard/response-fields.adoc[]
+=== 게시물 리스트 조회
+게시물 목록을 요청할 때 사용되는 리소스.
+
+==== Request
+
+.Request Fields
+include::{snippets}/vacBoard-query-List/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/vacBoard-query-List/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/vacBoard-query-List/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/vacBoard-query-List/http-response.adoc[]
+
+.Links
+include::{snippets}/vacBoard-query-List/links.adoc[]
+
+
+
+=== 게시물 단건 조회
+게시물 하나를 요청할 때 사용되는 리소스.
+
+==== Request
+
+.Request Fields
+include::{snippets}/vacBoard-query/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/vacBoard-query/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/vacBoard-query/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/vacBoard-query/http-response.adoc[]
+
+
+=== 게시물 수정
+게시물 작성자가 수정시에 사용되는 리소스
+
+==== Request
+
+.Request Fields
+include::{snippets}/vacBoard-update/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/vacBoard-update/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/vacBoard-update/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/vacBoard-update/http-response.adoc[]
+
+.Links
+include::{snippets}/vacBoard-update/links.adoc[]
+
+
+== Comment Resource
+
+
+=== 댓글 생성
+
+==== Request
+
+.Request Fields
+include::{snippets}/comment-create-in-vacBoard/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/comment-create-in-vacBoard/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/comment-create-in-vacBoard/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/comment-create-in-vacBoard/http-response.adoc[]
+
+.Links
+include::{snippets}/comment-create-in-vacBoard/links.adoc[]
+
+
+=== 댓글 리스트 조회
+
+==== Request
+
+.Request Fields
+include::{snippets}/comment-query-list-in-vacBoard/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/comment-query-list-in-vacBoard/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/comment-query-list-in-vacBoard/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/comment-query-list-in-vacBoard/http-response.adoc[]
+
+== Mypage Resource
+
+=== 백신게시판 작성글 리스트
+
+==== Request
+
+.Request Fields
+include::{snippets}/mypage-vacBoard-List/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/mypage-vacBoard-List/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/mypage-vacBoard-List/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/mypage-vacBoard-List/http-response.adoc[]
+
+
+=== 격리게시판 작성글 리스트
+
+==== Request
+
+.Request Fields
+include::{snippets}/mypage-quarBoard-list/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/mypage-quarBoard-List/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/mypage-quarBoard-List/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/mypage-quarBoard-List/http-response.adoc[]
+
+=== 의료진분들께 작성글 리스트
+
+==== Request
+
+.Request Fields
+include::{snippets}/mypage-medical-list/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/mypage-medical-List/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/mypage-medical-List/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/mypage-medical-List/http-response.adoc[]
+
+
+
+
