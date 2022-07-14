@@ -28,6 +28,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.net.URI;
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -96,12 +97,18 @@ private final ModelMapper modelMapper;
 
     // 게시물 수정
     @Transactional
-    public VacBoard update(Long vacBoardId, VacBoardRequestDto requestDto) {
+    public VacBoard update(Long vacBoardId, VacBoardRequestDto requestDto, Long userId) throws AccessDeniedException {
         VacBoard vacBoard = vacBoardRepository.findById(vacBoardId).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
-        vacBoard.update(requestDto);
-        return vacBoard;
+        Long postUserId = vacBoard.getUser().getId();
+
+        if(postUserId.equals(userId)) {
+            vacBoard.update(requestDto);
+            return vacBoard;
+        }else{
+            throw new AccessDeniedException("작성자만 수정이 가능합니다.");
+        }
     }
 
     // 게시물 삭제

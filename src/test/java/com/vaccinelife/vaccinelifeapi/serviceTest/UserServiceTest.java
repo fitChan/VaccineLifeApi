@@ -1,22 +1,8 @@
 package com.vaccinelife.vaccinelifeapi.serviceTest;
 
 
-import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
-import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
-import com.vaccinelife.vaccinelifeapi.model.enums.Type;
-import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
-import com.vaccinelife.vaccinelifeapi.service.UserService;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.Collections;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 
 
@@ -57,7 +43,7 @@ public class UserServiceTest {
 //        //Then
 //        assertThat(this.passwordEncoder.matches(password, userDetails.getPassword())).isTrue();
 //    }
-
+//
 //    @Test
 //    public void findByUsernameFail() {
 //        //Expected ExpectedException 은 먼저 써주는 것.

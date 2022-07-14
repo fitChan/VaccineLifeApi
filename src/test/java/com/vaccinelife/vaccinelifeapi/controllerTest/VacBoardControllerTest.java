@@ -25,8 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.event.annotation.PrepareTestInstance;
+import org.springframework.test.util.AssertionErrors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@WithUser
 public class VacBoardControllerTest extends BaseControllerTest {
 
 
@@ -132,7 +133,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
 
     private String getAccessToken() throws Exception {
         String username = "cksdntjd";
-        String password = "cksdn123";
+
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("없는 유저 ")
         );
@@ -142,9 +143,8 @@ public class VacBoardControllerTest extends BaseControllerTest {
         Token.Response response = Token.Response.builder().token(token).build();
 
         String res = String.valueOf(response);
-        String replace = res.substring(21, res.length() - 1);
 
-        return replace;
+        return res.substring(21, res.length() - 1);
     }
 
     @Test
@@ -282,7 +282,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
                                 fieldWithPath("disease").description("the disease of the user who posted the vacBoard"),
                                 fieldWithPath("sideEffect").description("the sideEffect of the user who posted the vacBoard after vaccination")
                         )
-                        ))
+                ))
         ;
     }
 
@@ -290,11 +290,11 @@ public class VacBoardControllerTest extends BaseControllerTest {
     @Test
     @TestDescription("게시물을 수정하는 테스트")
     public void update_vacBoard() throws Exception {
-        Long id = 2L;
+        Long id = 3L;
         VacBoard vacBoard = vacBoardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("없는 게시물입니다.")
         );
-        vacBoard.update(new VacBoardRequestDto().builder()
+        vacBoard.update(VacBoardRequestDto.builder()
                 .title("updated title")
                 .contents("updated contents")
                 .build());
@@ -340,6 +340,33 @@ public class VacBoardControllerTest extends BaseControllerTest {
                                 fieldWithPath("likeCount").description("number of likeCount on the vacBoard")
                         )
                 ))
+        ;
+    }
+
+
+
+
+    @Test
+    @TestDescription("타인의 게시물을 수정하는 테스트")
+    public void update_vacBoard_access_deny() throws Exception {
+
+        Long id = 2L;
+        VacBoard vacBoard = vacBoardRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("없는 게시물입니다.")
+        );
+        vacBoard.update(VacBoardRequestDto.builder()
+                .title("updated title")
+                .contents("updated contents")
+                .build());
+
+
+        this.mockMvc.perform(put("/api/vacBoard/" + id)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+
         ;
     }
 }

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -109,8 +110,11 @@ public class VacBoardController {
 
     //    게시글 수정
     @PutMapping("/{vacBoardId}")
-    public ResponseEntity updateVacBoard(@PathVariable Long vacBoardId, @RequestBody VacBoardRequestDto requestDto) {
-        VacBoard vacBoard = vacBoardService.update(vacBoardId, requestDto);
+    public ResponseEntity updateVacBoard(@PathVariable Long vacBoardId, @RequestBody VacBoardRequestDto requestDto) throws AccessDeniedException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String s = authentication.getPrincipal().toString();
+        Long userId = Long.valueOf(s);
+        VacBoard vacBoard = vacBoardService.update(vacBoardId, requestDto, userId);
 
         WebMvcLinkBuilder selfLinkBuilder = linkTo(VacBoardController.class).slash(vacBoard.getId());
         URI createdUri
