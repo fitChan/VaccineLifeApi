@@ -2,9 +2,7 @@ package com.vaccinelife.vaccinelifeapi.controller;
 
 
 import com.vaccinelife.vaccinelifeapi.config.Resource.CommentResource;
-import com.vaccinelife.vaccinelifeapi.dto.CommentDeleteRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.CommentPostRequestDto;
-import com.vaccinelife.vaccinelifeapi.dto.CommentRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.ApiException;
 import com.vaccinelife.vaccinelifeapi.service.CommentService;
 import lombok.RequiredArgsConstructor;

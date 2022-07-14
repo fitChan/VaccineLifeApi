@@ -20,17 +20,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 @Component
 @Log
-public class UserService{
+public class UserService {
 
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -95,40 +93,32 @@ public class UserService{
         log.info("유저 부작용 업데이트");
     }
 
+
+    public Map<SideEffectname, List<SideEffect>> sideEffectGroup(List<SideEffect> sideEffects) {
+        return sideEffects.stream().collect(Collectors.groupingBy(SideEffect::getSideEffectname));
+    }
+
+    public int isthatNull(SideEffectname sideEffectname) {
+        List<SideEffect> sideEffect = sideEffectRepository.findAll();
+        Map<SideEffectname, List<SideEffect>> collect = sideEffectGroup(sideEffect);
+        if (collect.get(sideEffectname) == null) {
+            return 0;
+        } else {
+            return collect.get(sideEffectname).size();
+        }
+    }
+
     @Transactional
     public void findAfterEffect() {
-        /*TODO
-        1. STREAM() 쓸꺼고, GROUP BY(?) SUM -> ENUM 으로 들어가서 될거야 , 공부할 것.
-        2. 유지 보수 문제가 분명 존재할 것. 문자열 가공은 하지말고 ENUM 으로 TYPE SAFE 하게 할것.
-        3. groupBy (or) switch+case
-        4. if (sideEffect.get(i).getSideEffectname() == SideEffectname.none) {
-        */
-
-        List<SideEffect> sideEffect = sideEffectRepository.findAll();
-        int none = 0, fever = 0, headache = 0, fatigue = 0, pain = 0, swell = 0, sickness = 0, allergy = 0, others = 0;
-        for (int i = 0; i < sideEffect.size(); i++) {
-            if (sideEffect.get(i).getSideEffectname() == SideEffectname.none) {
-                none++;
-            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("fev")) {
-                fever++;
-            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("headac")) {
-                headache++;
-            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("fatig")) {
-                fatigue++;
-            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("pa")) {
-                pain++;
-            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("swe")) {
-                swell++;
-            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("fev")) {
-                fever++;
-            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("sickne")) {
-                sickness++;
-            } else if (sideEffect.get(i).getSideEffectname().toString().startsWith("aller")) {
-                allergy++;
-            } else {
-                others++;
-            }
-        }
+        int none = isthatNull(SideEffectname.none);
+        int fever = isthatNull(SideEffectname.fever);
+        int headache = isthatNull(SideEffectname.headache);
+        int fatigue = isthatNull(SideEffectname.fatigue);
+        int pain = isthatNull(SideEffectname.pain);
+        int swell = isthatNull(SideEffectname.swell);
+        int sickness = isthatNull(SideEffectname.sickness);
+        int allergy = isthatNull(SideEffectname.allergy);
+        int others = isthatNull(SideEffectname.others);
 
         /*TODO CREATE,UPDATE 같이 되는게 있는 것같다. */
         StatisticsAfterEffect realstatisticsAfterEffect = StatisticsAfterEffect.builder()
@@ -146,23 +136,6 @@ public class UserService{
         statisticsAfterEffectRepository.save(realstatisticsAfterEffect);
 
     }
-
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        User user = userRepository.findByUsername(username).orElseThrow(
-//                () -> new UsernameNotFoundException(username)
-//        );
-//        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities(user.getRole()));
-//    }
-//
-//    private Collection<? extends GrantedAuthority> authorities(Set<UserRole> role) {
-//        return role.stream()
-//                .map(r -> new SimpleGrantedAuthority("ROLE" + r.name()))
-//                .collect(Collectors.toSet());
-//    }
-
-
-
 
 
 }
