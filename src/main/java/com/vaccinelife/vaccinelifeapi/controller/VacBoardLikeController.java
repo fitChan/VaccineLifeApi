@@ -1,5 +1,6 @@
 package com.vaccinelife.vaccinelifeapi.controller;
 
+import com.sun.xml.bind.v2.TODO;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardLikeRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.ResponseDto;
 import com.vaccinelife.vaccinelifeapi.exception.ApiException;
@@ -27,9 +28,11 @@ public class VacBoardLikeController {
         return vacBoardLikeService.Like(vacBoardLikeRequestDto, userId);
     }
 
-    //   유저 기본키로 유저별 좋아요 조회
-    @GetMapping("/api/vacBoard/like/{userId}")
-    public ResponseEntity<List<VacBoardLikeRequestDto>> Like(@PathVariable Long userId) {
+
+    @GetMapping("/api/vacBoard/like")
+    public ResponseEntity<List<VacBoardLikeRequestDto>> Like() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.valueOf(authentication.getPrincipal().toString());
         return ResponseEntity.ok().body(vacBoardLikeService.getLike(userId));
     }
 

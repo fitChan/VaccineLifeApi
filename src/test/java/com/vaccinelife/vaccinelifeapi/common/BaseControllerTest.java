@@ -1,11 +1,18 @@
 package com.vaccinelife.vaccinelifeapi.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
+import com.vaccinelife.vaccinelifeapi.model.*;
+import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
+import com.vaccinelife.vaccinelifeapi.model.enums.Type;
+import com.vaccinelife.vaccinelifeapi.repository.*;
 import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.restdocs.RestDocsAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +24,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -35,15 +45,16 @@ public class BaseControllerTest {
     protected ObjectMapper objectMapper;
     @Autowired
     protected JwtTokenProvider jwtTokenProvider;
-    @Autowired
-    protected UserService userService;
+
 
     @BeforeEach
-    void setup(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
+    void setup(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation){
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())    // springSecurity설정이 되어있지 않으면 생략
                 .apply(documentationConfiguration(restDocumentation)).build();
     }
+
+
 
 
 }

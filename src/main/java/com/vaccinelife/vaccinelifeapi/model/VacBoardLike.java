@@ -8,13 +8,15 @@ import lombok.Setter;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.*;
+import java.sql.Time;
 
 @Getter
 @RestController
 @Setter
 @Entity
 @NoArgsConstructor
-public class VacBoardLike {
+/*TODO CREATEDATE 추가함*/
+public class VacBoardLike extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

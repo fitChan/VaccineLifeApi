@@ -55,9 +55,6 @@ public class AppConfig {
                         .afterEffect(sam)
                         .build();
                 userService.registerUser(cksdntjd);
-//                List<SideEffectname> sam2 = new ArrayList<>();
-//                sam.add(SideEffectname.fatigue);
-//                sam.add(SideEffectname.fever);
                 SignupRequestDto cksdntjd2 = SignupRequestDto.builder()
                         .username("cksdntjd2")
                         .password("cksdn123")
@@ -149,18 +146,6 @@ public class AppConfig {
                         byId.setCommentCount(commentCount);
                     }
                 }
-
-
-//                1. 우선 유저 아이디로 user 받음.
-//                2. 해당 유저를 통해 repo찾고 리스트 반환
-//
-//                User cksdntjd1 = userRepository.findByUsername("cksdntjd").orElseThrow(
-//                        ()-> new IllegalArgumentException("not")
-//                );
-//                List<AfterEffect> allByUser = afterEffectRepository.findAllByUser(cksdntjd1);
-//                for(int i=0; i<allByUser.size(); i++){
-//                    System.out.println(allByUser.get(i).getSideEffectname());
-//                }
             }
         };
     }

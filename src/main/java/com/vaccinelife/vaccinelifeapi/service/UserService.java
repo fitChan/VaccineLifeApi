@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@Log
 public class UserService {
 
 
@@ -36,6 +35,7 @@ public class UserService {
     private final SideEffectRepository sideEffectRepository;
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
     private final StatisticsAfterEffectRepository statisticsAfterEffectRepository;
+
 
     public boolean wrongpassword(SignupRequestDto requestDto, String password) {
         if (!passwordEncoder.matches(requestDto.getPassword(), password)) {

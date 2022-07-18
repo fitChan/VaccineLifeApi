@@ -53,8 +53,8 @@ public class AuthServerConfigTest extends BaseControllerTest {
 //                .andExpect(jsonPath("access_token").exists());
 //    }
     @Test
-    @TestDescription("인증 토큰 발급 테스트") @WithUser
-    public void getAuthToken() throws Exception {
+    @TestDescription("인증 토큰 발급 테스트")
+    public void 인증_토큰_발급_테스트() throws Exception {
         String username = "cksdntjd";
         String password = "cksdn123";
 

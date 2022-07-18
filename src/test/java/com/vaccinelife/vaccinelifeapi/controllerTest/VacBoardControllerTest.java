@@ -1,38 +1,31 @@
 package com.vaccinelife.vaccinelifeapi.controllerTest;
 
 
-import com.sun.xml.bind.v2.TODO;
-import com.vaccinelife.vaccinelifeapi.accountUser.WithUser;
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
+import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardPostRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
-import com.vaccinelife.vaccinelifeapi.model.SideEffect;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import com.vaccinelife.vaccinelifeapi.model.enums.SideEffectname;
-import com.vaccinelife.vaccinelifeapi.repository.SideEffectRepository;
+import com.vaccinelife.vaccinelifeapi.model.enums.Type;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
 import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
-import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
 import com.vaccinelife.vaccinelifeapi.security.Token;
 import com.vaccinelife.vaccinelifeapi.security.UserAuthentication;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
-import com.vaccinelife.vaccinelifeapi.service.VacBoardService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.test.context.event.annotation.PrepareTestInstance;
-import org.springframework.test.util.AssertionErrors;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.IntStream;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
@@ -53,27 +46,27 @@ public class VacBoardControllerTest extends BaseControllerTest {
     @Autowired
     VacBoardRepository vacBoardRepository;
     @Autowired
-    VacBoardService vacBoardService;
-    @Autowired
     UserRepository userRepository;
-    @Autowired
-    UserService userService;
-    @Autowired
-    SideEffectRepository sideEffectRepository;
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
 
-    @BeforeEach
-    /* TODO BeforeEach 문 사용하기 + mock user(user 생성)*/
+
+//    @BeforeAll
+//    public static void generateEach(){
+//        IntStream.range(0,30).forEach(i->{
+//            try {
+//                generateEvent(i);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+//    }
+    /* TODO BeforeEach 문 사용하기 + mock user(user 생성)
+     *   2. 모든 API 추가해야함
+     *   3. BEFORE-Each 로 DATA 넣어두기 */
 
 
     @Test
     @TestDescription("정상적으로 vacBoard를 생성함")
     public void createVacBoard() throws Exception {
-
-        User user = userRepository.findByUsername("cksdntjd").orElseThrow(
-                () -> new IllegalArgumentException("없는 유저")
-        );
         VacBoardPostRequestDto vacBoardPostRequestDto = VacBoardPostRequestDto.builder()
 
                 .title("the title 정상적으로 vacBoard를 생성함")
@@ -123,8 +116,6 @@ public class VacBoardControllerTest extends BaseControllerTest {
                                 fieldWithPath("likeCount").description("number of likeCount on the vacBoard"),
                                 fieldWithPath("contents").description("contests of the vacBoard"),
                                 fieldWithPath("contents").description("contests of the vacBoard")
-//                                fieldWithPath("_links.self.href").description("link to self"),
-//                                fieldWithPath("_links.query-vacBoards.href").description("link to query vacBoard")
                         )
 
                 ))
@@ -167,9 +158,6 @@ public class VacBoardControllerTest extends BaseControllerTest {
     @Test
     @TestDescription("30개의 게시물을 10개씩 페이지 조회하기.")
     public void queryVacBoardList() throws Exception {
-        //Given
-//        IntStream.range(0, 30).forEach(this::generateVacboard);
-        //When
         this.mockMvc.perform(get("/api/vacBoard")
                 .param("page", "1")
                 .param("size", "10")
@@ -213,18 +201,6 @@ public class VacBoardControllerTest extends BaseControllerTest {
         ;
     }
 
-//    private VacBoard generateVacboard(int i) {
-//        User user = userRepository.findById(1L).orElseThrow(
-//                () -> new IllegalArgumentException("없는 유저입니다.")
-//        );
-//        VacBoard vacBoard = VacBoard.builder()
-//                .user(user)
-//                .title("vacBoard" + i)
-//                .contents("generated contents for JUnit Test")
-//                .build();
-//        return this.vacBoardRepository.save(vacBoard);
-//    }
-
     @Test
     @TestDescription("vacBoard 게시물 하나를 조회하는 테스트")
     public void get_vacBoard() throws Exception {
@@ -244,8 +220,6 @@ public class VacBoardControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("contents").exists())
                 .andExpect(jsonPath("totalVisitors").exists())
                 .andExpect(jsonPath("likeCount").exists())
-//                .andExpect(jsonPath("userId").exists())
-//                .andExpect(jsonPath("username").exists())
                 .andExpect(jsonPath("nickname").exists())
                 .andExpect(jsonPath("isVaccine").exists())
                 .andExpect(jsonPath("type").exists())
@@ -344,8 +318,6 @@ public class VacBoardControllerTest extends BaseControllerTest {
     }
 
 
-
-
     @Test
     @TestDescription("타인의 게시물을 수정하는 테스트")
     public void update_vacBoard_access_deny() throws Exception {
@@ -369,4 +341,30 @@ public class VacBoardControllerTest extends BaseControllerTest {
 
         ;
     }
+
+//    public static void generateEvent(int i) throws Exception {
+//        User user = userRepository.findById(1L).orElseThrow(
+//                () -> new IllegalArgumentException("없는 유저입니다.")
+//        );
+//        User user2 = userRepository.findById(2L).orElseThrow(
+//                () -> new IllegalArgumentException("없는 유저입니다.")
+//        );
+//
+//        if (i % 2 == 0) {
+//            VacBoard vacBoard = VacBoard.builder()
+//                    .user(user)
+//                    .title("user1의 the title" + i + "번째 for Junit Test")
+//                    .contents("the content" + i + "번째 for Junit Test")
+//                    .build();
+//
+//            vacBoardRepository.save(vacBoard);
+//        } else {
+//            VacBoard vacBoard = VacBoard.builder()
+//                    .user(user2)
+//                    .title("user2의 the title" + i + "번째 for Junit Test")
+//                    .contents("the content" + i + "번째 for Junit Test")
+//                    .build();
+//            vacBoardRepository.save(vacBoard);
+//        }
+//    }
 }

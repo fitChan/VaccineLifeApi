@@ -80,8 +80,7 @@ git, GitHub
 ![VacBoard게시판작성 시퀀스](https://user-images.githubusercontent.com/84306157/176438341-ce18cd85-ebb0-49da-a01d-2b8aa2fb2ec1.png)
 - 백신 게시판 댓글 GetMapping
 ![댓글조회시퀀스](https://user-images.githubusercontent.com/84306157/177777172-56d03a76-eead-492c-bb74-03f340430615.png)
-
 - 백신 게시판 댓글 PostMapping
 ![댓글 작성](https://user-images.githubusercontent.com/84306157/177777183-5fca1f7b-35c9-415b-b24c-c2ae1cfe024d.png)
 
-
+[comment]: <> (TODO 최상단에 DOCS IMG 파일 넣어두고 끌어다 쓸수 있음을 확인 &#40;MARKDOWN 문서 만들기&#41; )

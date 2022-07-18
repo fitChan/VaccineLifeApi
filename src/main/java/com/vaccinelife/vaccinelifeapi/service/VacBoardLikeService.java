@@ -1,5 +1,6 @@
 package com.vaccinelife.vaccinelifeapi.service;
 
+import com.sun.xml.bind.v2.TODO;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardLikeRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.ResponseDto;
 import com.vaccinelife.vaccinelifeapi.model.User;
@@ -24,15 +25,13 @@ public class VacBoardLikeService {
     private final VacBoardRepository vacBoardRepository;
     private final UserRepository userRepository;
 
+
+    /*TODO 1. 생각해볼것 -> 동시요청 / 한번에 여러번 눌렀을 경우 어캐 될지 생각 해볼것. */
     @Transactional
     public ResponseDto Like(VacBoardLikeRequestDto vacBoardLikeRequestDto, Long userId) {
         VacBoard vacBoard = vacBoardRepository.findById(vacBoardLikeRequestDto.getVacBoardId()).orElseThrow(
                 () -> new NullPointerException("해당 게시물이 존재하지 않습니다.")
         );
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
-
-
         User user = userRepository.getById(userId);
 
         boolean isExist = vacBoardLikeRepository.existsByVacBoardAndUser(vacBoard, user);
@@ -41,20 +40,21 @@ public class VacBoardLikeService {
         if (isExist) {
             vacBoardLikeRepository.deleteByVacBoardAndUser(vacBoard, user);
             vacBoard.updateLikeNum(-1);
-            return new ResponseDto(false, "Basic 게시글 좋아요 취소", 200);
+            return new ResponseDto(false, "vacBoard like is canceled", 200);
         } else {
             VacBoardLike vacBoardLike = new VacBoardLike(vacBoard, user);
             vacBoardLikeRepository.save(vacBoardLike);
             vacBoard.updateLikeNum(+1);
-            return new ResponseDto(true, "Basic 게시글 좋아요 추가", 200);
+            return new ResponseDto(true, "vacBoard like is applied", 200);
         }
     }
+
     //userID로 유저별로 좋아요 한 게시글 조회
-    public List<VacBoardLikeRequestDto> getLike(Long id) {
-        List<VacBoardLike> vacBoardLike = vacBoardLikeRepository.findAllByUserId(id);
-            if(id==null){
-                new NullPointerException("아이디가 존재하지 않습니다.");
+    public List<VacBoardLikeRequestDto> getLike(Long userId) {
+        if (userId == null) {
+            throw new NullPointerException("아이디가 존재하지 않습니다.");
         }
+        List<VacBoardLike> vacBoardLike = vacBoardLikeRepository.findAllByUserId(userId);
 
         return VacBoardLikeRequestDto.list(vacBoardLike);
     }

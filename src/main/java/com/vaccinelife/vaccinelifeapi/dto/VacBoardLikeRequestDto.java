@@ -26,12 +26,12 @@ import java.util.List;
 @AllArgsConstructor
 public class VacBoardLikeRequestDto {
     private Long vacBoardId;
-    private String title;
-    private String contents;
+//    private String title;
+//    private String contents;
     private int likeCount;
-    private int totalVisitors;
-    private int commentCount;
-    private Type type;
+//    private int totalVisitors;
+//    private int commentCount;
+//    private Type type;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
@@ -48,12 +48,12 @@ public class VacBoardLikeRequestDto {
     public static VacBoardLikeRequestDto of(VacBoardLike vacBoardLike) {
         return VacBoardLikeRequestDto.builder()
                 .vacBoardId(vacBoardLike.getVacBoard().getId())
-                .title(vacBoardLike.getVacBoard().getTitle())
-                .contents(vacBoardLike.getVacBoard().getContents())
+//                .title(vacBoardLike.getVacBoard().getTitle())
+//                .contents(vacBoardLike.getVacBoard().getContents())
                 .likeCount(vacBoardLike.getVacBoard().getLikeCount())
-                .totalVisitors(vacBoardLike.getVacBoard().getTotalVisitors())
-                .commentCount(vacBoardLike.getVacBoard().getCommentCount())
-                .type(vacBoardLike.getUser().getType())
+//                .totalVisitors(vacBoardLike.getVacBoard().getTotalVisitors())
+//                .commentCount(vacBoardLike.getVacBoard().getCommentCount())
+//                .type(vacBoardLike.getUser().getType())
                 .createdAt(vacBoardLike.getVacBoard().getCreatedAt())
                 .modifiedAt(vacBoardLike.getVacBoard().getModifiedAt())
                 .build();
