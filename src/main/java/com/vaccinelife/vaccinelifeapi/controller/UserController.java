@@ -75,19 +75,6 @@ public class UserController {
         }
     }
 
-    //유저 정보 수정 후 새로 바뀐 정보로 토큰 재발급
-//    @PutMapping("api/signup/{id}")
-//    public String Userinfo(@PathVariable Long id, @RequestBody SignupRequestDto requestDto) {
-//        User user = userRepository.findByUsername(requestDto.getUsername())
-//                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 유저입니다."));
-//        userService.update(id, requestDto);
-//        return jwtTokenProvider.createToken(user.getUsername());
-//    }
-
-//    @GetMapping("/test")
-//    public ResponseEntity<List<TestAfterEffect>> findAfterEffect(){
-//        return ResponseEntity.ok().body(userService.findAfterEffect());
-//    }
 
     @GetMapping("/api/main/afterEffect")
     public ResponseEntity findAfterEffect() {

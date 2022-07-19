@@ -35,6 +35,8 @@ public class AppConfig {
             UserRepository userRepository;
             @Autowired
             SideEffectRepository sideEffectRepository;
+            @Autowired
+            QuarCommentRepository quarCommentRepository;
 
             //Test용 User.
             @Override
@@ -124,6 +126,9 @@ public class AppConfig {
                     VacBoard byId = vacBoardRepository.findById(i + 1L).orElseThrow(
                             () -> new IllegalArgumentException("??????????????????????????")
                     );
+                    QuarBoard quarBoard = quarBoardRepository.findById(i+1L).orElseThrow(
+                            () -> new IllegalArgumentException("??????????????????????????")
+                    );
                     for (int j = 0; j < 2; j++) {
                         if (i % 2 == 0) {
                             Comment comment = Comment.builder()
@@ -131,19 +136,34 @@ public class AppConfig {
                                     .vacBoard(byId)
                                     .comment("user1의 contents")
                                     .build();
+                            QuarComment quarComment = QuarComment.builder()
+                                    .user(user)
+                                    .quarBoard(quarBoard)
+                                    .quarcomment("user1의 contents")
+                                    .build();
                             commentRepository.save(comment);
+                            quarCommentRepository.save(quarComment);
                         } else {
                             Comment comment = Comment.builder()
                                     .user(user2)
                                     .vacBoard(byId)
                                     .comment("user2의 contents")
                                     .build();
+                            QuarComment quarComment = QuarComment.builder()
+                                    .user(user2)
+                                    .quarBoard(quarBoard)
+                                    .quarcomment("user2의 contents")
+                                    .build();
+                            quarCommentRepository.save(quarComment);
                             commentRepository.save(comment);
                         }
 
                         int commentCount = byId.getCommentCount();
                         commentCount += 1;
+                        int quarCommentCount = quarBoard.getCommentCount();
+                        quarCommentCount+=1;
                         byId.setCommentCount(commentCount);
+                        quarBoard.setCommentCount(quarCommentCount);
                     }
                 }
             }

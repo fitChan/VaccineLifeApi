@@ -114,7 +114,6 @@ public class VacBoardControllerTest extends BaseControllerTest {
                                 fieldWithPath("totalVisitors").description("number of Visitors of the vacBoard"),
                                 fieldWithPath("commentCount").description("number of comments on the vacBoard"),
                                 fieldWithPath("likeCount").description("number of likeCount on the vacBoard"),
-                                fieldWithPath("contents").description("contests of the vacBoard"),
                                 fieldWithPath("contents").description("contests of the vacBoard")
                         )
 

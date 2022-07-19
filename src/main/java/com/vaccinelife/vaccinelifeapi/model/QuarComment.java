@@ -26,6 +26,7 @@ import javax.persistence.*;
     @JoinColumn(name = "quarBoardId")
     private QuarBoard quarBoard;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
      private User user;

@@ -5,6 +5,7 @@ import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.security.JwtTokenProvider;
+import com.vaccinelife.vaccinelifeapi.security.Token;
 import com.vaccinelife.vaccinelifeapi.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AuthServerConfigTest extends BaseControllerTest {
 
@@ -58,13 +60,14 @@ public class AuthServerConfigTest extends BaseControllerTest {
         String username = "cksdntjd";
         String password = "cksdn123";
 
-        String s = objectMapper.writeValueAsString(new User(username, password));
+        String s = objectMapper.writeValueAsString(new Token.Request(username, password));
 
         this.mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(s)
         )
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("token").exists());
 
     }

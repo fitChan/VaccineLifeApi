@@ -56,8 +56,8 @@ public class User extends Timestamped{
     private Type type;
 
     // 중복으로 못들어가는거 확인. @OneToMany 관계 연결 해주기.
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
-
     private Set<SideEffect> sideEffect = new HashSet<>();
 
 
@@ -109,7 +109,6 @@ public class User extends Timestamped{
     private Set<UserRole> role;
 
 
-   /* TODO AfterEffectEnum + AfterEffect 로직 처리해야함 . */
     public User(String username, String password) {
         this.username = username;
         this.password = password;

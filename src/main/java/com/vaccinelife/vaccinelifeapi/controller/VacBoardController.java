@@ -69,14 +69,14 @@ public class VacBoardController {
 
     //    상세 게시판 조회
     @GetMapping("/{vacBoardId}")
-    public ResponseEntity<VacBoardRequestDto> getDetailVacBoard(@PathVariable Long vacBoardId) {
+    public ResponseEntity<VacBoardRequestDtoResource> getDetailVacBoard(@PathVariable Long vacBoardId) {
         vacBoardService.IpChecker(vacBoardId); // 방문자 체크 로직
 
         VacBoardRequestDto newVacBoardRequestDto = vacBoardService.getDetailVacBoard(vacBoardId);
         VacBoardRequestDtoResource vacBoardRequestDtoResource = new VacBoardRequestDtoResource(newVacBoardRequestDto);
         vacBoardRequestDtoResource.add(Link.of("/docs/index.html#resources-get-vacBoard").withRel("profile"));
 
-        return ResponseEntity.ok().body(newVacBoardRequestDto);
+        return ResponseEntity.ok().body(vacBoardRequestDtoResource);
     }
 
     @GetMapping("/{vacBoardId}/comments")
@@ -86,7 +86,7 @@ public class VacBoardController {
 
         entityModel.add(linkTo((this.getClass())).slash(vacBoardId).withSelfRel());
 
-        entityModel.add(Link.of("/docs/index.html#resources_query_comment_list_in_vacBoard").withRel("profile"));
+        entityModel.add(Link.of("/docs/index.html#resources_query_comments_list_in_vacBoard").withRel("profile"));
 
         return ResponseEntity.ok(entityModel);
     }

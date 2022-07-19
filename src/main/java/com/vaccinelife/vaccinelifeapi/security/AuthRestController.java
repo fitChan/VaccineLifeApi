@@ -60,7 +60,7 @@ public class AuthRestController {
         }
 
         Authentication authentication = new UserAuthentication( user.getId(), null, null);
-        String token = jwtTokenProvider.createToken(String.valueOf(user.getId()));
+        String token = jwtTokenProvider.createToken(String.valueOf(authentication.getPrincipal().toString()));
 
         Token.Response response = Token.Response.builder().token(token).build();
 

@@ -1,5 +1,7 @@
 package com.vaccinelife.vaccinelifeapi.service;
 
+import com.vaccinelife.vaccinelifeapi.config.Resource.QuarBoardResource;
+import com.vaccinelife.vaccinelifeapi.controller.QuarBoardController;
 import com.vaccinelife.vaccinelifeapi.dto.*;
 import com.vaccinelife.vaccinelifeapi.model.QuarBoard;
 import com.vaccinelife.vaccinelifeapi.model.User;
@@ -14,18 +16,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.net.URI;
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @AllArgsConstructor
 @Service
@@ -78,23 +85,40 @@ public class QuarBoardService {
 
     //    게시물 작성
     @Transactional
-    public void createQuarBoard(QuarBoardPostRequestDto requestDto, Long userId) {
+    public ResponseEntity<QuarBoardResource> createQuarBoard(QuarBoardPostRequestDto requestDto, Long userId) {
+
+
         User user = userRepository.getById(userId);
         QuarBoard quarBoard = QuarBoard.builder()
                 .user(user)
                 .title(requestDto.getTitle())
                 .contents(requestDto.getContents()).build();
-        quarBoardRepository.save(quarBoard);
+        QuarBoard save = quarBoardRepository.save(quarBoard);
+
+        WebMvcLinkBuilder selfLinkBuilder = linkTo(QuarBoardController.class).slash(save.getId());
+        URI createdUri
+                = selfLinkBuilder.toUri();
+
+        QuarBoardResource quarBoardResource = new QuarBoardResource(quarBoard);
+        quarBoardResource.add(linkTo(QuarBoardController.class).withRel("query-quarBoards"));
+        quarBoardResource.add(Link.of("/docs/index.html#resources-quarBoard-create").withRel("profile"));
+        return ResponseEntity.created(createdUri).body(quarBoardResource);
+
     }
 
     //     게시물 수정
     @Transactional
-    public Long update(Long quarBoardId, QuarBoardRequestDto requestDto) {
+    public QuarBoard update(Long quarBoardId, QuarBoardRequestDto requestDto, Long userId) throws AccessDeniedException {
         QuarBoard quarBoard = quarBoardRepository.findById(quarBoardId).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
-        quarBoard.update(requestDto);
-        return quarBoardId;
+
+        if(quarBoard.getUser().getId().equals(userId)) {
+            quarBoard.update(requestDto);
+            return quarBoard;
+        }else{
+            throw new AccessDeniedException("작성자만 수정이 가능합니다.");
+        }
     }
 
     //    게시물 삭제

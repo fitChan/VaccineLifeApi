@@ -24,7 +24,6 @@ public class QuarBoardRequestDto {
     private int totalVisitors;
     private int likeCount;
     private int commentCount;
-    private String username;
     private String nickname;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -46,7 +45,6 @@ public class QuarBoardRequestDto {
                 .contents(quarBoard.getContents())
                 .totalVisitors(quarBoard.getTotalVisitors())
                 .likeCount(quarBoard.getLikeCount())
-                .username(quarBoard.getUser().getUsername())
                 .nickname(quarBoard.getUser().getNickname())
                 .createdAt(quarBoard.getCreatedAt())
                 .modifiedAt(quarBoard.getModifiedAt())
