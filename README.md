@@ -62,7 +62,7 @@ git, GitHub
 ### ERD 
 
 ![erd](https://user-images.githubusercontent.com/84306157/178018736-139397c2-6baf-4aae-94ff-b8c1711f5820.png)
-<img src="images/erd.png", width="300" height="200">
+
 
 
 
