@@ -33,7 +33,7 @@ public class Medical extends Timestamped {
 
     @OneToMany(mappedBy = "medical", cascade = {CascadeType.REMOVE})
     @JsonIgnore
-    private Set<MedicalLike> medicalLikes = new HashSet<>();
+    private final Set<MedicalLike> medicalLikes = new HashSet<>();
     public void updateMedicalLikeNum(int count) {
         this.likeCount += count;
     }

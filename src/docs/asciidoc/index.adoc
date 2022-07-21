@@ -17,8 +17,7 @@ Baeldung;
 = 소개
 VaccineLife(슬기로운 백신 생활) API
 
-[[overview-http-verbs]]
-== HTTP verbs
+
 
 [[overview-http-verbs]]
 == 공통사항
@@ -156,7 +155,7 @@ include::{snippets}/vacBoard-update/links.adoc[]
 
 
 === 게시물 좋아요
-게시물에 좋아요를 누르는 기능
+게시물에 좋아요 리소스
 
 ==== Request
 
@@ -175,7 +174,7 @@ include::{snippets}/like_vacBoard_applied/response-fields.adoc[]
 include::{snippets}/like_vacBoard_applied/http-response.adoc[]
 
 === 게시물 좋아요 취소
-게시물에 좋아요를 취소하는 기능
+게시물에 좋아요를 취소하는 리소스
 
 ==== Request
 
@@ -196,6 +195,7 @@ include::{snippets}/like_vacBoard_canceled/http-response.adoc[]
 == VacBoard Comment Resource
 
 === 댓글 생성
+VacBoard에 댓글을 생성하는 리소스
 
 ==== Request
 
@@ -218,6 +218,7 @@ include::{snippets}/comment-create-in-vacBoard/links.adoc[]
 
 
 === 댓글 리스트 조회
+한 VacBoard에 생성된 댓글 리스트를 조회하는 리소스
 
 ==== Request
 
@@ -239,6 +240,7 @@ include::{snippets}/comment-query-list-in-vacBoard/http-response.adoc[]
 
 
 === 게시물 생성
+
 
 ==== Request
 

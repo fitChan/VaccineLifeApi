@@ -39,15 +39,11 @@
     asciidoctor
 <br/><br/>
   
-### Environment
+### Environment 반응형 웹
 
     OS: Windows, Mac OS, Android, IOS  
     Browser support: Chrome, Safari  
 <br/><br/>
-  
-### License
-
-    GNU General Public License v2.0
 
   
 ### 협업 툴
@@ -66,6 +62,8 @@ git, GitHub
 ### ERD 
 
 ![erd](https://user-images.githubusercontent.com/84306157/178018736-139397c2-6baf-4aae-94ff-b8c1711f5820.png)
+<img src="images/erd.png", width="300" height="200">
+
 
 
 ### 시퀀스 
