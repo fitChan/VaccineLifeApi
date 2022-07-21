@@ -82,6 +82,9 @@ git, GitHub
 ![댓글 작성](https://user-images.githubusercontent.com/84306157/177777183-5fca1f7b-35c9-415b-b24c-c2ae1cfe024d.png)
 
 [comment]: <> (TODO 최상단에 DOCS IMG 파일 넣어두고 끌어다 쓸수 있음을 확인 &#40;MARKDOWN 문서 만들기&#41; )
+
+
 - Rest Docs 바로가기
+
   [![Rest Docs Page](https://user-images.githubusercontent.com/84306157/180272884-0361ac70-5521-42ed-85be-0b088ef74c0d.png)
   ](https://fitchan.github.io/)
