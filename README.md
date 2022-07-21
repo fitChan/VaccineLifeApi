@@ -84,7 +84,6 @@ git, GitHub
 [comment]: <> (TODO 최상단에 DOCS IMG 파일 넣어두고 끌어다 쓸수 있음을 확인 &#40;MARKDOWN 문서 만들기&#41; )
 
 
-* :link:
 ### Rest Docs 바로가기(이미지를 클릭하시면 restDocs을 확인 하실수 있습니다.)
 
   [![Rest Docs Page](https://user-images.githubusercontent.com/84306157/180276538-633b2bc5-5b1a-4ddb-b6f6-082da192d72e.png)
