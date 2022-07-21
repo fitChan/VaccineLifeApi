@@ -28,8 +28,9 @@ public class QuarBoardLikeController {
     }
 
 //   유저 기본키로 유저별 좋아요 조회
-    @GetMapping("/api/quarBoard/like/{userId}")
-    public ResponseEntity<List<QuarBoardLikeRequestDto>> Like(@PathVariable Long userId) {
+    @GetMapping("/api/quarBoard/like")
+    public ResponseEntity<List<QuarBoardLikeRequestDto>> Like() {
+        Long userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         return ResponseEntity.ok().body(quarBoardLikeService.getLike(userId));
     }
 

@@ -155,8 +155,45 @@ include::{snippets}/vacBoard-update/http-response.adoc[]
 include::{snippets}/vacBoard-update/links.adoc[]
 
 
-== Comment Resource
+=== 게시물 좋아요
+게시물에 좋아요를 누르는 기능
 
+==== Request
+
+.Request Fields
+include::{snippets}/like_vacBoard_applied/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/like_vacBoard_applied/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/like_vacBoard_applied/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/like_vacBoard_applied/http-response.adoc[]
+
+=== 게시물 좋아요 취소
+게시물에 좋아요를 취소하는 기능
+
+==== Request
+
+.Request Fields
+include::{snippets}/like_vacBoard_canceled/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/like_vacBoard_canceled/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/like_vacBoard_canceled/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/like_vacBoard_canceled/http-response.adoc[]
+
+== VacBoard Comment Resource
 
 === 댓글 생성
 
@@ -197,6 +234,172 @@ include::{snippets}/comment-query-list-in-vacBoard/response-fields.adoc[]
 
 .Response HTTP Example
 include::{snippets}/comment-query-list-in-vacBoard/http-response.adoc[]
+
+== QuarBoard Resource
+
+
+=== 게시물 생성
+
+==== Request
+
+.Request Fields
+include::{snippets}/quarBoard-create/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/quarBoard-create/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/quarBoard-create/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/quarBoard-create/http-response.adoc[]
+
+.Links
+include::{snippets}/quarBoard-create/links.adoc[]
+
+
+=== 게시물 리스트 조회
+
+==== Request
+
+.Request Fields
+include::{snippets}/quarBoard-query-List/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/quarBoard-query-List/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/quarBoard-query-List/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/quarBoard-query-List/http-response.adoc[]
+
+.Links
+include::{snippets}/quarBoard-query-List/links.adoc[]
+
+=== 게시물 단건 조회
+
+==== Request
+
+.Request Fields
+include::{snippets}/quarBoard-query/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/quarBoard-query/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/quarBoard-query/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/quarBoard-query/http-response.adoc[]
+
+.Links
+include::{snippets}/quarBoard-query/links.adoc[]
+
+=== 게시물 수정
+
+==== Request
+
+.Request Fields
+include::{snippets}/quarBoard-update/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/quarBoard-update/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/quarBoard-update/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/quarBoard-update/http-response.adoc[]
+
+.Links
+include::{snippets}/quarBoard-update/links.adoc[]
+
+=== 게시물 좋아요
+
+==== Request
+
+.Request Fields
+include::{snippets}/like_quarBoard_applied/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/like_quarBoard_applied/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/like_quarBoard_applied/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/like_quarBoard_applied/http-response.adoc[]
+
+=== 게시물 좋아요 취소
+
+==== Request
+
+.Request Fields
+include::{snippets}/like_quarBoard_canceled/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/like_quarBoard_canceled/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/like_quarBoard_canceled/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/like_quarBoard_canceled/http-response.adoc[]
+
+== QuarBoard Comment Resource
+
+=== 댓글 생성
+
+==== Request
+
+.Request Fields
+include::{snippets}/quarBoard-comment-create/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/quarBoard-comment-create/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/quarBoard-comment-create/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/quarBoard-comment-create/http-response.adoc[]
+
+.Links
+include::{snippets}/quarBoard-comment-create/links.adoc[]
+
+=== 댓글 리스트 조회
+
+==== Request
+
+.Request Fields
+include::{snippets}/quarBoard-comment-query-list/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/quarBoard-comment-query-list/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/quarBoard-comment-query-list/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/quarBoard-comment-query-list/http-response.adoc[]
+
 
 == Mypage Resource
 

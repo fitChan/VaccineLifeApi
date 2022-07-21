@@ -207,7 +207,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
                 () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")
         );
 
-        this.mockMvc.perform(get("/api/vacBoard/{vacBoardId}", vacBoard.getId())
+        this.mockMvc.perform(get("/api/vacBoard/" + vacBoard.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
                 .accept(MediaTypes.HAL_JSON)
@@ -253,7 +253,9 @@ public class VacBoardControllerTest extends BaseControllerTest {
                                 fieldWithPath("gender").description("the gender of the user who posted the vacBoard"),
                                 fieldWithPath("age").description("the age of the user who posted the vacBoard"),
                                 fieldWithPath("disease").description("the disease of the user who posted the vacBoard"),
-                                fieldWithPath("sideEffect").description("the sideEffect of the user who posted the vacBoard after vaccination")
+                                fieldWithPath("sideEffect").description("the sideEffect of the user who posted the vacBoard after vaccination"),
+                                fieldWithPath("_links.profile.href").description("link to profile"),
+                                fieldWithPath("_links.self.href").description("link to self")
                         )
                 ))
         ;

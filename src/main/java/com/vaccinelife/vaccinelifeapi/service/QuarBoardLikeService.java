@@ -33,19 +33,19 @@ public class QuarBoardLikeService {
         if (isExist) {
             quarBoardLikeRepository.deleteByQuarBoardAndUser(quarBoard, user);
             quarBoard.updateQuarLikeNum(-1);
-            return new ResponseDto(false, "Basic 게시글 좋아요 취소", 200);
+            return new ResponseDto(false, "quarBoard like is canceled", 200);
         } else {
             QuarBoardLike quarBoardLike = new QuarBoardLike(quarBoard, user);
             quarBoardLikeRepository.save(quarBoardLike);
             quarBoard.updateQuarLikeNum(+1);
-            return new ResponseDto(true, "Basic 게시글 좋아요 추가", 200);
+            return new ResponseDto(true, "quarBoard like is applied", 200);
         }
     }
 
     public List<QuarBoardLikeRequestDto> getLike(Long id) {
         List<QuarBoardLike> quarBoardLike = quarBoardLikeRepository.findAllByUserId(id);
           if(id==null){
-            new NullPointerException("아이디가 존재하지 않습니다.");
+            throw new NullPointerException("아이디가 존재하지 않습니다.");
         }
 
         return QuarBoardLikeRequestDto.list(quarBoardLike);
