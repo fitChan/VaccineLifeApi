@@ -60,16 +60,16 @@ git, GitHub
 
 
 ### ERD 
+![sample](images/erd.png)
 
-![erd](https://user-images.githubusercontent.com/84306157/178018736-139397c2-6baf-4aae-94ff-b8c1711f5820.png)
-<img src="images/erd.png", width="300" height="200">
+
 
 
 
 ### 시퀀스 
 
 - 로그인
-![로그인 시퀀스](https://user-images.githubusercontent.com/84306157/176438321-13b1c2b1-801d-454b-8c1a-df9a75843563.png)
+![login](images/login.png)
 - 회원가입
 ![회원가입 시퀀스](https://user-images.githubusercontent.com/84306157/176438329-eb66c6c2-b652-4a14-93b4-f258b1f7f543.png)
 - 백신 게시판 GetMapping
@@ -81,10 +81,10 @@ git, GitHub
 - 백신 게시판 댓글 PostMapping
 ![댓글 작성](https://user-images.githubusercontent.com/84306157/177777183-5fca1f7b-35c9-415b-b24c-c2ae1cfe024d.png)
 
-[comment]: <> (TODO 최상단에 DOCS IMG 파일 넣어두고 끌어다 쓸수 있음을 확인 &#40;MARKDOWN 문서 만들기&#41; )
 
 
- :link: 
+
+
 - Rest Docs 바로가기(이미지를 클릭하시면 restDocs을 확인 하실수 있습니다.) 
  :link:
   [![Rest Docs Page](https://user-images.githubusercontent.com/84306157/180276538-633b2bc5-5b1a-4ddb-b6f6-082da192d72e.png)
