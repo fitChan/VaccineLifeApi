@@ -5,6 +5,7 @@ import com.vaccinelife.vaccinelifeapi.dto.ResponseDto;
 import com.vaccinelife.vaccinelifeapi.exception.ApiException;
 import com.vaccinelife.vaccinelifeapi.service.QuarBoardLikeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -29,9 +30,13 @@ public class QuarBoardLikeController {
 
 //   유저 기본키로 유저별 좋아요 조회
     @GetMapping("/api/quarBoard/like")
-    public ResponseEntity<List<QuarBoardLikeRequestDto>> Like() {
+    public ResponseEntity<CollectionModel<QuarBoardLikeRequestDto>> Like() {
         Long userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-        return ResponseEntity.ok().body(quarBoardLikeService.getLike(userId));
+
+        List<QuarBoardLikeRequestDto> like = quarBoardLikeService.getLike(userId);
+        CollectionModel<QuarBoardLikeRequestDto> entity = CollectionModel.of(like);
+
+        return ResponseEntity.ok().body(entity);
     }
 
     //예외처리 메세지 던질 핸들러

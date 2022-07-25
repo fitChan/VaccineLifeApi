@@ -1,11 +1,11 @@
 package com.vaccinelife.vaccinelifeapi.controller;
 
-import com.sun.xml.bind.v2.TODO;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardLikeRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.ResponseDto;
 import com.vaccinelife.vaccinelifeapi.exception.ApiException;
 import com.vaccinelife.vaccinelifeapi.service.VacBoardLikeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,10 +30,14 @@ public class VacBoardLikeController {
 
 
     @GetMapping("/api/vacBoard/like")
-    public ResponseEntity<List<VacBoardLikeRequestDto>> Like() {
+    public ResponseEntity<CollectionModel<VacBoardLikeRequestDto>> Like() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.valueOf(authentication.getPrincipal().toString());
-        return ResponseEntity.ok().body(vacBoardLikeService.getLike(userId));
+
+        List<VacBoardLikeRequestDto> like = vacBoardLikeService.getLike(userId);
+        CollectionModel<VacBoardLikeRequestDto> entitymodel = CollectionModel.of(like);
+
+        return ResponseEntity.ok().body(entitymodel);
     }
 
     //예외처리 메세지 던질 핸들러

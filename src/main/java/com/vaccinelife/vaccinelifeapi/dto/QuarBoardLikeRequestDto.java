@@ -24,10 +24,10 @@ public class QuarBoardLikeRequestDto {
 
     private Long quarBoardId;
     private String title;
-    private String contents;
+//    private String contents;
     private int likeCount;
-    private int commentCount;
-    private int totalVisitors;
+//    private int commentCount;
+//    private int totalVisitors;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "asia/seoul")
@@ -48,10 +48,10 @@ public class QuarBoardLikeRequestDto {
         return QuarBoardLikeRequestDto.builder()
                 .quarBoardId(quarBoardLike.getQuarBoard().getId())
                 .title(quarBoardLike.getQuarBoard().getTitle())
-                .contents(quarBoardLike.getQuarBoard().getContents())
+//                .contents(quarBoardLike.getQuarBoard().getContents())
                 .likeCount(quarBoardLike.getQuarBoard().getLikeCount())
-                .commentCount(quarBoardLike.getQuarBoard().getCommentCount())
-                .totalVisitors(quarBoardLike.getQuarBoard().getTotalVisitors())
+//                .commentCount(quarBoardLike.getQuarBoard().getCommentCount())
+//                .totalVisitors(quarBoardLike.getQuarBoard().getTotalVisitors())
                 .createdAt(quarBoardLike.getQuarBoard().getCreatedAt())
                 .modifiedAt(quarBoardLike.getQuarBoard().getModifiedAt())
                 .build();

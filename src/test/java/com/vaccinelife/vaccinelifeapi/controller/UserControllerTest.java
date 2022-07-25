@@ -1,4 +1,4 @@
-package com.vaccinelife.vaccinelifeapi.controllerTest;
+package com.vaccinelife.vaccinelifeapi.controller;
 
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;

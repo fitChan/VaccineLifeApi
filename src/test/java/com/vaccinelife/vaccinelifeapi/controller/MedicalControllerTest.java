@@ -1,13 +1,10 @@
-package com.vaccinelife.vaccinelifeapi.controllerTest;
+package com.vaccinelife.vaccinelifeapi.controller;
 
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
 import com.vaccinelife.vaccinelifeapi.dto.MedicalLikeRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.MedicalRequestDto;
-import com.vaccinelife.vaccinelifeapi.dto.MedicalTop3RequestDto;
-import com.vaccinelife.vaccinelifeapi.dto.QuarBoardLikeRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
 import com.vaccinelife.vaccinelifeapi.model.Medical;
-import com.vaccinelife.vaccinelifeapi.model.QuarBoard;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.repository.MedicalRepository;
 import com.vaccinelife.vaccinelifeapi.security.Token;
@@ -17,14 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -207,6 +201,23 @@ class MedicalControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("ok").exists())
                 .andExpect(jsonPath("msg").exists())
                 .andExpect(jsonPath("status").exists())
+        .andDo(document("medical_update",
+                requestHeaders(
+                        headerWithName(HttpHeaders.ACCEPT).description("accept Header"),
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
+                ),
+                requestFields(
+                        fieldWithPath("contents").description("the content of the medical update")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("Content type")
+                ),
+                responseFields(
+                        fieldWithPath("ok").description("true : saved"),
+                        fieldWithPath("msg").description("result information massage"),
+                        fieldWithPath("status").description("the status of the response")
+                )
+                ))
         ;
     }
 

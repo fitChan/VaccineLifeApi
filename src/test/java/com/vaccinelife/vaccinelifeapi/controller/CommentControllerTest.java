@@ -1,4 +1,4 @@
-package com.vaccinelife.vaccinelifeapi.controllerTest;
+package com.vaccinelife.vaccinelifeapi.controller;
 
 import com.vaccinelife.vaccinelifeapi.accountUser.WithUser;
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;

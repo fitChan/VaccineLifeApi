@@ -32,12 +32,12 @@ public class MedicalLikeService {
         if (isExist) {
             medicalLikeRepository.deleteByMedicalAndUser(medical, user);
             medical.updateMedicalLikeNum(-1);
-            return new ResponseDto(false, "Basic 게시글 좋아요 취소", 200);
+            return new ResponseDto(false, "medical 게시글 좋아요 취소", 200);
         } else {
             MedicalLike medicalLike = new MedicalLike(medical, user);
             medicalLikeRepository.save(medicalLike);
             medical.updateMedicalLikeNum(+1);
-            return new ResponseDto(true, "Basic 게시글 좋아요 추가", 200);
+            return new ResponseDto(true, "medical 게시글 좋아요 추가", 200);
         }
     }
 

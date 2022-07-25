@@ -1,4 +1,4 @@
-package com.vaccinelife.vaccinelifeapi.controllerTest;
+package com.vaccinelife.vaccinelifeapi.controller;
 
 
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
@@ -6,10 +6,8 @@ import com.vaccinelife.vaccinelifeapi.dto.*;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
 import com.vaccinelife.vaccinelifeapi.model.QuarBoard;
 import com.vaccinelife.vaccinelifeapi.model.User;
-import com.vaccinelife.vaccinelifeapi.model.VacBoard;
 import com.vaccinelife.vaccinelifeapi.repository.QuarBoardRepository;
 import com.vaccinelife.vaccinelifeapi.repository.UserRepository;
-import com.vaccinelife.vaccinelifeapi.repository.VacBoardRepository;
 import com.vaccinelife.vaccinelifeapi.security.Token;
 import com.vaccinelife.vaccinelifeapi.security.UserAuthentication;
 import org.junit.jupiter.api.Test;

@@ -42,7 +42,6 @@ public class VacBoardController {
     private final VacBoardRepository vacBoardRepository;
     private final UserRepository userRepository;
     private final CommentService commentService;
-    private final ModelMapper modelMapper;
 
     //    전체 게시판 조회
     @GetMapping("")

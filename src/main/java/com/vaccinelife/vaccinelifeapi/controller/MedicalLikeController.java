@@ -1,11 +1,11 @@
 package com.vaccinelife.vaccinelifeapi.controller;
 
 import com.vaccinelife.vaccinelifeapi.dto.MedicalLikeRequestDto;
-import com.vaccinelife.vaccinelifeapi.dto.QuarBoardLikeRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.ResponseDto;
 import com.vaccinelife.vaccinelifeapi.exception.ApiException;
 import com.vaccinelife.vaccinelifeapi.service.MedicalLikeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -31,10 +31,14 @@ public class MedicalLikeController {
 
     //유저별 좋아요 medicalId 받기
     @GetMapping("")
-    public ResponseEntity<List<MedicalLikeRequestDto>> getLike() {
+    public ResponseEntity<CollectionModel<MedicalLikeRequestDto>> getLike() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.valueOf(authentication.getPrincipal().toString());
-        return ResponseEntity.ok().body(medicalLikeService.getLike(userId));
+
+        List<MedicalLikeRequestDto> like = medicalLikeService.getLike(userId);
+        CollectionModel<MedicalLikeRequestDto> entityModel = CollectionModel.of(like);
+
+        return ResponseEntity.ok().body(entityModel);
     }
     //예외처리 메세지 던질 핸들러
     @ExceptionHandler({IllegalArgumentException.class})

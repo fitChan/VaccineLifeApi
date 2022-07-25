@@ -192,6 +192,25 @@ include::{snippets}/like_vacBoard_canceled/response-fields.adoc[]
 .Response HTTP Example
 include::{snippets}/like_vacBoard_canceled/http-response.adoc[]
 
+=== 백신게시판 좋아요 TOP3 조회
+
+==== Request
+
+.Request Fields
+include::{snippets}/vacBoard-query-top3/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/vacBoard-query-top3/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/vacBoard-query-top3/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/vacBoard-query-top3/http-response.adoc[]
+
+
 == VacBoard Comment Resource
 
 === 댓글 생성
@@ -363,6 +382,25 @@ include::{snippets}/like_quarBoard_canceled/response-fields.adoc[]
 .Response HTTP Example
 include::{snippets}/like_quarBoard_canceled/http-response.adoc[]
 
+=== 격리게시판 좋아요 TOP3 조회
+
+==== Request
+
+.Request Fields
+include::{snippets}/quarBoard-query-top3/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/quarBoard-query-top3/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/quarBoard-query-top3/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/quarBoard-query-top3/http-response.adoc[]
+
+
 == QuarBoard Comment Resource
 
 === 댓글 생성
@@ -405,6 +443,117 @@ include::{snippets}/quarBoard-comment-query-list/response-fields.adoc[]
 include::{snippets}/quarBoard-comment-query-list/http-response.adoc[]
 
 
+== Medical Resource
+
+=== 의료진분들께 작성
+
+==== Request
+
+.Request Fields
+include::{snippets}/medical-create/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/medical-create/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/medical-create/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/medical-create/http-response.adoc[]
+
+=== 의료진분들께 작성글 리스트
+
+==== Request
+
+.Request Fields
+include::{snippets}/medical-query-list/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/medical-query-list/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/medical-query-list/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/medical-query-list/http-response.adoc[]
+
+=== 의료진분들께 수정
+
+==== Request
+
+.Request Fields
+include::{snippets}/medical_update/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/medical_update/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/medical_update/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/medical_update/http-response.adoc[]
+
+=== 의료진분들께 좋아요 누르기
+
+==== Request
+
+.Request Fields
+include::{snippets}/like_medical_applied/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/like_medical_applied/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/like_medical_applied/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/like_medical_applied/http-response.adoc[]
+
+=== 의료진분들께 좋아요 취소
+
+==== Request
+
+.Request Fields
+include::{snippets}/like_medical_canceled/request-fields.adoc[]
+
+.Request HTTP Example
+include::{snippets}/like_medical_canceled/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/like_medical_canceled/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/like_medical_canceled/http-response.adoc[]
+
+=== 의료진분들께 좋아요 TOP3 조회
+
+==== Request
+
+.Request Fields
+include::{snippets}/medical-query-top3/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/medical-query-top3/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/medical-query-top3/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/medical-query-top3/http-response.adoc[]
+
+
 == Mypage Resource
 
 === 백신게시판 작성글 리스트
@@ -426,6 +575,25 @@ include::{snippets}/mypage-vacBoard-List/response-fields.adoc[]
 include::{snippets}/mypage-vacBoard-List/http-response.adoc[]
 
 
+=== 백신게시판 좋아요 누른 게시물 리스트
+
+==== Request
+
+.Request Fields
+include::{snippets}/mypage_vacBoard_like_list/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/mypage_vacBoard_like_list/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/mypage_vacBoard_like_list/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/mypage_vacBoard_like_list/http-response.adoc[]
+
+
 === 격리게시판 작성글 리스트
 
 ==== Request
@@ -443,6 +611,26 @@ include::{snippets}/mypage-quarBoard-List/response-fields.adoc[]
 
 .Response HTTP Example
 include::{snippets}/mypage-quarBoard-List/http-response.adoc[]
+
+
+
+=== 격리 게시판 좋아요 누른 게시물 리스트
+
+==== Request
+
+.Request Fields
+include::{snippets}/mypage_quarBoard_like_list/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/mypage_quarBoard_like_list/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/mypage_quarBoard_like_list/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/mypage_quarBoard_like_list/http-response.adoc[]
 
 === 의료진분들께 작성글 리스트
 
@@ -462,6 +650,24 @@ include::{snippets}/mypage-medical-List/response-fields.adoc[]
 .Response HTTP Example
 include::{snippets}/mypage-medical-List/http-response.adoc[]
 
+
+=== 의료진분들께 게시판 좋아요 누른 게시물 리스트
+
+==== Request
+
+.Request Fields
+include::{snippets}/mypage_medical_like_list/request-body.adoc[]
+
+.Request HTTP Example
+include::{snippets}/mypage_medical_like_list/http-request.adoc[]
+
+==== Response
+
+.Response Fields
+include::{snippets}/mypage_medical_like_list/response-fields.adoc[]
+
+.Response HTTP Example
+include::{snippets}/mypage_medical_like_list/http-response.adoc[]
 
 
 
