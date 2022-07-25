@@ -83,7 +83,8 @@ git, GitHub
 
 
  - 프로잭트 컨트롤러 태스트 커버리지
-![coverage](images/coverage.png)
+   ![coverage](https://user-images.githubusercontent.com/84306157/180826299-d1962e43-f606-4c09-85d5-b34c3826c2ae.png)
+
 
 - Rest Docs 바로가기(이미지를 클릭하시면 restDocs을 확인 하실수 있습니다.) 
  :link:
