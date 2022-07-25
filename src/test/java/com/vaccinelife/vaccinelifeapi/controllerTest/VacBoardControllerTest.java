@@ -3,6 +3,7 @@ package com.vaccinelife.vaccinelifeapi.controllerTest;
 
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
 import com.vaccinelife.vaccinelifeapi.dto.SignupRequestDto;
+import com.vaccinelife.vaccinelifeapi.dto.VacBoardLikeRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardPostRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.VacBoardRequestDto;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
@@ -121,21 +123,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
         ;
     }
 
-    private String getAccessToken() throws Exception {
-        String username = "cksdntjd";
 
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("없는 유저 ")
-        );
-        Authentication authentication = new UserAuthentication(user.getId(), null, null);
-
-        String token = jwtTokenProvider.createToken(authentication.getPrincipal().toString());
-        Token.Response response = Token.Response.builder().token(token).build();
-
-        String res = String.valueOf(response);
-
-        return res.substring(21, res.length() - 1);
-    }
 
     @Test
     @TestDescription("입력값이 없을경우 vacBoard 생성 오류")
@@ -186,7 +174,7 @@ public class VacBoardControllerTest extends BaseControllerTest {
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("Content type")
                         ),
-                        relaxedResponseFields(
+                        responseFields(
                                 fieldWithPath("_embedded.vacBoardList[0].createdAt").description("created date and time"),
                                 fieldWithPath("_embedded.vacBoardList[0].modifiedAt").description("modified date and time"),
                                 fieldWithPath("_embedded.vacBoardList[0].id").description("the id of the vacBoard post"),
@@ -194,7 +182,18 @@ public class VacBoardControllerTest extends BaseControllerTest {
                                 fieldWithPath("_embedded.vacBoardList[0].contents").description("content of the vacBoard"),
                                 fieldWithPath("_embedded.vacBoardList[0].totalVisitors").description("number of Visitors of the vacBoard"),
                                 fieldWithPath("_embedded.vacBoardList[0].commentCount").description("number of comments on the vacBoard"),
-                                fieldWithPath("_embedded.vacBoardList[0].likeCount").description("number of likeCount on the vacBoard")
+                                fieldWithPath("_embedded.vacBoardList[0].likeCount").description("number of likeCount on the vacBoard"),
+                                fieldWithPath("_embedded.vacBoardList[0]._links.self.href").description("link to self"),
+                                fieldWithPath("_links.first.href").description("link to vacBoard"),
+                                fieldWithPath("_links.prev.href").description("link to previous vacBoard page"),
+                                fieldWithPath("_links.self.href").description("link to self"),
+                                fieldWithPath("_links.next.href").description("link to next vacBoard page"),
+                                fieldWithPath("_links.last.href").description("link to last vacBoard"),
+                                fieldWithPath("_links.profile.href").description("link to profile"),
+                                fieldWithPath("page.size").description("each page vacBoard number"),
+                                fieldWithPath("page.totalElements").description("total vacBoard size"),
+                                fieldWithPath("page.totalPages").description("total vacBoard page size"),
+                                fieldWithPath("page.number").description("now page number")
                         )
                 ))
         ;
@@ -343,6 +342,88 @@ public class VacBoardControllerTest extends BaseControllerTest {
         ;
     }
 
+    @Test
+    @TestDescription("좋아요 TOP3를 불러오는 테스트")
+    public void 좋아요_top3_리스트_test() throws Exception {
+        pressLike(4L);
+        pressLike(5L);
+
+        this.mockMvc.perform(get("/api/vacBoard/topLike")
+                .characterEncoding("utf-8")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+        .andExpect(jsonPath("_embedded.vacBoardTopRequestDtoList[0].vacBoardId").exists())
+        .andExpect(jsonPath("_embedded.vacBoardTopRequestDtoList[0].title").exists())
+        .andExpect(jsonPath("_embedded.vacBoardTopRequestDtoList[0].contents").exists())
+        .andExpect(jsonPath("_embedded.vacBoardTopRequestDtoList[0].likeCount").exists())
+        .andExpect(jsonPath("_embedded.vacBoardTopRequestDtoList[0].totalVisitors").exists())
+        .andExpect(jsonPath("_embedded.vacBoardTopRequestDtoList[0].commentCount").exists())
+        .andExpect(jsonPath("_embedded.vacBoardTopRequestDtoList[0].type").exists())
+        .andExpect(jsonPath("_embedded.vacBoardTopRequestDtoList[0].createdAt").exists())
+        .andExpect(jsonPath("_embedded.vacBoardTopRequestDtoList[0].modifiedAt").exists())
+        .andDo(document("vacBoard-query-top3",
+                requestHeaders(
+                        headerWithName(HttpHeaders.ACCEPT).description("accept Header"),
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("Content type")
+                ),
+                responseFields(
+                        fieldWithPath("_embedded.vacBoardTopRequestDtoList[0].createdAt").description("created date and time"),
+                        fieldWithPath("_embedded.vacBoardTopRequestDtoList[0].modifiedAt").description("modified date and time"),
+                        fieldWithPath("_embedded.vacBoardTopRequestDtoList[0].vacBoardId").description("the id of the vacBoard post"),
+                        fieldWithPath("_embedded.vacBoardTopRequestDtoList[0].title").description("title of the vacBoard"),
+                        fieldWithPath("_embedded.vacBoardTopRequestDtoList[0].contents").description("content of the vacBoard"),
+                        fieldWithPath("_embedded.vacBoardTopRequestDtoList[0].totalVisitors").description("number of visitors of the vacBoard"),
+                        fieldWithPath("_embedded.vacBoardTopRequestDtoList[0].commentCount").description("number of comments on the vacBoard"),
+                        fieldWithPath("_embedded.vacBoardTopRequestDtoList[0].likeCount").description("number of likeCount on the vacBoard"),
+                        fieldWithPath("_embedded.vacBoardTopRequestDtoList[0].type").description("the vaccine type of the user who posted the vacBoard")
+                )
+                ))
+
+        ;
+    }
+
+
+    public VacBoardLikeRequestDto pressLike(Long vacBoardId) throws Exception {
+        VacBoard vacBoard = vacBoardRepository.findById(vacBoardId).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시물은 존재하지 않습니다.")
+        );
+
+        VacBoardLikeRequestDto vacBoardLikeRequestDto = VacBoardLikeRequestDto.builder()
+                .vacBoardId(vacBoard.getId())
+                .likeCount(vacBoard.getLikeCount())
+                .createdAt(vacBoard.getCreatedAt())
+                .modifiedAt(vacBoard.getModifiedAt())
+                .build();
+
+        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/api/vacBoard/like")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
+                .characterEncoding("UTF-8")
+                .content(objectMapper.writeValueAsString(vacBoardLikeRequestDto)));
+        return vacBoardLikeRequestDto;
+    }
+    private String getAccessToken() throws Exception {
+        String username = "cksdntjd";
+
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("없는 유저 ")
+        );
+        Authentication authentication = new UserAuthentication(user.getId(), null, null);
+
+        String token = jwtTokenProvider.createToken(authentication.getPrincipal().toString());
+        Token.Response response = Token.Response.builder().token(token).build();
+
+        String res = String.valueOf(response);
+
+        return res.substring(21, res.length() - 1);
+    }
 //    public static void generateEvent(int i) throws Exception {
 //        User user = userRepository.findById(1L).orElseThrow(
 //                () -> new IllegalArgumentException("없는 유저입니다.")

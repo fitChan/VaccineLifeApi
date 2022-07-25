@@ -39,6 +39,9 @@ public class QuarBoard extends Timestamped{
     private int totalVisitors;
 
 
+
+
+
     @JoinColumn(name = "userId")
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

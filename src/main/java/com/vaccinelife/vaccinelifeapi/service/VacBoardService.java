@@ -49,16 +49,16 @@ public class VacBoardService {
     private final UserService userDetailsService;
 private final ModelMapper modelMapper;
     //이전글 다음글
-    @Transactional
-
-    public VacPrevNextDto getVacNextPrevId(Long vaBoardId) {
-        VacBoard prevId = vacBoardRepository.findTopByIdLessThanOrderByCreatedAtDesc(vaBoardId);
-        VacBoard nextId = vacBoardRepository.findFirstByIdGreaterThan(vaBoardId);
-        return VacPrevNextDto.builder()
-                .prevId(prevId)
-                .nextId(nextId)
-                .build();
-    }
+//    @Transactional
+//
+//    public VacPrevNextDto getVacNextPrevId(Long vaBoardId) {
+//        VacBoard prevId = vacBoardRepository.findTopByIdLessThanOrderByCreatedAtDesc(vaBoardId);
+//        VacBoard nextId = vacBoardRepository.findFirstByIdGreaterThan(vaBoardId);
+//        return VacPrevNextDto.builder()
+//                .prevId(prevId)
+//                .nextId(nextId)
+//                .build();
+//    }
 
 
     //    상세조회
@@ -71,11 +71,11 @@ private final ModelMapper modelMapper;
     }
 
     //    전체조회
-    @Transactional
-    public List<VacBoardSimRequestDto> getSimpleVacBoard() {
-        List<VacBoard> vacBoards = vacBoardRepository.findAllByOrderByCreatedAtDesc();
-        return VacBoardSimRequestDto.list(vacBoards);
-    }
+//    @Transactional
+//    public List<VacBoardSimRequestDto> getSimpleVacBoard() {
+//        List<VacBoard> vacBoards = vacBoardRepository.findAllByOrderByCreatedAtDesc();
+//        return VacBoardSimRequestDto.list(vacBoards);
+//    }
 
     //    탑 3
     @Transactional
@@ -110,7 +110,6 @@ private final ModelMapper modelMapper;
             throw new AccessDeniedException("작성자만 수정이 가능합니다.");
         }
     }
-
     // 게시물 삭제
     @Transactional
     public void deleteVacBoard(Long vacBoardId) {
@@ -178,23 +177,23 @@ private final ModelMapper modelMapper;
 
     }
 
-
-    //게시판 무한스크롤
-    public Page<VacBoardSimRequestDto> readVacBoard(int page, int size, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return vacBoardRepository.findAllByOrderByCreatedAtDesc(pageable);
-    }
-
-    // 백신 타입별 필터링 + 동시에 무한스크롤
-    public Page<VacBoardSimRequestDto> readVacBoardType(int page, int size, String sortBy, boolean isAsc, String type) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        return vacBoardRepository.findAllByUserTypeOrderByCreatedAtDesc(pageable, type);
-    }
+//
+//    //게시판 무한스크롤
+//    public Page<VacBoardSimRequestDto> readVacBoard(int page, int size, String sortBy, boolean isAsc) {
+//        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+//        Sort sort = Sort.by(direction, sortBy);
+//        Pageable pageable = PageRequest.of(page, size, sort);
+//        return vacBoardRepository.findAllByOrderByCreatedAtDesc(pageable);
+//    }
+//
+//    // 백신 타입별 필터링 + 동시에 무한스크롤
+//    public Page<VacBoardSimRequestDto> readVacBoardType(int page, int size, String sortBy, boolean isAsc, String type) {
+//        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+//        Sort sort = Sort.by(direction, sortBy);
+//        Pageable pageable = PageRequest.of(page, size, sort);
+//
+//        return vacBoardRepository.findAllByUserTypeOrderByCreatedAtDesc(pageable, type);
+//    }
 
 
     public ResponseEntity<VacBoardResource> createVacBoardUrl(VacBoardPostRequestDto requestDto, User user) {

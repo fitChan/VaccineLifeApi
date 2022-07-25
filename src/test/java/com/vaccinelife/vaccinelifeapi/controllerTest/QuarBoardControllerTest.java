@@ -2,10 +2,7 @@ package com.vaccinelife.vaccinelifeapi.controllerTest;
 
 
 import com.vaccinelife.vaccinelifeapi.common.BaseControllerTest;
-import com.vaccinelife.vaccinelifeapi.dto.QuarBoardPostRequestDto;
-import com.vaccinelife.vaccinelifeapi.dto.QuarBoardRequestDto;
-import com.vaccinelife.vaccinelifeapi.dto.VacBoardPostRequestDto;
-import com.vaccinelife.vaccinelifeapi.dto.VacBoardRequestDto;
+import com.vaccinelife.vaccinelifeapi.dto.*;
 import com.vaccinelife.vaccinelifeapi.exception.TestDescription;
 import com.vaccinelife.vaccinelifeapi.model.QuarBoard;
 import com.vaccinelife.vaccinelifeapi.model.User;
@@ -20,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.core.Authentication;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
@@ -104,21 +102,6 @@ public class QuarBoardControllerTest extends BaseControllerTest {
         ;
     }
 
-    private String getAccessToken() throws Exception {
-        String username = "cksdntjd";
-
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("없는 유저 ")
-        );
-        Authentication authentication = new UserAuthentication(user.getId(), null, null);
-
-        String token = jwtTokenProvider.createToken(authentication.getPrincipal().toString());
-        Token.Response response = Token.Response.builder().token(token).build();
-
-        String res = String.valueOf(response);
-
-        return res.substring(21, res.length() - 1);
-    }
 
     @Test
     @TestDescription("입력값이 없을경우 QuarBoard 생성 오류")
@@ -326,5 +309,88 @@ public class QuarBoardControllerTest extends BaseControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
         ;
+    }
+
+    @Test
+    @TestDescription("좋아요Top3 게시물 가져오는 테스트")
+    public void 좋아요Top3_게시물_가져오기() throws Exception {
+        pressLike(4L);
+        pressLike(5L);
+
+        this.mockMvc.perform(get("/api/quarBoard/topLike")
+                .characterEncoding("utf-8")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("_embedded.quarBoardTopRequestDtoList[0].quarBoardId").exists())
+                .andExpect(jsonPath("_embedded.quarBoardTopRequestDtoList[0].title").exists())
+                .andExpect(jsonPath("_embedded.quarBoardTopRequestDtoList[0].contents").exists())
+                .andExpect(jsonPath("_embedded.quarBoardTopRequestDtoList[0].likeCount").exists())
+                .andExpect(jsonPath("_embedded.quarBoardTopRequestDtoList[0].totalVisitors").exists())
+                .andExpect(jsonPath("_embedded.quarBoardTopRequestDtoList[0].commentCount").exists())
+                .andExpect(jsonPath("_embedded.quarBoardTopRequestDtoList[0].createdAt").exists())
+                .andExpect(jsonPath("_embedded.quarBoardTopRequestDtoList[0].modifiedAt").exists())
+
+        .andDo(document("quarBoard-query-top3",
+                requestHeaders(
+                        headerWithName(HttpHeaders.ACCEPT).description("accept Header"),
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
+                ),
+                responseHeaders(
+                        headerWithName(HttpHeaders.CONTENT_TYPE).description("Content type")
+                ),
+                responseFields(
+                        fieldWithPath("_embedded.quarBoardTopRequestDtoList[0].createdAt").description("created date and time"),
+                        fieldWithPath("_embedded.quarBoardTopRequestDtoList[0].modifiedAt").description("modified date and time"),
+                        fieldWithPath("_embedded.quarBoardTopRequestDtoList[0].quarBoardId").description("id(PK) of the quarBoard"),
+                        fieldWithPath("_embedded.quarBoardTopRequestDtoList[0].title").description("title of the quarBoard"),
+                        fieldWithPath("_embedded.quarBoardTopRequestDtoList[0].contents").description("content of the quarBoard"),
+                        fieldWithPath("_embedded.quarBoardTopRequestDtoList[0].totalVisitors").description("number of Visitors of the quarBoard"),
+                        fieldWithPath("_embedded.quarBoardTopRequestDtoList[0].likeCount").description("number of like on the quarBoard"),
+                        fieldWithPath("_embedded.quarBoardTopRequestDtoList[0].commentCount").description("number of comment on the quarBoard")
+
+                )
+                ))
+
+        ;
+    }
+
+    private String getAccessToken() throws Exception {
+        String username = "cksdntjd";
+
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("없는 유저 ")
+        );
+        Authentication authentication = new UserAuthentication(user.getId(), null, null);
+
+        String token = jwtTokenProvider.createToken(authentication.getPrincipal().toString());
+        Token.Response response = Token.Response.builder().token(token).build();
+
+        String res = String.valueOf(response);
+
+        return res.substring(21, res.length() - 1);
+    }
+
+    public QuarBoardLikeRequestDto pressLike(Long quarBoardId) throws Exception {
+        QuarBoard quarBoard = quarBoardRepository.findById(quarBoardId).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시물은 존재하지 않습니다.")
+        );
+
+        QuarBoardLikeRequestDto quarBoardLikeRequestDto = QuarBoardLikeRequestDto.builder()
+                .quarBoardId(quarBoard.getId())
+                .likeCount(quarBoard.getLikeCount())
+                .createdAt(quarBoard.getCreatedAt())
+                .modifiedAt(quarBoard.getModifiedAt())
+                .build();
+
+        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/api/quarBoard/like")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON)
+                .characterEncoding("UTF-8")
+                .content(objectMapper.writeValueAsString(quarBoardLikeRequestDto)));
+        return quarBoardLikeRequestDto;
     }
 }

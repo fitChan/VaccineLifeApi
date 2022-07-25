@@ -51,15 +51,20 @@ public class QuarBoardController {
 
     //    탑 3
     @GetMapping("/topLike")
-    public ResponseEntity<List<QuarBoardTopRequestDto>> getTopList() {
-        return ResponseEntity.ok().body(quarBoardService.getTopList());
+    public ResponseEntity<CollectionModel<QuarBoardTopRequestDto>> getTopList() {
+        List<QuarBoardTopRequestDto> top = quarBoardService.getTopList();
+
+        CollectionModel<QuarBoardTopRequestDto> entityModel = CollectionModel.of(top);
+
+
+        return ResponseEntity.ok(entityModel);
     }
 
-    //이전글 다음글
-    @GetMapping("/{quarBoardId}/id")
-    public ResponseEntity<QuarPrevNextDto> getQuarNextPrevId(@PathVariable Long quarBoardId) {
-        return ResponseEntity.ok().body(quarBoardService.getQuarNextPrevId(quarBoardId));
-    }
+//    //이전글 다음글
+//    @GetMapping("/{quarBoardId}/id")
+//    public ResponseEntity<QuarPrevNextDto> getQuarNextPrevId(@PathVariable Long quarBoardId) {
+//        return ResponseEntity.ok().body(quarBoardService.getQuarNextPrevId(quarBoardId));
+//    }
 
     //    상세 게시판 조회
     @GetMapping("/{quarBoardId}")
@@ -119,19 +124,19 @@ public class QuarBoardController {
         return ResponseEntity.ok(entitymodel);
     }
 
-    //페이지 구현
-    @GetMapping("/page")
-    public Page<QuarBoardSimRequestDto> readQuarBoard(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size,
-            @RequestParam("sortBy") String sortBy,
-            @RequestParam("isAsc") boolean isAsc
-
-    ) {
-
-        page = page - 1;
-        return quarBoardService.readQuarBoard(page, size, sortBy, isAsc);
-    }
+//    //페이지 구현
+//    @GetMapping("/page")
+//    public Page<QuarBoardSimRequestDto> readQuarBoard(
+//            @RequestParam("page") int page,
+//            @RequestParam("size") int size,
+//            @RequestParam("sortBy") String sortBy,
+//            @RequestParam("isAsc") boolean isAsc
+//
+//    ) {
+//
+//        page = page - 1;
+//        return quarBoardService.readQuarBoard(page, size, sortBy, isAsc);
+//    }
 
     //예외처리 메세지 던질 핸들러
     @ExceptionHandler({IllegalArgumentException.class})

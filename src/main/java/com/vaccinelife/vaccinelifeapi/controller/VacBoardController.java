@@ -1,7 +1,6 @@
 package com.vaccinelife.vaccinelifeapi.controller;
 
 
-import com.vaccinelife.vaccinelifeapi.config.Resource.CommentResource;
 import com.vaccinelife.vaccinelifeapi.config.Resource.VacBoardRequestDtoResource;
 import com.vaccinelife.vaccinelifeapi.config.Resource.VacBoardResource;
 import com.vaccinelife.vaccinelifeapi.dto.*;
@@ -33,7 +32,6 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RequiredArgsConstructor
 @RestController
@@ -57,15 +55,19 @@ public class VacBoardController {
 
     //    탑 3
     @GetMapping("/topLike")
-    public ResponseEntity<List<VacBoardTopRequestDto>> getTopList() {
-        return ResponseEntity.ok().body(vacBoardService.getTopList());
+    public ResponseEntity<CollectionModel<VacBoardTopRequestDto>> getTopList() {
+        List<VacBoardTopRequestDto> topList = vacBoardService.getTopList();
+        CollectionModel<VacBoardTopRequestDto> entityModel = CollectionModel.of(topList);
+
+
+        return ResponseEntity.ok().body(entityModel);
     }
 
     //이전글 다음글
-    @GetMapping("/{vacBoardId}/id")
-    public ResponseEntity<VacPrevNextDto> getNPId(@PathVariable Long vacBoardId) {
-        return ResponseEntity.ok().body(vacBoardService.getVacNextPrevId(vacBoardId));
-    }
+//    @GetMapping("/{vacBoardId}/id")
+//    public ResponseEntity<VacPrevNextDto> getNPId(@PathVariable Long vacBoardId) {
+//        return ResponseEntity.ok().body(vacBoardService.getVacNextPrevId(vacBoardId));
+//    }
 
     //    상세 게시판 조회
     @GetMapping("/{vacBoardId}")
@@ -135,34 +137,34 @@ public class VacBoardController {
     }
 
     //페이지 구현
-    @GetMapping("/page")
-    public Page<VacBoardSimRequestDto> readVacBoard(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size,
-            @RequestParam("sortBy") String sortBy,
-            @RequestParam("isAsc") boolean isAsc
-
-    ) {
-
-        page = page - 1;
-        return vacBoardService.readVacBoard(page, size, sortBy, isAsc);
-    }
+//    @GetMapping("/page")
+//    public Page<VacBoardSimRequestDto> readVacBoard(
+//            @RequestParam("page") int page,
+//            @RequestParam("size") int size,
+//            @RequestParam("sortBy") String sortBy,
+//            @RequestParam("isAsc") boolean isAsc
+//
+//    ) {
+//
+//        page = page - 1;
+//        return vacBoardService.readVacBoard(page, size, sortBy, isAsc);
+//    }
 
 
     //백신 종류별 필터링 + 페이지 구현
-    @GetMapping("type/page")
-    public Page<VacBoardSimRequestDto> readVacBoardType(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size,
-            @RequestParam("sortBy") String sortBy,
-            @RequestParam("isAsc") boolean isAsc,
-            @RequestParam("type") String type
-
-    ) {
-
-        page = page - 1;
-        return vacBoardService.readVacBoardType(page, size, sortBy, isAsc, type);
-    }
+//    @GetMapping("type/page")
+//    public Page<VacBoardSimRequestDto> readVacBoardType(
+//            @RequestParam("page") int page,
+//            @RequestParam("size") int size,
+//            @RequestParam("sortBy") String sortBy,
+//            @RequestParam("isAsc") boolean isAsc,
+//            @RequestParam("type") String type
+//
+//    ) {
+//
+//        page = page - 1;
+//        return vacBoardService.readVacBoardType(page, size, sortBy, isAsc, type);
+//    }
 
     //예외처리 메세지 던질 핸들러
     @ExceptionHandler({IllegalArgumentException.class})

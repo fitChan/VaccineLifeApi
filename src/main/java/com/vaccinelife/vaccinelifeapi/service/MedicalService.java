@@ -3,6 +3,7 @@ package com.vaccinelife.vaccinelifeapi.service;
 import com.vaccinelife.vaccinelifeapi.dto.MedicalRequestDto;
 import com.vaccinelife.vaccinelifeapi.dto.MedicalResponseDto;
 import com.vaccinelife.vaccinelifeapi.dto.MedicalTop3RequestDto;
+import com.vaccinelife.vaccinelifeapi.dto.ResponseDto;
 import com.vaccinelife.vaccinelifeapi.model.Medical;
 import com.vaccinelife.vaccinelifeapi.model.User;
 import com.vaccinelife.vaccinelifeapi.repository.MedicalRepository;
@@ -16,12 +17,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Field;
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -62,20 +63,28 @@ public class MedicalService {
 
     //    의료진 한마디 작성 기능
     @Transactional
-    public void createMedical(MedicalRequestDto requestDto, Long userId) {
+    public ResponseDto createMedical(MedicalRequestDto requestDto, Long userId) {
         User user = userRepository.getById(userId);
         Medical medical = new Medical(requestDto);
         medical.setUser(user);
         medicalRepository.save(medical);
+        return new ResponseDto(true, "medical 게시물 저장 완료", 200);
     }
 
     //    의료진 한마디 삭제 기능
     @Transactional
-    public void deleteMedical(Long medicalId) {
+    public void deleteMedical(Long medicalId, Long userId) throws AccessDeniedException {
         Medical medical = medicalRepository.findById(medicalId).orElseThrow(
                 () -> new IllegalArgumentException("해당 아이디값을 찾을 수 없습니다.")
         );
-        medicalRepository.delete(medical);
+
+        if (!medical.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException("작성자만 삭제가 가능합니다.");
+        } else {
+            medicalRepository.delete(medical);
+        }
+
+
     }
 
     //    탑 3
@@ -90,26 +99,28 @@ public class MedicalService {
 
     //내용 수정
     @Transactional
-    public ResponseEntity<Medical> patch(Long medicalId, Map<Object, Object> fields) {
+    public ResponseDto patch(Long medicalId, Map<Object, Object> fields, Long userId) throws AccessDeniedException {
         Optional<Medical> medical = medicalRepository.findById(medicalId);
-        if (medical.isPresent()) {
-            fields.forEach((key, value) -> {
-                Field field = ReflectionUtils.findField(Medical.class, (String) key);
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, medical.get(), value);
-            });
-            Medical updateVacBoard = medical.get();
-            return new ResponseEntity<>(updateVacBoard, HttpStatus.OK);
+
+        if (userId.equals(medical.get().getUser().getId())){
+                fields.forEach((key, value) -> {
+                    Field field = ReflectionUtils.findField(Medical.class, (String) key);
+                    field.setAccessible(true);
+                    ReflectionUtils.setField(field, medical.get(), value);
+                });
+                return new ResponseDto(true, "medical 게시물 수정 완료", 200);
+        }else{
+            throw  new AccessDeniedException("작성자만 게시물을 수정할 수 있습니다.");
         }
-        return null;
+
     }
 
-    public Page<MedicalResponseDto> readMedical(int page, int size, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return medicalRepository.findAllByOrderByCreatedAtDesc(pageable);
-    }
+//    public Page<MedicalResponseDto> readMedical(int page, int size, String sortBy, boolean isAsc) {
+//        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+//        Sort sort = Sort.by(direction, sortBy);
+//        Pageable pageable = PageRequest.of(page, size, sort);
+//        return medicalRepository.findAllByOrderByCreatedAtDesc(pageable);
+//    }
 
 
 }

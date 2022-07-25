@@ -45,6 +45,8 @@ public class BaseControllerTest {
     protected ObjectMapper objectMapper;
     @Autowired
     protected JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    protected UserRepository userRepository;
 
 
     @BeforeEach

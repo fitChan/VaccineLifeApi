@@ -56,22 +56,22 @@ public class QuarBoardService {
     }
 
     //이전글 다음글
-    @Transactional
-    public QuarPrevNextDto getQuarNextPrevId(Long quarBoardId) {
-        QuarBoard prevId = quarBoardRepository.findTopByIdLessThanOrderByCreatedAtDesc(quarBoardId);
-        QuarBoard nextId = quarBoardRepository.findFirstByIdGreaterThan(quarBoardId);
-        return QuarPrevNextDto.builder()
-                .prevId(prevId)
-                .nextId(nextId)
-                .build();
-    }
-
-    //    전체 조회
-    @Transactional
-    public List<QuarBoardSimRequestDto> getSimpleQuarBoard() {
-        List<QuarBoard> quarBoards = quarBoardRepository.findAllByOrderByCreatedAtDesc();
-        return QuarBoardSimRequestDto.list(quarBoards);
-    }
+//    @Transactional
+//    public QuarPrevNextDto getQuarNextPrevId(Long quarBoardId) {
+//        QuarBoard prevId = quarBoardRepository.findTopByIdLessThanOrderByCreatedAtDesc(quarBoardId);
+//        QuarBoard nextId = quarBoardRepository.findFirstByIdGreaterThan(quarBoardId);
+//        return QuarPrevNextDto.builder()
+//                .prevId(prevId)
+//                .nextId(nextId)
+//                .build();
+//    }
+//
+//    //    전체 조회
+//    @Transactional
+//    public List<QuarBoardSimRequestDto> getSimpleQuarBoard() {
+//        List<QuarBoard> quarBoards = quarBoardRepository.findAllByOrderByCreatedAtDesc();
+//        return QuarBoardSimRequestDto.list(quarBoards);
+//    }
 
 
     //    탑 3
@@ -173,13 +173,13 @@ public class QuarBoardService {
     }
 
     //    페이지 처리
-    public Page<QuarBoardSimRequestDto> readQuarBoard(int page, int size, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        return quarBoardRepository.findAllByOrderByCreatedAtDesc(pageable);
-    }
+//    public Page<QuarBoardSimRequestDto> readQuarBoard(int page, int size, String sortBy, boolean isAsc) {
+//        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+//        Sort sort = Sort.by(direction, sortBy);
+//        Pageable pageable = PageRequest.of(page, size, sort);
+//
+//        return quarBoardRepository.findAllByOrderByCreatedAtDesc(pageable);
+//    }
 
     //마이페이지 내가 쓴글
     @Transactional
